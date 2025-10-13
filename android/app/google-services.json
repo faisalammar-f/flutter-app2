@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "777959805374",
+    "project_id": "time-expense-manager",
+    "storage_bucket": "time-expense-manager.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:777959805374:android:88d8bb3ac19e9fee79a9ef",
+        "android_client_info": {
+          "package_name": "com.timer"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCB5-L19dxqj7uTcihi9cObJxbTZ9UTk8o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
