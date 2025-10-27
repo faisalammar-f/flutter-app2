@@ -1,12 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class Tasks {
+  String docId;
+
   String description;
   String tasktype;
   DateTime d;
   bool isdone;
   Tasks({
+    this.docId = '',
+
     required this.description,
     required this.tasktype,
     required this.d,
@@ -24,7 +31,26 @@ class Ttasktype extends State<Taskt> {
   final GlobalKey<FormState> _formkey = GlobalKey();
   final TextEditingController desc_con = TextEditingController();
   final TextEditingController date_con = TextEditingController();
-  List<String> tasktype = ["Work", "Study", "Personal"];
+  List<String> tasktype = [
+    "Work",
+    "Study",
+    "Personal",
+    "Free time",
+    "Social occasions",
+    "Attend lectures",
+    "Complete assignments",
+    "Prepare presentations",
+    "Submit reports",
+    "Group study sessions",
+    "Project research",
+    "Team meetings",
+    "Daily exercise",
+    "Plan weekly schedule",
+    "Call family/friends",
+    "Review work emails",
+    "Work on internship tasks",
+  ];
+
   String? selectedtasktype;
   DateTime d1 = DateTime.now();
 
@@ -33,7 +59,7 @@ class Ttasktype extends State<Taskt> {
     final prov = Provider.of<task_provider>(context);
 
     return Scaffold(
-      appBar: AppBar(title: Text("Task Management"), centerTitle: true),
+      appBar: AppBar(title: Text("Task Management".tr), centerTitle: true),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Form(
@@ -42,21 +68,22 @@ class Ttasktype extends State<Taskt> {
             children: [
               const SizedBox(height: 20),
               Text(
-                "Task Title",
+                "Task Title".tr,
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
               ),
               const SizedBox(height: 8),
               TextFormField(
                 controller: desc_con,
                 decoration: InputDecoration(
-                  labelText: "Enter task title",
+                  labelText: "Enter task title".tr,
                   border: OutlineInputBorder(),
                 ),
-                validator: (value) => value!.isEmpty ? "Field is empty" : null,
+                validator: (value) =>
+                    value!.isEmpty ? "Field is empty".tr : null,
               ),
               const SizedBox(height: 20),
               Text(
-                "Task Type",
+                "Task Type".tr,
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
               ),
               const SizedBox(height: 8),
@@ -68,11 +95,11 @@ class Ttasktype extends State<Taskt> {
                 value: selectedtasktype,
                 onChanged: (val) => setState(() => selectedtasktype = val),
                 validator: (value) =>
-                    value == null ? "Please select a type" : null,
+                    value == null ? "Please select a type".tr : null,
               ),
               const SizedBox(height: 20),
               Text(
-                "Due Date",
+                "Due Date".tr,
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
               ),
               const SizedBox(height: 8),
@@ -82,9 +109,10 @@ class Ttasktype extends State<Taskt> {
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
                   suffixIcon: Icon(Icons.calendar_today),
-                  hintText: "Select date & time",
+                  hintText: "Select date & time".tr,
                 ),
-                validator: (value) => value!.isEmpty ? "Cannot be empty" : null,
+                validator: (value) =>
+                    value!.isEmpty ? "Cannot be empty".tr : null,
                 onTap: () async {
                   DateTime? newd = await showDatePicker(
                     context: context,
@@ -131,179 +159,258 @@ class Ttasktype extends State<Taskt> {
                     setState(() => selectedtasktype = null);
                   }
                 },
-                child: Text("Add Task"),
+                child: Text("Add Task".tr),
               ),
               const SizedBox(height: 20),
-              ListView.builder(
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                itemCount: prov.task_p.length,
-                itemBuilder: (context, index) {
-                  final t = prov.task_p[index];
-                  return Card(
-                    margin: const EdgeInsets.symmetric(vertical: 8),
-                    child: Padding(
-                      padding: const EdgeInsets.all(12),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                t.description,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
-                                ),
-                              ),
-                              IconButton(
-                                icon: Icon(Icons.edit, color: Colors.blue),
-                                onPressed: () {
-                                  TextEditingController descController =
-                                      TextEditingController(
-                                        text: t.description,
-                                      );
-                                  String selectedType = t.tasktype;
-                                  DateTime selectedDate = t.d;
-                                  TextEditingController
-                                  dateController = TextEditingController(
-                                    text:
-                                        "${selectedDate.day}/${selectedDate.month}/${selectedDate.year} ${selectedDate.hour.toString().padLeft(2, '0')}:${selectedDate.minute.toString().padLeft(2, '0')}",
-                                  );
+              SizedBox(
+                height:
+                    MediaQuery.of(context).size.height * 0.6, // أو حسب الحاجة
+                child: StreamBuilder<List<Tasks>>(
+                  stream:
+                      prov.taskStream, // <- هنا استخدم الـ Stream من provider
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(child: CircularProgressIndicator());
+                    }
 
-                                  showDialog(
-                                    context: context,
-                                    builder: (context) => AlertDialog(
-                                      title: Text("Edit Task"),
-                                      content: SingleChildScrollView(
-                                        child: Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            TextField(
-                                              controller: descController,
-                                              decoration: InputDecoration(
-                                                labelText: "Description",
+                    if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                      return Center(child: Text("لا توجد مهام حالياً".tr));
+                    }
+
+                    final tasks = snapshot.data!;
+
+                    return ListView.builder(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemCount: tasks.length,
+                      itemBuilder: (context, index) {
+                        final t = tasks[index];
+
+                        return Card(
+                          margin: const EdgeInsets.symmetric(vertical: 8),
+                          child: Padding(
+                            padding: const EdgeInsets.all(12),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      t.description,
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                    IconButton(
+                                      icon: Icon(
+                                        Icons.edit,
+                                        color: Colors.blue,
+                                      ),
+                                      onPressed: () {
+                                        TextEditingController descController =
+                                            TextEditingController(
+                                              text: t.description,
+                                            );
+                                        String selectedType = t.tasktype;
+                                        DateTime selectedDate = t.d;
+                                        TextEditingController
+                                        dateController = TextEditingController(
+                                          text:
+                                              "${selectedDate.day}/${selectedDate.month}/${selectedDate.year} ${selectedDate.hour.toString().padLeft(2, '0')}:${selectedDate.minute.toString().padLeft(2, '0')}",
+                                        );
+
+                                        showDialog(
+                                          context: context,
+                                          builder: (context) => AlertDialog(
+                                            title: Text("Edit Task".tr),
+                                            content: SingleChildScrollView(
+                                              child: Column(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  TextField(
+                                                    controller: descController,
+                                                    decoration: InputDecoration(
+                                                      labelText:
+                                                          "Description".tr,
+                                                    ),
+                                                  ),
+                                                  const SizedBox(height: 10),
+                                                  DropdownButtonFormField<
+                                                    String
+                                                  >(
+                                                    value: selectedType,
+                                                    items: tasktype
+                                                        .map(
+                                                          (type) =>
+                                                              DropdownMenuItem(
+                                                                value: type,
+                                                                child: Text(
+                                                                  type,
+                                                                ),
+                                                              ),
+                                                        )
+                                                        .toList(),
+                                                    onChanged: (val) =>
+                                                        selectedType = val!,
+                                                  ),
+                                                  const SizedBox(height: 10),
+                                                  TextField(
+                                                    controller: dateController,
+                                                    readOnly: true,
+                                                    decoration: InputDecoration(
+                                                      labelText: "Due Date".tr,
+                                                      suffixIcon: Icon(
+                                                        Icons.calendar_today,
+                                                      ),
+                                                    ),
+                                                    onTap: () async {
+                                                      DateTime? newDate =
+                                                          await showDatePicker(
+                                                            context: context,
+                                                            initialDate:
+                                                                selectedDate,
+                                                            firstDate: DateTime(
+                                                              2000,
+                                                            ),
+                                                            lastDate: DateTime(
+                                                              2100,
+                                                            ),
+                                                          );
+                                                      if (newDate == null)
+                                                        return;
+
+                                                      TimeOfDay? newTime =
+                                                          await showTimePicker(
+                                                            context: context,
+                                                            initialTime: TimeOfDay(
+                                                              hour: selectedDate
+                                                                  .hour,
+                                                              minute:
+                                                                  selectedDate
+                                                                      .minute,
+                                                            ),
+                                                          );
+                                                      if (newTime == null)
+                                                        return;
+
+                                                      selectedDate = DateTime(
+                                                        newDate.year,
+                                                        newDate.month,
+                                                        newDate.day,
+                                                        newTime.hour,
+                                                        newTime.minute,
+                                                      );
+                                                      dateController.text =
+                                                          "${selectedDate.day}/${selectedDate.month}/${selectedDate.year} ${selectedDate.hour.toString().padLeft(2, '0')}:${selectedDate.minute.toString().padLeft(2, '0')}";
+                                                    },
+                                                  ),
+                                                ],
                                               ),
                                             ),
-                                            const SizedBox(height: 10),
-                                            DropdownButtonFormField<String>(
-                                              value: selectedType,
-                                              items: tasktype
-                                                  .map(
-                                                    (type) => DropdownMenuItem(
-                                                      value: type,
-                                                      child: Text(type),
-                                                    ),
-                                                  )
-                                                  .toList(),
-                                              onChanged: (val) =>
-                                                  selectedType = val!,
-                                            ),
-                                            const SizedBox(height: 10),
-                                            TextField(
-                                              controller: dateController,
-                                              readOnly: true,
-                                              decoration: InputDecoration(
-                                                labelText: "Due Date",
-                                                suffixIcon: Icon(
-                                                  Icons.calendar_today,
+                                            actions: [
+                                              TextButton(
+                                                onPressed: () async {
+                                                  await FirebaseFirestore
+                                                      .instance
+                                                      .collection('users')
+                                                      .doc(
+                                                        FirebaseAuth
+                                                            .instance
+                                                            .currentUser!
+                                                            .uid,
+                                                      )
+                                                      .collection('tasks')
+                                                      .doc(t.docId)
+                                                      .delete();
+                                                  Navigator.pop(context);
+                                                },
+                                                child: Text(
+                                                  "Delete".tr,
+                                                  style: TextStyle(
+                                                    color: Colors.red,
+                                                  ),
                                                 ),
                                               ),
-                                              onTap: () async {
-                                                DateTime? newDate =
-                                                    await showDatePicker(
-                                                      context: context,
-                                                      initialDate: selectedDate,
-                                                      firstDate: DateTime(2000),
-                                                      lastDate: DateTime(2100),
-                                                    );
-                                                if (newDate == null) return;
-
-                                                TimeOfDay? newTime =
-                                                    await showTimePicker(
-                                                      context: context,
-                                                      initialTime: TimeOfDay(
-                                                        hour: selectedDate.hour,
-                                                        minute:
-                                                            selectedDate.minute,
-                                                      ),
-                                                    );
-                                                if (newTime == null) return;
-
-                                                selectedDate = DateTime(
-                                                  newDate.year,
-                                                  newDate.month,
-                                                  newDate.day,
-                                                  newTime.hour,
-                                                  newTime.minute,
-                                                );
-                                                dateController.text =
-                                                    "${selectedDate.day}/${selectedDate.month}/${selectedDate.year} ${selectedDate.hour.toString().padLeft(2, '0')}:${selectedDate.minute.toString().padLeft(2, '0')}";
-                                              },
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      actions: [
-                                        TextButton(
-                                          onPressed: () {
-                                            prov.removeTask(index);
-                                            Navigator.pop(context);
-                                          },
-                                          child: Text(
-                                            "Delete",
-                                            style: TextStyle(color: Colors.red),
-                                          ),
-                                        ),
-                                        TextButton(
-                                          onPressed: () =>
-                                              Navigator.pop(context),
-                                          child: Text("Cancel"),
-                                        ),
-                                        ElevatedButton(
-                                          onPressed: () {
-                                            prov.updateTask(
-                                              index,
-                                              Tasks(
-                                                description:
-                                                    descController.text,
-                                                tasktype: selectedType,
-                                                d: selectedDate,
-                                                isdone: t.isdone,
+                                              TextButton(
+                                                onPressed: () =>
+                                                    Navigator.pop(context),
+                                                child: Text("Cancel".tr),
                                               ),
-                                            );
-                                            Navigator.pop(context);
-                                          },
-                                          child: Text("Save"),
-                                        ),
-                                      ],
+                                              ElevatedButton(
+                                                onPressed: () async {
+                                                  await FirebaseFirestore
+                                                      .instance
+                                                      .collection('users')
+                                                      .doc(
+                                                        FirebaseAuth
+                                                            .instance
+                                                            .currentUser!
+                                                            .uid,
+                                                      )
+                                                      .collection('tasks')
+                                                      .doc(t.docId)
+                                                      .update({
+                                                        'description':
+                                                            descController.text,
+                                                        'tasktype':
+                                                            selectedType,
+                                                        'date': selectedDate,
+                                                        'isdone': t.isdone,
+                                                      });
+                                                  Navigator.pop(context);
+                                                },
+                                                child: Text("Save".tr),
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                      },
                                     ),
-                                  );
-                                },
-                              ),
-                            ],
+                                  ],
+                                ),
+                                const SizedBox(height: 6),
+                                Text(
+                                  "${t.tasktype} | ${t.d.day}/${t.d.month}/${t.d.year} ${t.d.hour.toString().padLeft(2, '0')}:${t.d.minute.toString().padLeft(2, '0')}",
+                                ),
+                                const SizedBox(height: 6),
+                                Row(
+                                  children: [
+                                    Checkbox(
+                                      value: t.isdone,
+                                      onChanged: (val) async {
+                                        if (val == null) return;
+
+                                        await FirebaseFirestore.instance
+                                            .collection('users')
+                                            .doc(
+                                              FirebaseAuth
+                                                  .instance
+                                                  .currentUser!
+                                                  .uid,
+                                            )
+                                            .collection('tasks')
+                                            .doc(t.docId)
+                                            .update({'isdone': val});
+
+                                        setState(() {
+                                          t.isdone = val;
+                                        });
+                                      },
+                                    ),
+                                    Text("تم إنجاز المهمة".tr),
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
-                          const SizedBox(height: 6),
-                          Text(
-                            "${t.tasktype} | ${t.d.day}/${t.d.month}/${t.d.year} ${t.d.hour.toString().padLeft(2, '0')}:${t.d.minute.toString().padLeft(2, '0')}",
-                          ),
-                          const SizedBox(height: 6),
-                          Row(
-                            children: [
-                              Checkbox(
-                                value: t.isdone,
-                                onChanged: (val) =>
-                                    prov.toggleDone(index, val!),
-                              ),
-                              const Text("تم إنجاز المهمة"),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                },
+                        );
+                      },
+                    );
+                  },
+                ),
               ),
             ],
           ),
@@ -315,44 +422,123 @@ class Ttasktype extends State<Taskt> {
 
 class task_provider extends ChangeNotifier {
   List<Tasks> task_p = [];
-  int getincomplete_count() {
-    int count = 0;
+  final String userId = FirebaseAuth.instance.currentUser!.uid;
 
-    for (var t in task_p) {
-      if (t.isdone == false) {
-        count++;
-      }
-    }
+  CollectionReference get taskCollection => FirebaseFirestore.instance
+      .collection('users')
+      .doc(userId)
+      .collection('tasks');
 
-    return count;
+  // جلب المهام من Firestore
+  Stream<int> get incompleteCount {
+    return FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .collection('tasks')
+        .where('isdone', isEqualTo: false)
+        .snapshots()
+        .map((snapshot) => snapshot.docs.length);
   }
 
-  List<Tasks> get getincomplete_list {
-    return task_p.where((t) => t.isdone == false).toList();
+  Stream<List<Tasks>> get incompletetasks {
+    final userId = FirebaseAuth.instance.currentUser!.uid;
+
+    return FirebaseFirestore.instance
+        .collection('users')
+        .doc(userId)
+        .collection('tasks')
+        .where('isdone', isEqualTo: false)
+        .snapshots()
+        .map((snapshot) {
+          return snapshot.docs.map((doc) {
+            final data = doc.data();
+
+            return Tasks(
+              docId: doc.id, // نحفظ الـ document ID
+              description: data['description'] ?? '',
+              tasktype: data['tasktype'] ?? '',
+              d: (data['d'] as Timestamp)
+                  .toDate(), // تحويل Timestamp إلى DateTime
+              isdone: data['isdone'] ?? false,
+            );
+          }).toList();
+        });
   }
 
-  void toggleTaskDone(Tasks task, bool value) {
-    task.isdone = value;
-    notifyListeners();
+  Stream<List<Tasks>> get allTasks {
+    final userId = FirebaseAuth.instance.currentUser!.uid;
+
+    return FirebaseFirestore.instance
+        .collection('users')
+        .doc(userId)
+        .collection('tasks')
+        .orderBy('d', descending: false) // ترتيب حسب التاريخ مثلاً (اختياري)
+        .snapshots()
+        .map((snapshot) {
+          return snapshot.docs.map((doc) {
+            final data = doc.data();
+            return Tasks(
+              docId: doc.id,
+              description: data['description'] ?? '',
+              tasktype: data['tasktype'] ?? '',
+              d: (data['d'] as Timestamp).toDate(),
+              isdone: data['isdone'] ?? false,
+            );
+          }).toList();
+        });
   }
 
-  void addTask(Tasks t) {
-    task_p.add(t);
-    notifyListeners();
+  Stream<List<Tasks>> get taskStream {
+    return taskCollection
+        .orderBy('created_at', descending: true)
+        .snapshots()
+        .map(
+          (snapshot) => snapshot.docs.map((doc) {
+            final data = doc.data() as Map<String, dynamic>;
+            return Tasks(
+              docId: doc.id,
+              description: data['description'],
+              tasktype: data['tasktype'],
+              d: (data['date'] as Timestamp).toDate(),
+              isdone: data['isdone'] ?? false,
+            );
+          }).toList(),
+        );
   }
 
-  void updateTask(int index, Tasks t) {
-    task_p[index] = t;
-    notifyListeners();
+  // إضافة مهمة
+  Future<void> addTask(Tasks t) async {
+    final docRef = await taskCollection.add({
+      'description': t.description,
+      'tasktype': t.tasktype,
+      'date': t.d,
+      'isdone': t.isdone,
+      'created_at': FieldValue.serverTimestamp(),
+    });
+    t.docId = docRef.id;
   }
 
-  void removeTask(int index) {
-    task_p.removeAt(index);
-    notifyListeners();
+  // تحديث مهمة
+  Future<void> updateTask(Tasks t) async {
+    if (t.docId.isEmpty) return;
+    await taskCollection.doc(t.docId).update({
+      'description': t.description,
+      'tasktype': t.tasktype,
+      'date': t.d,
+      'isdone': t.isdone,
+    });
   }
 
-  void toggleDone(int index, bool val) {
-    task_p[index].isdone = val;
-    notifyListeners();
+  // حذف مهمة
+
+  Future<void> removeTask(Tasks t) async {
+    if (t.docId.isEmpty) return;
+    await taskCollection.doc(t.docId).delete();
+  }
+
+  // تبديل حالة المهمة
+  Future<void> toggleDone(Tasks t, bool val) async {
+    if (t.docId.isEmpty) return;
+    await taskCollection.doc(t.docId).update({'isdone': val});
   }
 }

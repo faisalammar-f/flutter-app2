@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'main.dart';
 import 'task.dart';
@@ -8,6 +9,7 @@ import 'package:provider/provider.dart';
 import 'Expenses.dart';
 import 'Income.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'translation.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({super.key});
@@ -47,24 +49,24 @@ class _HomePageState extends State<HomePage> {
         return StatefulBuilder(
           builder: (context, setState) {
             return AlertDialog(
-              title: const Text('Edit User Info'),
+              title: Text('Edit User Info'.tr),
               content: SingleChildScrollView(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     TextField(
                       controller: fullnameController,
-                      decoration: const InputDecoration(labelText: 'Full Name'),
+                      decoration: InputDecoration(labelText: 'Full Name'.tr),
                     ),
                     TextField(
                       controller: emailController,
-                      decoration: const InputDecoration(labelText: 'Email'),
+                      decoration: InputDecoration(labelText: 'Email'.tr),
                     ),
                     TextField(
                       controller: passwordController,
                       obscureText: isObsecure,
                       decoration: InputDecoration(
-                        labelText: 'Password',
+                        labelText: 'Password'.tr,
                         suffixIcon: IconButton(
                           icon: Icon(
                             isObsecure
@@ -82,15 +84,13 @@ class _HomePageState extends State<HomePage> {
                     TextField(
                       controller: phoneController,
                       keyboardType: TextInputType.phone,
-                      decoration: const InputDecoration(
-                        labelText: 'Phone Number',
-                      ),
+                      decoration: InputDecoration(labelText: 'Phone Number'.tr),
                     ),
                     TextField(
                       controller: dateController,
                       readOnly: true,
-                      decoration: const InputDecoration(
-                        labelText: 'Date of Birth',
+                      decoration: InputDecoration(
+                        labelText: 'Date of Birth'.tr,
                       ),
                       onTap: () async {
                         DateTime? newDate = await showDatePicker(
@@ -112,7 +112,7 @@ class _HomePageState extends State<HomePage> {
                       children: [
                         Expanded(
                           child: RadioListTile<String>(
-                            title: const Text('Male'),
+                            title: Text('Male'.tr),
                             value: 'Male',
                             groupValue: gender,
                             onChanged: (val) {
@@ -124,7 +124,7 @@ class _HomePageState extends State<HomePage> {
                         ),
                         Expanded(
                           child: RadioListTile<String>(
-                            title: const Text('Female'),
+                            title: Text('Female'.tr),
                             value: 'Female',
                             groupValue: gender,
                             onChanged: (val) {
@@ -142,7 +142,7 @@ class _HomePageState extends State<HomePage> {
               actions: [
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(),
-                  child: const Text('Cancel'),
+                  child: Text('Cancel'.tr),
                 ),
                 ElevatedButton(
                   onPressed: () {
@@ -156,7 +156,7 @@ class _HomePageState extends State<HomePage> {
                     );
                     Navigator.of(context).pop();
                   },
-                  child: const Text('Save'),
+                  child: Text('Save'.tr),
                 ),
               ],
             );
@@ -167,7 +167,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   int s = 0;
-  List<Widget> l = [Home_p(), Taskt(), Inex(), Text("AI Assistant")];
+  List<Widget> l = [Home_p(), Taskt(), Inex(), Text("AI Assistant".tr)];
 
   Future<void> _logout(BuildContext context) async {
     final prefs = await SharedPreferences.getInstance();
@@ -180,11 +180,21 @@ class _HomePageState extends State<HomePage> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<provider_sign>(context, listen: false);
+      Provider.of<task_provider>(context, listen: false);
+      Provider.of<income_provider>(context, listen: false);
+      Provider.of<exp_provider>(context, listen: false);
+    });
+  }
+
   Widget build(BuildContext context) {
     final provider1 = Provider.of<provider_sign>(context);
 
     return Scaffold(
-      appBar: AppBar(title: Text("Smart Plan")),
+      appBar: AppBar(title: Text("Smart Plan".tr)),
       drawer: Drawer(
         child: ListView(
           children: [
@@ -199,7 +209,7 @@ class _HomePageState extends State<HomePage> {
             Card(
               child: ListTile(
                 leading: Icon(Icons.home),
-                title: Text("Home"),
+                title: Text("Home".tr),
                 onTap: () {
                   if (s == 0) {
                     Navigator.of(context).pop();
@@ -207,8 +217,7 @@ class _HomePageState extends State<HomePage> {
                     Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(builder: (context) => HomePage()),
-                      (Route<dynamic> route) =>
-                          false, // Remove all previous routes.
+                      (Route<dynamic> route) => false,
                     );
                   }
                 },
@@ -218,7 +227,7 @@ class _HomePageState extends State<HomePage> {
             Card(
               child: ListTile(
                 leading: Icon(Icons.account_box_rounded),
-                title: Text("Account"),
+                title: Text("Account".tr),
                 onTap: () {
                   showEditUserDialog(context);
                 },
@@ -227,14 +236,14 @@ class _HomePageState extends State<HomePage> {
             Card(
               child: ListTile(
                 leading: Icon(Icons.miscellaneous_services),
-                title: Text("Our Services"),
+                title: Text("Our Services".tr),
                 onTap: () {
                   Navigator.pop(context);
                   showDialog(
                     context: context,
                     builder: (context) => AlertDialog(
                       title: Text(
-                        'Our Services',
+                        'Our Services'.tr,
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           color: Colors.deepPurple,
@@ -246,12 +255,12 @@ class _HomePageState extends State<HomePage> {
                           children: [
                             SizedBox(height: 8),
                             Text(
-                              '🎯 Core Services of the App:',
+                              '🎯 Core Services of the App:'.tr,
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
                             SizedBox(height: 8),
                             Text(
-                              'Time and Task Management',
+                              'Time and Task Management'.tr,
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
@@ -260,18 +269,21 @@ class _HomePageState extends State<HomePage> {
                             ),
                             SizedBox(height: 8),
                             Text(
-                              "• Create daily and weekly schedules for tasks and classes.",
+                              "• Create daily and weekly schedules for tasks and classes."
+                                  .tr,
                             ),
-                            Text("• Add, edit, and delete tasks easily."),
+                            Text("• Add, edit, and delete tasks easily.".tr),
                             Text(
-                              "• Smart reminders for upcoming tasks and deadlines.",
+                              "• Smart reminders for upcoming tasks and deadlines."
+                                  .tr,
                             ),
                             Text(
-                              "• AI-powered analysis of time usage to suggest ways to improve productivity.",
+                              "• AI-powered analysis of time usage to suggest ways to improve productivity."
+                                  .tr,
                             ),
                             SizedBox(height: 16),
                             Text(
-                              'Personal Expense Management',
+                              'Personal Expense Management'.tr,
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
@@ -279,19 +291,22 @@ class _HomePageState extends State<HomePage> {
                               ),
                             ),
                             SizedBox(height: 8),
-                            Text("• Record daily expenses and income."),
+                            Text("• Record daily expenses and income.".tr),
                             Text(
-                              "• Categorize expenses (food, transport, books, etc.).",
+                              "• Categorize expenses (food, transport, books, etc.)."
+                                  .tr,
                             ),
                             Text(
-                              "• Display visual reports and charts of spending patterns.",
+                              "• Display visual reports and charts of spending patterns."
+                                  .tr,
                             ),
                             Text(
-                              "• Provide intelligent financial tips to reduce expenses and manage budgets better.",
+                              "• Provide intelligent financial tips to reduce expenses and manage budgets better."
+                                  .tr,
                             ),
                             SizedBox(height: 16),
                             Text(
-                              'Smart Reminder System',
+                              'Smart Reminder System'.tr,
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
@@ -300,14 +315,16 @@ class _HomePageState extends State<HomePage> {
                             ),
                             SizedBox(height: 8),
                             Text(
-                              "• Custom notifications for tasks, expenses, and bills.",
+                              "• Custom notifications for tasks, expenses, and bills."
+                                  .tr,
                             ),
                             Text(
-                              "• Suggest suitable times for study, rest, or focus based on user schedule.",
+                              "• Suggest suitable times for study, rest, or focus based on user schedule."
+                                  .tr,
                             ),
                             SizedBox(height: 16),
                             Text(
-                              'AI-Based Insights and Recommendations 🤖',
+                              'AI-Based Insights and Recommendations 🤖'.tr,
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
@@ -315,9 +332,10 @@ class _HomePageState extends State<HomePage> {
                               ),
                             ),
                             SizedBox(height: 8),
-                            Text("• Analyze user behavior and habits."),
+                            Text("• Analyze user behavior and habits.".tr),
                             Text(
-                              "• Offer personalized suggestions to improve time and money management.",
+                              "• Offer personalized suggestions to improve time and money management."
+                                  .tr,
                             ),
                           ],
                         ),
@@ -326,7 +344,7 @@ class _HomePageState extends State<HomePage> {
                         TextButton(
                           onPressed: () => Navigator.pop(context),
                           child: Text(
-                            "Close",
+                            "Close".tr,
                             style: TextStyle(color: Colors.deepPurple),
                           ),
                         ),
@@ -339,19 +357,25 @@ class _HomePageState extends State<HomePage> {
             Card(
               child: ListTile(
                 leading: Icon(Icons.contact_mail),
-                title: Text("Contact Us"),
+                title: Text("Contact Us".tr),
+                onTap: () {},
               ),
             ),
             Card(
               child: ListTile(
                 leading: Icon(Icons.settings),
-                title: Text("Settings"),
+                title: Text("Settings".tr),
+                onTap: () {
+                  Navigator.of(
+                    context,
+                  ).push(MaterialPageRoute(builder: (context) => Lang()));
+                },
               ),
             ),
             Card(
               child: ListTile(
                 leading: Icon(Icons.logout_outlined),
-                title: Text("Sign Out"),
+                title: Text("Sign Out".tr),
                 onTap: () => _logout(context),
               ),
             ),
@@ -366,18 +390,21 @@ class _HomePageState extends State<HomePage> {
           });
         },
         items: [
-          BottomNavigationBarItem(icon: Icon(Icons.home_filled), label: "Home"),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home_filled),
+            label: "Home".tr,
+          ),
           BottomNavigationBarItem(
             icon: Icon(Icons.event_available),
-            label: "Task & Time Management",
+            label: "Task & Time Management".tr,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.attach_money_outlined),
-            label: "Income & Expenses",
+            label: "Income & Expenses".tr,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.smart_toy),
-            label: "AI Assistant",
+            label: "AI Assistant".tr,
           ),
         ],
       ),
@@ -395,7 +422,7 @@ class Home_p extends StatefulWidget {
 
 class _Home_pState extends State<Home_p> {
   final GlobalKey<ScaffoldState> _skey = GlobalKey<ScaffoldState>();
-  bool isopen = false;
+  bool isopen = true;
 
   @override
   Widget build(BuildContext context) {
@@ -409,168 +436,202 @@ class _Home_pState extends State<Home_p> {
                 Expanded(
                   child: Consumer<task_provider>(
                     builder: (context, taskProv, _) {
-                      final incompletetasks = taskProv.getincomplete_list;
-                      int c = incompletetasks.length;
+                      return StreamBuilder<List<Tasks>>(
+                        stream: taskProv.incompletetasks,
+                        builder: (context, snapshot) {
+                          if (!snapshot.hasData) {
+                            return const Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          }
 
-                      return InkWell(
-                        onTap: () {
-                          showBottomSheet(
-                            context: context,
-                            builder: (context) => Container(
-                              padding: EdgeInsets.all(12),
-                              height: 300,
-                              color: Colors.white,
-                              child: ListView.builder(
-                                shrinkWrap: true,
-                                physics: NeverScrollableScrollPhysics(),
-                                itemCount: incompletetasks.length,
-                                itemBuilder: (context, index) {
-                                  final task = incompletetasks[index];
-                                  return Card(
-                                    margin: EdgeInsets.symmetric(vertical: 6),
-                                    child: Padding(
-                                      padding: EdgeInsets.all(8),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            task.description,
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 16,
-                                            ),
-                                          ),
-                                          Text("Type: ${task.tasktype}"),
-                                          Text(
-                                            "Date: ${task.d.day}/${task.d.month}/${task.d.year} ${task.d.hour}:${task.d.minute}",
-                                          ),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.end,
+                          final incompletetasks = snapshot.data!;
+                          int c = incompletetasks.length;
+
+                          return InkWell(
+                            onTap: () {
+                              showBottomSheet(
+                                context: context,
+                                builder: (context) => Container(
+                                  padding: EdgeInsets.all(12),
+                                  height: 300,
+                                  color: Colors.white,
+                                  child: ListView.builder(
+                                    shrinkWrap: true,
+                                    physics: NeverScrollableScrollPhysics(),
+                                    itemCount: incompletetasks.length,
+                                    itemBuilder: (context, index) {
+                                      final task = incompletetasks[index];
+                                      return Card(
+                                        margin: EdgeInsets.symmetric(
+                                          vertical: 6,
+                                        ),
+                                        child: Padding(
+                                          padding: EdgeInsets.all(8),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
                                             children: [
-                                              Text("تم انجاز المهمة"),
-                                              Checkbox(
-                                                value: task.isdone,
-                                                onChanged: (value) {
-                                                  taskProv.toggleTaskDone(
-                                                    task,
-                                                    value!,
-                                                  );
-                                                },
+                                              Text(
+                                                task.description,
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 16,
+                                                ),
+                                              ),
+                                              Text("Type: ${task.tasktype}".tr),
+                                              Text(
+                                                "Date: ${task.d.day}/${task.d.month}/${task.d.year} ${task.d.hour}:${task.d.minute}"
+                                                    .tr,
+                                              ),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.end,
+                                                children: [
+                                                  Text("تم انجاز المهمة".tr),
+                                                  Checkbox(
+                                                    value: task.isdone,
+                                                    onChanged: (value) {
+                                                      taskProv.toggleDone(
+                                                        task,
+                                                        value!,
+                                                      );
+                                                    },
+                                                  ),
+                                                ],
                                               ),
                                             ],
                                           ),
-                                        ],
-                                      ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ),
+                              );
+                            },
+                            child: Container(
+                              height: 100,
+                              margin: EdgeInsets.all(4),
+                              decoration: BoxDecoration(
+                                color: Colors.orange,
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    "Tasks".tr,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
                                     ),
-                                  );
-                                },
+                                  ),
+                                  Text(
+                                    "$c",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 24,
+                                    ),
+                                  ),
+                                  Text(
+                                    "Pending".tr,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                           );
                         },
-                        child: Container(
-                          height: 100,
-                          margin: EdgeInsets.all(4),
-                          decoration: BoxDecoration(
-                            color: Colors.orange,
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                "Tasks",
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                              Text(
-                                "$c",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 24,
-                                ),
-                              ),
-                              Text(
-                                "Pending",
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                            ],
-                          ),
-                        ),
                       );
                     },
                   ),
                 ),
+
                 Expanded(
                   child: Consumer<income_provider>(
                     builder: (context, incomeProv, _) {
-                      final sumofincomes = incomeProv.get_listincome;
-                      double i = sumofincomes.fold(
-                        0,
-                        (sum, item) => sum + item.amount,
-                      );
+                      return StreamBuilder<List<Income>>(
+                        stream: incomeProv.allIncome, // Stream للقائمة
+                        builder: (context, snapshot) {
+                          if (!snapshot.hasData)
+                            return const CircularProgressIndicator();
 
-                      return InkWell(
-                        onTap: () {
-                          showBottomSheet(
-                            context: context,
-                            builder: (context) => Container(
-                              padding: EdgeInsets.all(12),
-                              height: 300,
-                              color: Colors.white,
-                              child: ListView.builder(
-                                shrinkWrap: true,
-                                physics: NeverScrollableScrollPhysics(),
-                                itemCount: sumofincomes.length,
-                                itemBuilder: (context, index) {
-                                  final item = sumofincomes[index];
-                                  return Card(
-                                    margin: EdgeInsets.symmetric(vertical: 6),
-                                    child: Padding(
-                                      padding: EdgeInsets.all(8),
-                                      child: Column(
-                                        children: [
-                                          Text("Source: ${item.source}"),
-                                          Text(
-                                            "Amount: ${item.amount.toStringAsFixed(2)}",
+                          final incomes = snapshot.data!;
+                          // نحسب المجموع مباشرة من القائمة
+                          final double total = incomes.fold(
+                            0,
+                            (sum, item) => sum + item.amount,
+                          );
+
+                          return InkWell(
+                            onTap: () {
+                              showBottomSheet(
+                                context: context,
+                                builder: (context) => Container(
+                                  padding: EdgeInsets.all(12),
+                                  height: 300,
+                                  color: Colors.white,
+                                  child: ListView.builder(
+                                    shrinkWrap: true,
+                                    physics: NeverScrollableScrollPhysics(),
+                                    itemCount: incomes.length,
+                                    itemBuilder: (context, index) {
+                                      final item = incomes[index];
+                                      return Card(
+                                        margin: EdgeInsets.symmetric(
+                                          vertical: 6,
+                                        ),
+                                        child: Padding(
+                                          padding: EdgeInsets.all(8),
+                                          child: Column(
+                                            children: [
+                                              Text("Source: ${item.source}".tr),
+                                              Text(
+                                                "Amount: ${item.amount.toStringAsFixed(2)}"
+                                                    .tr,
+                                              ),
+                                              Text(
+                                                "Date: ${item.date.day}/${item.date.month}/${item.date.year}"
+                                                    .tr,
+                                              ),
+                                            ],
                                           ),
-                                          Text(
-                                            "Date: ${item.date.day}/${item.date.month}/${item.date.year}",
-                                          ),
-                                        ],
-                                      ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ),
+                              );
+                            },
+                            child: Container(
+                              height: 100,
+                              margin: EdgeInsets.all(4),
+                              decoration: BoxDecoration(
+                                color: Colors.green,
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    "Income".tr,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
                                     ),
-                                  );
-                                },
+                                  ),
+                                  Text(
+                                    "$total",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 24,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                           );
                         },
-                        child: Container(
-                          height: 100,
-                          margin: EdgeInsets.all(4),
-                          decoration: BoxDecoration(
-                            color: Colors.green,
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                "Income",
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                              Text(
-                                "$i",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 24,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
                       );
                     },
                   ),
@@ -578,72 +639,89 @@ class _Home_pState extends State<Home_p> {
                 Expanded(
                   child: Consumer<exp_provider>(
                     builder: (context, expProv, _) {
-                      final sumofexpenses = expProv.get_listexp;
-                      double j = sumofexpenses.fold(
-                        0,
-                        (sum, item) => sum + item.amount,
-                      );
+                      return StreamBuilder<List<Expenses>>(
+                        stream: expProv.allExpenses, // Stream من Provider
+                        builder: (context, snapshot) {
+                          if (!snapshot.hasData)
+                            return CircularProgressIndicator();
 
-                      return InkWell(
-                        onTap: () {
-                          showBottomSheet(
-                            context: context,
-                            builder: (context) => Container(
-                              padding: EdgeInsets.all(12),
-                              height: 300,
-                              color: Colors.white,
-                              child: ListView.builder(
-                                shrinkWrap: true,
-                                physics: NeverScrollableScrollPhysics(),
-                                itemCount: sumofexpenses.length,
-                                itemBuilder: (context, index) {
-                                  final e = sumofexpenses[index];
-                                  return Card(
-                                    margin: EdgeInsets.symmetric(vertical: 6),
-                                    child: Padding(
-                                      padding: EdgeInsets.all(8),
-                                      child: Column(
-                                        children: [
-                                          Text("Category: ${e.category}"),
-                                          Text(
-                                            "Amount: ${e.amount.toStringAsFixed(2)}",
+                          final expenses =
+                              snapshot.data!; // هذه القائمة الفعلية
+                          double totale = expenses.fold(
+                            0,
+                            (sum, item) => sum + item.amount,
+                          );
+
+                          return InkWell(
+                            onTap: () {
+                              showBottomSheet(
+                                context: context,
+                                builder: (context) => Container(
+                                  padding: EdgeInsets.all(12),
+                                  height: 300,
+                                  color: Colors.white,
+                                  child: ListView.builder(
+                                    shrinkWrap: true,
+                                    physics: NeverScrollableScrollPhysics(),
+                                    itemCount: expenses.length,
+                                    itemBuilder: (context, index) {
+                                      final e = expenses[index];
+                                      return Card(
+                                        margin: EdgeInsets.symmetric(
+                                          vertical: 6,
+                                        ),
+                                        child: Padding(
+                                          padding: EdgeInsets.all(8),
+                                          child: Column(
+                                            children: [
+                                              Text(
+                                                "Category: ${e.category}".tr,
+                                              ),
+                                              Text(
+                                                "Amount: ${e.amount.toStringAsFixed(2)}"
+                                                    .tr,
+                                              ),
+                                              Text(
+                                                "Date: ${e.date.day}/${e.date.month}/${e.date.year}"
+                                                    .tr,
+                                              ),
+                                            ],
                                           ),
-                                          Text(
-                                            "Date: ${e.date.day}/${e.date.month}/${e.date.year}",
-                                          ),
-                                        ],
-                                      ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ),
+                              );
+                            },
+                            child: Container(
+                              height: 100,
+                              margin: EdgeInsets.all(4),
+                              decoration: BoxDecoration(
+                                color: Colors.redAccent,
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    "Expenses".tr,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
                                     ),
-                                  );
-                                },
+                                  ),
+                                  Text(
+                                    "$totale",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 24,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                           );
                         },
-                        child: Container(
-                          height: 100,
-                          margin: EdgeInsets.all(4),
-                          decoration: BoxDecoration(
-                            color: Colors.redAccent,
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                "Expenses",
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                              Text(
-                                "$j",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 24,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
                       );
                     },
                   ),
@@ -652,7 +730,7 @@ class _Home_pState extends State<Home_p> {
             ),
             SizedBox(height: 20),
             Text(
-              "Expenses vs Income",
+              "Expenses vs Income".tr,
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
               textAlign: TextAlign.center,
             ),
@@ -660,44 +738,70 @@ class _Home_pState extends State<Home_p> {
               height: 250,
               child: Consumer2<income_provider, exp_provider>(
                 builder: (context, incomeProv, expProv, _) {
-                  double i = incomeProv.get_listincome.fold(
-                    0,
-                    (sum, item) => sum + item.amount,
-                  );
-                  double j = expProv.get_listexp.fold(
-                    0,
-                    (sum, item) => sum + item.amount,
-                  );
+                  return StreamBuilder<List<Income>>(
+                    stream: incomeProv.allIncome,
+                    builder: (context, snapshotIncome) {
+                      if (!snapshotIncome.hasData)
+                        return CircularProgressIndicator();
 
-                  if (i == 0 && j == 0)
-                    return Center(child: Text("No data available"));
+                      final incomes = snapshotIncome.data!;
+                      double totalIncome = incomes.fold(
+                        0,
+                        (sum, item) => sum + item.amount,
+                      );
 
-                  return AspectRatio(
-                    aspectRatio: 1, // يحافظ على أن PieChart دائري
-                    child: PieChart(
-                      PieChartData(
-                        sections: [
-                          PieChartSectionData(
-                            value: i > 0 ? i : 0.1,
-                            title: "Income",
-                            color: Colors.green,
-                            radius: 80,
-                          ),
-                          PieChartSectionData(
-                            value: j > 0 ? j : 0.1,
-                            title: "Expenses",
-                            color: Colors.red,
-                            radius: 80,
-                          ),
-                        ],
-                        sectionsSpace: 2,
-                        centerSpaceRadius: 0,
-                      ),
-                    ),
+                      return StreamBuilder<List<Expenses>>(
+                        stream: expProv.allExpenses,
+                        builder: (context, snapshotExp) {
+                          if (!snapshotExp.hasData)
+                            return CircularProgressIndicator();
+
+                          final expenses = snapshotExp.data!;
+                          double totalExpenses = expenses.fold(
+                            0,
+                            (sum, item) => sum + item.amount,
+                          );
+
+                          if (totalIncome == 0 && totalExpenses == 0) {
+                            return Center(child: Text("No data available".tr));
+                          }
+
+                          if (totalExpenses == 0 && totalIncome == 0)
+                            return Center(child: Text("No data available".tr));
+
+                          return AspectRatio(
+                            aspectRatio: 1, // يحافظ على أن PieChart دائري
+                            child: PieChart(
+                              PieChartData(
+                                sections: [
+                                  PieChartSectionData(
+                                    value: totalIncome > 0 ? totalIncome : 0.1,
+                                    title: "Income".tr,
+                                    color: Colors.green,
+                                    radius: 80,
+                                  ),
+                                  PieChartSectionData(
+                                    value: totalExpenses > 0
+                                        ? totalExpenses
+                                        : 0.1,
+                                    title: "Expenses".tr,
+                                    color: Colors.red,
+                                    radius: 80,
+                                  ),
+                                ],
+                                sectionsSpace: 2,
+                                centerSpaceRadius: 0,
+                              ),
+                            ),
+                          );
+                        },
+                      );
+                    },
                   );
                 },
               ),
             ),
+
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
@@ -712,27 +816,39 @@ class _Home_pState extends State<Home_p> {
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: IgnorePointer(
-                    ignoring: isopen, // منع التفاعل إذا كانت الحالة مغلقة
+                    ignoring: isopen,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         ListTile(
                           leading: Icon(Icons.check, color: Colors.orange),
-                          title: Text("Add Task"),
-                          onTap: () {},
+                          title: Text("Add Task".tr),
+                          onTap: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(builder: (context) => Taskt()),
+                            );
+                          },
                         ),
                         ListTile(
                           leading: Icon(
                             Icons.attach_money,
                             color: Colors.green,
                           ),
-                          title: Text("Add Income"),
-                          onTap: () {},
+                          title: Text("Add Income".tr),
+                          onTap: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(builder: (context) => Inex()),
+                            );
+                          },
                         ),
                         ListTile(
                           leading: Icon(Icons.sync, color: Colors.redAccent),
-                          title: Text("Add Expense"),
-                          onTap: () {},
+                          title: Text("Add Expense".tr),
+                          onTap: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(builder: (context) => Inex()),
+                            );
+                          },
                         ),
                       ],
                     ),

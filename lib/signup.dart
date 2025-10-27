@@ -1,7 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'Sendcode.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Signu extends StatefulWidget {
   const Signu({super.key});
@@ -69,7 +73,7 @@ class _SignuState extends State<Signu> {
                   shrinkWrap: true,
                   children: [
                     Text(
-                      "Sign Up",
+                      "Sign Up".tr,
                       style: TextStyle(
                         color: Colors.black,
                         fontWeight: FontWeight.bold,
@@ -81,7 +85,7 @@ class _SignuState extends State<Signu> {
 
                     // Full Name
                     Text(
-                      "Full Name",
+                      "Full Name".tr,
                       style: TextStyle(
                         color: Color(0xFF444444),
                         fontWeight: FontWeight.bold,
@@ -104,7 +108,7 @@ class _SignuState extends State<Signu> {
                         fillColor: Colors.white,
                       ),
                       validator: (value) {
-                        if (value!.isEmpty) return "empty field";
+                        if (value!.isEmpty) return "empty field".tr;
                         return null;
                       },
                     ),
@@ -112,7 +116,7 @@ class _SignuState extends State<Signu> {
 
                     // Email
                     Text(
-                      "Email",
+                      "Email".tr,
                       style: TextStyle(
                         color: Color(0xFF444444),
                         fontWeight: FontWeight.bold,
@@ -135,9 +139,10 @@ class _SignuState extends State<Signu> {
                         fillColor: Colors.white,
                       ),
                       validator: (value) {
-                        if (value!.isEmpty) return "empty field";
+                        if (value!.isEmpty) return "empty field".tr;
                         if (!EmailValidator.validate(value)) {
-                          return "Enter a valid email (e.g. name@example.com)";
+                          return "Enter a valid email (e.g. name@example.com)"
+                              .tr;
                         }
                         return null;
                       },
@@ -146,7 +151,7 @@ class _SignuState extends State<Signu> {
 
                     // Password
                     Text(
-                      "Password",
+                      "Password".tr,
                       style: TextStyle(
                         color: Color(0xFF444444),
                         fontWeight: FontWeight.bold,
@@ -181,19 +186,20 @@ class _SignuState extends State<Signu> {
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return "Password cannot be empty";
+                          return "Password cannot be empty".tr;
                         }
                         if (value.length < 8) {
-                          return "Password must be at least 8 characters";
+                          return "Password must be at least 8 characters".tr;
                         }
                         if (!RegExp(r'[A-Z]').hasMatch(value)) {
-                          return "Must contain at least 1 uppercase letter";
+                          return "Must contain at least 1 uppercase letter".tr;
                         }
                         if (!RegExp(r'[0-9]').hasMatch(value)) {
-                          return "Must contain at least 1 number";
+                          return "Must contain at least 1 number".tr;
                         }
                         if (!RegExp(r'[!@#\$&*~]').hasMatch(value)) {
-                          return "Must contain at least 1 special character (!@#\$&*~)";
+                          return "Must contain at least 1 special character (!@#\$&*~)"
+                              .tr;
                         }
                         return null;
                       },
@@ -203,7 +209,7 @@ class _SignuState extends State<Signu> {
 
                     // Confirm Password
                     Text(
-                      "Confirm Password",
+                      "Confirm Password".tr,
                       style: TextStyle(
                         color: Color(0xFF444444),
                         fontWeight: FontWeight.bold,
@@ -238,10 +244,10 @@ class _SignuState extends State<Signu> {
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return "Password cannot be empty";
+                          return "Password cannot be empty".tr;
                         }
                         if (value != passcontroller.text) {
-                          return "Password does not match";
+                          return "Password does not match".tr;
                         }
                         return null;
                       },
@@ -251,7 +257,7 @@ class _SignuState extends State<Signu> {
 
                     // Phone Number
                     Text(
-                      "Phone Number",
+                      "Phone Number".tr,
                       style: TextStyle(
                         color: Color(0xFF444444),
                         fontWeight: FontWeight.bold,
@@ -293,7 +299,7 @@ class _SignuState extends State<Signu> {
                             keyboardType: TextInputType.phone,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
-                                return "phone number cannot be empty";
+                                return "phone number cannot be empty".tr;
                               }
                               return null; // مهم جداً
                             },
@@ -303,7 +309,7 @@ class _SignuState extends State<Signu> {
                               ),
                               filled: true,
                               fillColor: Colors.white,
-                              labelText: 'رقم الهاتف',
+                              labelText: 'رقم الهاتف'.tr,
                             ),
                           ),
                         ),
@@ -311,7 +317,7 @@ class _SignuState extends State<Signu> {
                     ),
                     const SizedBox(height: 30),
                     Text(
-                      "Date of Birth",
+                      "Date of Birth".tr,
                       style: TextStyle(
                         color: Color(0xFF444444),
                         fontWeight: FontWeight.bold,
@@ -335,7 +341,7 @@ class _SignuState extends State<Signu> {
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return " cannot be empty";
+                          return " cannot be empty".tr;
                         }
 
                         return null;
@@ -358,7 +364,7 @@ class _SignuState extends State<Signu> {
                     ),
                     const SizedBox(height: 30),
                     Text(
-                      "Gender",
+                      "Gender".tr,
                       style: TextStyle(
                         color: Color(0xFF444444),
                         fontWeight: FontWeight.bold,
@@ -368,7 +374,7 @@ class _SignuState extends State<Signu> {
                     const SizedBox(height: 8),
                     RadioListTile(
                       value: "Male",
-                      title: Text("Male"),
+                      title: Text("Male".tr),
                       groupValue: gender,
                       onChanged: (val) {
                         setState(() {
@@ -378,7 +384,7 @@ class _SignuState extends State<Signu> {
                     ),
                     RadioListTile(
                       value: "Female",
-                      title: Text("Female"),
+                      title: Text("Female".tr),
                       groupValue: gender,
                       onChanged: (val) {
                         setState(() {
@@ -390,34 +396,98 @@ class _SignuState extends State<Signu> {
                     // Button
                     const SizedBox(height: 20),
                     ElevatedButton(
-                      onPressed: () {
+                      onPressed: () async {
                         if (_formKey.currentState!.validate()) {
-                          final provider1 = Provider.of<provider_sign>(
-                            context,
-                            listen: false,
-                          );
-                          provider1.setuserdata(
-                            full_name: fullname.text,
-                            email_u: email.text,
-                            password_u: passcontroller.text,
-                            phone_number:
-                                selectedCountryCode + phoneController.text,
-                            birthofdate: date,
-                            gender_u: gender!,
-                          );
-                          // Navigate to SendCodePage
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => SendCodePage(
-                                email: email.text,
-                                password: passcontroller.text,
+                          try {
+                            UserCredential credential;
+
+                            // محاولة إنشاء حساب جديد
+                            try {
+                              credential = await FirebaseAuth.instance
+                                  .createUserWithEmailAndPassword(
+                                    email: email.text.trim(),
+                                    password: passcontroller.text.trim(),
+                                  );
+
+                              final user = credential.user;
+                              if (user != null) {
+                                await FirebaseFirestore.instance
+                                    .collection('users')
+                                    .doc(user.uid)
+                                    .set({
+                                      'fullname': fullname.text.trim(),
+                                      'email': email.text.trim(),
+                                      'phone':
+                                          selectedCountryCode +
+                                          phoneController.text,
+                                      'dateofbirth': date.toIso8601String(),
+                                      'gender': gender,
+                                      'created_at':
+                                          FieldValue.serverTimestamp(),
+                                    });
+                              }
+                            } on FirebaseAuthException catch (e) {
+                              if (e.code == 'email-already-in-use') {
+                                // لو البريد موجود، تسجيل الدخول بدل التسجيل
+                                credential = await FirebaseAuth.instance
+                                    .signInWithEmailAndPassword(
+                                      email: email.text.trim(),
+                                      password: passcontroller.text.trim(),
+                                    );
+                              } else {
+                                rethrow;
+                              }
+                            }
+
+                            if (!credential.user!.emailVerified) {
+                              await credential.user!.sendEmailVerification();
+                            }
+
+                            final provider1 = Provider.of<provider_sign>(
+                              context,
+                              listen: false,
+                            );
+                            await provider1.setuserdata(
+                              full_name: fullname.text,
+                              email_u: email.text,
+                              password_u: passcontroller.text,
+                              phone_number:
+                                  selectedCountryCode + phoneController.text,
+                              birthofdate: date,
+                              gender_u: gender!,
+                            );
+
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => SendCodePage(
+                                  email: email.text,
+                                  password: passcontroller.text,
+                                ),
                               ),
-                            ),
-                          );
+                            );
+                          } on FirebaseAuthException catch (e) {
+                            String errorMessage;
+                            if (e.code == 'weak-password') {
+                              errorMessage = '🔐 كلمة المرور ضعيفة جدًا'.tr;
+                            } else {
+                              errorMessage = '❌ حدث خطأ: ${e.message}';
+                            }
+
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text(errorMessage.tr)),
+                            );
+                          } catch (e) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('⚠️ خطأ غير متوقع: $e'.tr),
+                              ),
+                            );
+                          }
                         }
                       },
-                      child: const Text('Sign Up & Verify'),
+
+                      child: Text('Sign Up & Verify'.tr),
                     ),
                   ],
                 ),
@@ -437,21 +507,114 @@ class provider_sign extends ChangeNotifier {
   String phonenumber = "";
   DateTime dateofbirth = DateTime.now();
   String gender = "";
+  bool isLoggedIn = false;
+  bool isLoading = true;
 
-  void setuserdata({
+  provider_sign() {
+    _loadUserData();
+  }
+
+  Future<void> _loadUserData() async {
+    final prefs = await SharedPreferences.getInstance();
+    isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
+
+    fullname = prefs.getString('fullname') ?? "";
+    email = prefs.getString('email') ?? "";
+    password = prefs.getString('password') ?? "";
+    phonenumber = prefs.getString('phonenumber') ?? "";
+    gender = prefs.getString('gender') ?? "";
+    final birthString = prefs.getString('dateofbirth');
+    if (birthString != null) {
+      dateofbirth = DateTime.tryParse(birthString) ?? DateTime.now();
+    }
+
+    isLoading = false;
+    notifyListeners();
+  }
+
+  Future<void> setuserdata({
     required String full_name,
     required String email_u,
     required String password_u,
     required String phone_number,
     required DateTime birthofdate,
     required String gender_u,
-  }) {
+  }) async {
     fullname = full_name;
     email = email_u;
     password = password_u;
     phonenumber = phone_number;
     dateofbirth = birthofdate;
     gender = gender_u;
+
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('fullname', fullname);
+    await prefs.setString('email', email);
+    await prefs.setString('password', password);
+    await prefs.setString('phonenumber', phonenumber);
+    await prefs.setString('gender', gender);
+    await prefs.setString('dateofbirth', dateofbirth.toIso8601String());
+
     notifyListeners();
+  }
+
+  Future<void> login() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('isLoggedIn', true);
+    isLoggedIn = true;
+    notifyListeners();
+  }
+
+  Future<void> logout() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.clear();
+    isLoggedIn = false;
+    fullname = "";
+    email = "";
+    password = "";
+    phonenumber = "";
+    gender = "";
+    dateofbirth = DateTime.now();
+    notifyListeners();
+  }
+
+  Future<void> fetchFromFirestore(String uid) async {
+    try {
+      final doc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(uid)
+          .get();
+
+      if (doc.exists) {
+        final data = doc.data()!;
+        fullname = data['fullname'] ?? '';
+        email = data['email'] ?? '';
+        password = data['password'] ?? '';
+        phonenumber = data['phonenumber'] ?? '';
+        gender = data['gender'] ?? '';
+        dateofbirth =
+            DateTime.tryParse(data['dateofbirth'] ?? '') ?? DateTime.now();
+        notifyListeners();
+
+        print('✅ تم تحميل بيانات المستخدم من Firestore بنجاح');
+      } else {
+        print('⚠️ لا يوجد بيانات للمستخدم في Firestore');
+      }
+    } catch (e) {
+      print('❌ خطأ أثناء تحميل البيانات من Firestore: $e');
+    }
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'fullname': fullname,
+      'email': email,
+      'phonenumber': phonenumber,
+      'gender': gender,
+      'birthDate': Timestamp.fromDate(
+        dateofbirth,
+      ), // تحويل من DateTime → Timestamp
+      'createdAt': Timestamp.now(),
+    };
   }
 }

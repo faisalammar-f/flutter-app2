@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:get/get.dart';
 import 'verfiycod.dart';
 
 class SendCodePage extends StatefulWidget {
@@ -15,48 +16,69 @@ class SendCodePage extends StatefulWidget {
 class _SendCodePageState extends State<SendCodePage> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   bool isLoading = false;
+  bool canResend = true;
+
+  /// 🔄 تحديث المرجع الحالي للمستخدم
+  Future<User?> getUpdatedUser() async {
+    await _auth.currentUser?.reload();
+    return _auth.currentUser;
+  }
 
   Future<void> sendEmailVerification() async {
-    print("📧 Attempting to verify email: ${widget.email}");
-    setState(() => isLoading = true);
+    if (!canResend) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("⏳ يرجى الانتظار قبل إعادة الإرسال مرة أخرى.".tr),
+        ),
+      );
+      return;
+    }
+
+    setState(() {
+      isLoading = true;
+      canResend = false;
+    });
 
     try {
+      // ignore: unused_local_variable
       UserCredential userCred;
 
       try {
-        print("🔹 Trying to create a new user...");
+        // حاول إنشاء حساب جديد
         userCred = await _auth.createUserWithEmailAndPassword(
           email: widget.email,
           password: widget.password,
         );
-        print("✅ User created successfully.");
       } on FirebaseAuthException catch (e) {
-        print("⚠️ FirebaseAuthException: ${e.code} - ${e.message}");
         if (e.code == 'email-already-in-use') {
-          print("🔹 Email already in use, signing in...");
+          // لو الإيميل موجود مسبقًا، قم بتسجيل الدخول مباشرة
           userCred = await _auth.signInWithEmailAndPassword(
             email: widget.email,
             password: widget.password,
           );
-          print("✅ Signed in successfully.");
         } else {
           rethrow;
         }
       }
 
-      User? user = userCred.user;
+      // الحصول على المستخدم المحدث
+      final updatedUser = await getUpdatedUser();
+      if (updatedUser == null) throw Exception("User not found".tr);
 
-      if (user == null) {
-        print("❌ User is null, cannot send verification email.");
-        return;
-      }
-
-      if (!user.emailVerified) {
-        print("📩 Sending verification email...");
-        await user.sendEmailVerification();
-        print("✅ Verification email sent to ${user.email}");
+      // إرسال رسالة التحقق لو لم يكن مفعل
+      if (!updatedUser.emailVerified) {
+        await updatedUser.sendEmailVerification();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              "📩 تم إرسال رسالة التحقق إلى ${updatedUser.email}".tr,
+            ),
+          ),
+        );
       } else {
-        print("✅ Email already verified.");
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text("✅ البريد مفعّل مسبقًا".tr)));
       }
 
       // الانتقال لصفحة التحقق
@@ -64,26 +86,29 @@ class _SendCodePageState extends State<SendCodePage> {
         context,
         MaterialPageRoute(builder: (_) => VerifyCodePage(email: widget.email)),
       );
+
+      Future.delayed(const Duration(seconds: 60), () {
+        if (mounted) setState(() => canResend = true);
+      });
     } catch (e) {
-      print("❌ Error during email verification process: $e");
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(SnackBar(content: Text("Error: $e")));
+      ).showSnackBar(SnackBar(content: Text("❌ خطأ: $e".tr)));
     } finally {
-      setState(() => isLoading = false);
+      if (mounted) setState(() => isLoading = false);
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Email Verification")),
+      appBar: AppBar(title: Text("Email Verification".tr)),
       body: Center(
         child: isLoading
             ? const CircularProgressIndicator()
             : ElevatedButton(
                 onPressed: sendEmailVerification,
-                child: const Text("Register/Sign In & Verify Email"),
+                child: Text("Register/Sign In & Verify Email".tr),
               ),
       ),
     );

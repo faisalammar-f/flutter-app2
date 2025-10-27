@@ -1,11 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart'; // تأكد أنك أضفت الباكيج
+import 'package:get/get.dart';
+import 'package:provider/provider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class Income {
+  String docId;
+
   String source;
   double amount;
   DateTime date;
-  Income({required this.source, required this.amount, required this.date});
+  Income({
+    this.docId = '',
+    required this.source,
+    required this.amount,
+    required this.date,
+  });
 }
 
 class Income_w extends StatefulWidget {
@@ -19,6 +29,7 @@ class Income_app extends State<Income_w> {
     "freelance",
     "trading",
     "investment",
+    "business",
   ];
   String? selectedsourcetype;
   GlobalKey<FormState> _formkey = GlobalKey();
@@ -40,7 +51,7 @@ class Income_app extends State<Income_w> {
               children: [
                 const SizedBox(height: 20),
                 Text(
-                  "Source",
+                  "Source".tr,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: Colors.black87,
@@ -63,11 +74,11 @@ class Income_app extends State<Income_w> {
                   },
                   value: selectedsourcetype,
                   validator: (value) =>
-                      value == null ? "Please select a type" : null,
+                      value == null ? "Please select a type".tr : null,
                 ),
                 const SizedBox(height: 20),
                 Text(
-                  "Amount",
+                  "Amount".tr,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: Colors.black87,
@@ -83,11 +94,11 @@ class Income_app extends State<Income_w> {
                     border: OutlineInputBorder(),
                   ),
                   validator: (value) =>
-                      value!.isEmpty ? "Field is empty" : null,
+                      value!.isEmpty ? "Field is empty".tr : null,
                 ),
                 const SizedBox(height: 20),
                 Text(
-                  "Date",
+                  "Date".tr,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: Colors.black87,
@@ -111,7 +122,7 @@ class Income_app extends State<Income_w> {
                     fillColor: Colors.white,
                   ),
                   validator: (value) => value == null || value.isEmpty
-                      ? " cannot be empty"
+                      ? " cannot be empty".tr
                       : null,
                   onTap: () async {
                     DateTime? newdate = await showDatePicker(
@@ -149,172 +160,195 @@ class Income_app extends State<Income_w> {
                       selectedsourcetype = null;
                     }
                   },
-                  child: Text("Add Income"),
+                  child: Text("Add Income".tr),
                 ),
                 const SizedBox(height: 20),
                 SizedBox(
                   height: MediaQuery.of(context).size.height * 0.3,
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    itemCount: prov.i_p.length,
-                    itemBuilder: (context, index) {
-                      final i = prov.i_p[index];
-                      return Card(
-                        margin: const EdgeInsets.symmetric(vertical: 8),
-                        elevation: 3,
-                        child: ListTile(
-                          title: Text(
-                            "Recent Income",
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black87,
-                              fontSize: 18,
-                            ),
-                          ),
-                          subtitle: Row(
-                            children: [
-                              Expanded(
-                                flex: 3,
-                                child: Text(
-                                  "Source: ${i.source}",
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ),
-                              Expanded(
-                                flex: 2,
-                                child: Text(
-                                  "Amount: ${i.amount.toStringAsFixed(2)}",
-                                  textAlign: TextAlign.center,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ),
-                              Expanded(
-                                flex: 3,
-                                child: Text(
-                                  "Date: ${i.date.day}/${i.date.month}/${i.date.year}",
-                                  textAlign: TextAlign.right,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ),
-                            ],
-                          ),
-                          trailing: IconButton(
-                            icon: Icon(Icons.edit, color: Colors.black),
-                            onPressed: () {
-                              TextEditingController amountController =
-                                  TextEditingController(
-                                    text: i.amount.toString(),
-                                  );
-                              String selectedSource = i.source;
-                              DateTime selectedDate = i.date;
-                              TextEditingController
-                              dateController = TextEditingController(
-                                text:
-                                    "${selectedDate.day}/${selectedDate.month}/${selectedDate.year}",
-                              );
+                  child: StreamBuilder<List<Income>>(
+                    stream: prov.incomeStream,
+                    builder: (context, snapshot) {
+                      if (!snapshot.hasData)
+                        return Center(child: CircularProgressIndicator());
 
-                              showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return AlertDialog(
-                                    title: Text("Edit Income"),
-                                    content: SingleChildScrollView(
-                                      child: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          DropdownButtonFormField<String>(
-                                            value: selectedSource,
-                                            items: source_type
-                                                .map(
-                                                  (type) => DropdownMenuItem(
-                                                    value: type,
-                                                    child: Text(type),
+                      final incomeList = snapshot.data!;
+
+                      return ListView.builder(
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        itemCount: incomeList.length,
+                        itemBuilder: (context, index) {
+                          final i = incomeList[index];
+
+                          return Card(
+                            margin: const EdgeInsets.symmetric(vertical: 8),
+                            elevation: 3,
+                            child: ListTile(
+                              title: Text(
+                                "Recent Income".tr,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black87,
+                                  fontSize: 18,
+                                ),
+                              ),
+                              subtitle: Row(
+                                children: [
+                                  Expanded(
+                                    flex: 3,
+                                    child: Text(
+                                      "Source: ${i.source}".tr,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                  Expanded(
+                                    flex: 2,
+                                    child: Text(
+                                      "Amount: ${i.amount.toStringAsFixed(2)}"
+                                          .tr,
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                  Expanded(
+                                    flex: 3,
+                                    child: Text(
+                                      "Date: ${i.date.day}/${i.date.month}/${i.date.year}"
+                                          .tr,
+                                      textAlign: TextAlign.right,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              trailing: IconButton(
+                                icon: Icon(Icons.edit, color: Colors.black),
+                                onPressed: () {
+                                  TextEditingController amountController =
+                                      TextEditingController(
+                                        text: i.amount.toString(),
+                                      );
+                                  String selectedSource = i.source;
+                                  DateTime selectedDate = i.date;
+                                  TextEditingController
+                                  dateController = TextEditingController(
+                                    text:
+                                        "${selectedDate.day}/${selectedDate.month}/${selectedDate.year}",
+                                  );
+
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        title: Text("Edit Income".tr),
+                                        content: SingleChildScrollView(
+                                          child: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              DropdownButtonFormField<String>(
+                                                value: selectedSource,
+                                                items: source_type
+                                                    .map(
+                                                      (type) =>
+                                                          DropdownMenuItem(
+                                                            value: type,
+                                                            child: Text(type),
+                                                          ),
+                                                    )
+                                                    .toList(),
+                                                onChanged: (val) {
+                                                  selectedSource = val!;
+                                                },
+                                              ),
+                                              const SizedBox(height: 10),
+                                              TextField(
+                                                controller: amountController,
+                                                keyboardType:
+                                                    TextInputType.number,
+                                                decoration: InputDecoration(
+                                                  labelText: "Amount".tr,
+                                                ),
+                                              ),
+                                              const SizedBox(height: 10),
+                                              TextField(
+                                                controller: dateController,
+                                                readOnly: true,
+                                                decoration: InputDecoration(
+                                                  labelText: "Date".tr,
+                                                  suffixIcon: Icon(
+                                                    Icons.calendar_today,
                                                   ),
-                                                )
-                                                .toList(),
-                                            onChanged: (val) {
-                                              selectedSource = val!;
+                                                ),
+                                                onTap: () async {
+                                                  DateTime? newDate =
+                                                      await showDatePicker(
+                                                        context: context,
+                                                        initialDate:
+                                                            selectedDate,
+                                                        firstDate: DateTime(
+                                                          2000,
+                                                        ),
+                                                        lastDate: DateTime(
+                                                          2100,
+                                                        ),
+                                                      );
+                                                  if (newDate != null) {
+                                                    selectedDate = newDate;
+                                                    dateController.text =
+                                                        "${newDate.day}/${newDate.month}/${newDate.year}";
+                                                  }
+                                                },
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () async {
+                                              await prov.removeIncome(i);
+
+                                              Navigator.pop(context);
                                             },
-                                          ),
-                                          const SizedBox(height: 10),
-                                          TextField(
-                                            controller: amountController,
-                                            keyboardType: TextInputType.number,
-                                            decoration: InputDecoration(
-                                              labelText: "Amount",
-                                            ),
-                                          ),
-                                          const SizedBox(height: 10),
-                                          TextField(
-                                            controller: dateController,
-                                            readOnly: true,
-                                            decoration: InputDecoration(
-                                              labelText: "Date",
-                                              suffixIcon: Icon(
-                                                Icons.calendar_today,
+                                            child: Text(
+                                              "Delete".tr,
+                                              style: TextStyle(
+                                                color: Colors.red,
                                               ),
                                             ),
-                                            onTap: () async {
-                                              DateTime? newDate =
-                                                  await showDatePicker(
-                                                    context: context,
-                                                    initialDate: selectedDate,
-                                                    firstDate: DateTime(2000),
-                                                    lastDate: DateTime(2100),
-                                                  );
-                                              if (newDate != null) {
-                                                selectedDate = newDate;
-                                                dateController.text =
-                                                    "${newDate.day}/${newDate.month}/${newDate.year}";
-                                              }
+                                          ),
+                                          TextButton(
+                                            onPressed: () =>
+                                                Navigator.pop(context),
+                                            child: Text("Cancel".tr),
+                                          ),
+                                          ElevatedButton(
+                                            onPressed: () async {
+                                              if (i.docId.isEmpty) return;
+
+                                              await prov.updateIncome(
+                                                Income(
+                                                  docId: i
+                                                      .docId, // docId موجود مسبقاً
+                                                  source: selectedSource,
+                                                  amount:
+                                                      double.tryParse(
+                                                        amountController.text,
+                                                      ) ??
+                                                      i.amount,
+                                                  date: selectedDate,
+                                                ),
+                                              );
+                                              Navigator.pop(context);
                                             },
+                                            child: Text("Save".tr),
                                           ),
                                         ],
-                                      ),
-                                    ),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () {
-                                          prov.removeIncome(
-                                            index,
-                                          ); // تعديل ليحذف من الـ Provider
-                                          Navigator.pop(context);
-                                        },
-                                        child: Text(
-                                          "Delete",
-                                          style: TextStyle(color: Colors.red),
-                                        ),
-                                      ),
-                                      TextButton(
-                                        onPressed: () => Navigator.pop(context),
-                                        child: Text("Cancel"),
-                                      ),
-                                      ElevatedButton(
-                                        onPressed: () {
-                                          prov.updateIncome(
-                                            index,
-                                            Income(
-                                              source: selectedSource,
-                                              amount:
-                                                  double.tryParse(
-                                                    amountController.text,
-                                                  ) ??
-                                                  i.amount,
-                                              date: selectedDate,
-                                            ),
-                                          );
-                                          Navigator.pop(context);
-                                        },
-                                        child: Text("Save"),
-                                      ),
-                                    ],
+                                      );
+                                    },
                                   );
                                 },
-                              );
-                            },
-                          ),
-                        ),
+                              ),
+                            ),
+                          );
+                        },
                       );
                     },
                   ),
@@ -330,29 +364,89 @@ class Income_app extends State<Income_w> {
 
 class income_provider extends ChangeNotifier {
   List<Income> i_p = [];
-  double get_sumincome() {
-    double sum = 0.0;
-
-    for (var i in i_p) {
-      sum += i.amount;
-    }
-    return sum;
+  Stream<double> get sumIncome {
+    return allIncome.map((incomeList) {
+      double sum = 0.0;
+      for (var i in incomeList) {
+        sum += i.amount;
+      }
+      return sum;
+    });
   }
 
-  List<Income> get get_listincome => i_p;
+  Stream<List<Income>> get allIncome {
+    final userId = FirebaseAuth.instance.currentUser!.uid;
 
-  void addIncome(Income i) {
-    i_p.add(i);
-    notifyListeners();
+    return FirebaseFirestore.instance
+        .collection('users')
+        .doc(userId)
+        .collection('income')
+        .orderBy('date', descending: true)
+        .snapshots()
+        .map((snapshot) {
+          return snapshot.docs.map((doc) {
+            final data = doc.data();
+            return Income(
+              docId: doc.id,
+              source: data['source'] ?? '',
+              amount: (data['amount'] ?? 0).toDouble(),
+              date: (data['date'] as Timestamp).toDate(),
+            );
+          }).toList();
+        });
   }
 
-  void removeIncome(int index) {
-    i_p.removeAt(index);
-    notifyListeners();
+  final String userId = FirebaseAuth.instance.currentUser!.uid;
+
+  CollectionReference get incomeCollection => FirebaseFirestore.instance
+      .collection('users')
+      .doc(userId)
+      .collection('income');
+
+  // جلب البيانات من Firestore
+
+  Stream<List<Income>> get incomeStream {
+    return incomeCollection
+        .orderBy('date', descending: true)
+        .snapshots()
+        .map(
+          (snapshot) => snapshot.docs.map((doc) {
+            final data = doc.data() as Map<String, dynamic>;
+            return Income(
+              docId: doc.id,
+              source: data['source'],
+              amount: (data['amount'] as num).toDouble(),
+              date: (data['date'] as Timestamp).toDate(),
+            );
+          }).toList(),
+        );
   }
 
-  void updateIncome(int index, Income i) {
-    i_p[index] = i;
-    notifyListeners();
+  // إضافة دخل
+  Future<void> addIncome(Income i) async {
+    // ignore: unused_local_variable
+    final docRef = await incomeCollection.add({
+      'source': i.source,
+      'amount': i.amount,
+      'date': i.date,
+      'created_at': FieldValue.serverTimestamp(),
+    });
+  }
+
+  // تحديث دخل
+  Future<void> updateIncome(Income i) async {
+    // ignore: unnecessary_null_comparison
+    if (i.docId.isEmpty) return; // تأكد من وجود docId
+    await incomeCollection.doc(i.docId).update({
+      'source': i.source,
+      'amount': i.amount,
+      'date': i.date,
+    });
+  }
+
+  // حذف دخل
+  Future<void> removeIncome(Income i) async {
+    if (i.docId.isEmpty) return;
+    await incomeCollection.doc(i.docId).delete();
   }
 }

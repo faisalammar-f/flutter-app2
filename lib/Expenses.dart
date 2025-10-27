@@ -1,11 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart'; // تأكد أنك أضفت الباكيج
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class Expenses {
+  String docId;
+
   String category;
   double amount;
   DateTime date;
-  Expenses({required this.category, required this.amount, required this.date});
+  Expenses({
+    this.docId = '',
+
+    required this.category,
+    required this.amount,
+    required this.date,
+  });
 }
 
 class Expenses_w extends StatefulWidget {
@@ -43,7 +54,7 @@ class Expenses_app extends State<Expenses_w> {
               children: [
                 const SizedBox(height: 20),
                 Text(
-                  "Category",
+                  "Category".tr,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: Colors.black87,
@@ -66,11 +77,11 @@ class Expenses_app extends State<Expenses_w> {
                   },
                   value: selectedcategory,
                   validator: (value) =>
-                      value == null ? "Please select a category" : null,
+                      value == null ? "Please select a category".tr : null,
                 ),
                 const SizedBox(height: 20),
                 Text(
-                  "Amount",
+                  "Amount".tr,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: Colors.black87,
@@ -86,11 +97,11 @@ class Expenses_app extends State<Expenses_w> {
                     border: OutlineInputBorder(),
                   ),
                   validator: (value) =>
-                      value!.isEmpty ? "Field is empty" : null,
+                      value!.isEmpty ? "Field is empty".tr : null,
                 ),
                 const SizedBox(height: 20),
                 Text(
-                  "Date",
+                  "Date".tr,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: Colors.black87,
@@ -114,7 +125,7 @@ class Expenses_app extends State<Expenses_w> {
                     fillColor: Colors.white,
                   ),
                   validator: (value) => value == null || value.isEmpty
-                      ? " cannot be empty"
+                      ? " cannot be empty".tr
                       : null,
                   onTap: () async {
                     DateTime? newdate = await showDatePicker(
@@ -150,171 +161,193 @@ class Expenses_app extends State<Expenses_w> {
                       selectedcategory = null;
                     }
                   },
-                  child: Text("Add Expense"),
+                  child: Text("Add Expense".tr),
                 ),
                 const SizedBox(height: 20),
                 SizedBox(
                   height: MediaQuery.of(context).size.height * 0.3,
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    itemCount: prov.ex_p.length,
-                    itemBuilder: (context, index) {
-                      final i = prov.ex_p[index];
-                      return Card(
-                        margin: const EdgeInsets.symmetric(vertical: 8),
-                        elevation: 3,
-                        child: ListTile(
-                          title: Text(
-                            "Recent Expenses",
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black87,
-                              fontSize: 18,
-                            ),
-                          ),
-                          subtitle: Row(
-                            children: [
-                              Expanded(
-                                flex: 3,
-                                child: Text(
-                                  "Category: ${i.category}",
-                                  overflow: TextOverflow.ellipsis,
+                  child: StreamBuilder<List<Expenses>>(
+                    stream: prov.expensesStream,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Center(child: CircularProgressIndicator());
+                      }
+                      if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                        return Center(child: Text("No expenses yet".tr));
+                      }
+                      final expenses = snapshot.data!;
+                      return ListView.builder(
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        itemCount: expenses.length,
+                        itemBuilder: (context, index) {
+                          final i = expenses[index];
+                          return Card(
+                            margin: const EdgeInsets.symmetric(vertical: 8),
+                            elevation: 3,
+                            child: ListTile(
+                              title: Text(
+                                "Recent Expenses".tr,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black87,
+                                  fontSize: 18,
                                 ),
                               ),
-                              Expanded(
-                                flex: 2,
-                                child: Text(
-                                  "Amount: ${i.amount.toStringAsFixed(2)}",
-                                  textAlign: TextAlign.center,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
+                              subtitle: Row(
+                                children: [
+                                  Expanded(
+                                    flex: 3,
+                                    child: Text(
+                                      "Category: ${i.category}".tr,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                  Expanded(
+                                    flex: 2,
+                                    child: Text(
+                                      "Amount: ${i.amount.toStringAsFixed(2)}"
+                                          .tr,
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                  Expanded(
+                                    flex: 3,
+                                    child: Text(
+                                      "Date: ${i.date.day}/${i.date.month}/${i.date.year}"
+                                          .tr,
+                                      textAlign: TextAlign.right,
+                                    ),
+                                  ),
+                                ],
                               ),
-                              Expanded(
-                                flex: 3,
-                                child: Text(
-                                  "Date: ${i.date.day}/${i.date.month}/${i.date.year}",
-                                  textAlign: TextAlign.right,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ),
-                            ],
-                          ),
-
-                          trailing: IconButton(
-                            icon: Icon(Icons.edit, color: Colors.black),
-                            onPressed: () {
-                              TextEditingController amountController =
-                                  TextEditingController(
-                                    text: i.amount.toString(),
+                              trailing: IconButton(
+                                icon: Icon(Icons.edit, color: Colors.black),
+                                onPressed: () {
+                                  TextEditingController amountController =
+                                      TextEditingController(
+                                        text: i.amount.toString(),
+                                      );
+                                  String selectedCategory = i.category;
+                                  DateTime selectedDate = i.date;
+                                  TextEditingController
+                                  dateController = TextEditingController(
+                                    text:
+                                        "${selectedDate.day}/${selectedDate.month}/${selectedDate.year}",
                                   );
-                              String selectedCategory = i.category;
-                              DateTime selectedDate = i.date;
-                              TextEditingController
-                              dateController = TextEditingController(
-                                text:
-                                    "${selectedDate.day}/${selectedDate.month}/${selectedDate.year}",
-                              );
 
-                              showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return AlertDialog(
-                                    title: Text("Edit Expense"),
-                                    content: SingleChildScrollView(
-                                      child: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          DropdownButtonFormField<String>(
-                                            value: selectedCategory,
-                                            items: categorytype
-                                                .map(
-                                                  (type) => DropdownMenuItem(
-                                                    value: type,
-                                                    child: Text(type),
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        title: Text("Edit Expense".tr),
+                                        content: SingleChildScrollView(
+                                          child: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              DropdownButtonFormField<String>(
+                                                value: selectedCategory,
+                                                items: categorytype
+                                                    .map(
+                                                      (type) =>
+                                                          DropdownMenuItem(
+                                                            value: type,
+                                                            child: Text(type),
+                                                          ),
+                                                    )
+                                                    .toList(),
+                                                onChanged: (val) {
+                                                  selectedCategory = val!;
+                                                },
+                                              ),
+                                              const SizedBox(height: 10),
+                                              TextField(
+                                                controller: amountController,
+                                                keyboardType:
+                                                    TextInputType.number,
+                                                decoration: InputDecoration(
+                                                  labelText: "Amount".tr,
+                                                ),
+                                              ),
+                                              const SizedBox(height: 10),
+                                              TextField(
+                                                controller: dateController,
+                                                readOnly: true,
+                                                decoration: InputDecoration(
+                                                  labelText: "Date".tr,
+                                                  suffixIcon: Icon(
+                                                    Icons.calendar_today,
                                                   ),
-                                                )
-                                                .toList(),
-                                            onChanged: (val) {
-                                              selectedCategory = val!;
+                                                ),
+                                                onTap: () async {
+                                                  DateTime? newDate =
+                                                      await showDatePicker(
+                                                        context: context,
+                                                        initialDate:
+                                                            selectedDate,
+                                                        firstDate: DateTime(
+                                                          2000,
+                                                        ),
+                                                        lastDate: DateTime(
+                                                          2100,
+                                                        ),
+                                                      );
+                                                  if (newDate != null) {
+                                                    selectedDate = newDate;
+                                                    dateController.text =
+                                                        "${newDate.day}/${newDate.month}/${newDate.year}";
+                                                  }
+                                                },
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () {
+                                              prov.removeExpense(i);
+                                              Navigator.pop(context);
                                             },
-                                          ),
-                                          const SizedBox(height: 10),
-                                          TextField(
-                                            controller: amountController,
-                                            keyboardType: TextInputType.number,
-                                            decoration: InputDecoration(
-                                              labelText: "Amount",
-                                            ),
-                                          ),
-                                          const SizedBox(height: 10),
-                                          TextField(
-                                            controller: dateController,
-                                            readOnly: true,
-                                            decoration: InputDecoration(
-                                              labelText: "Date",
-                                              suffixIcon: Icon(
-                                                Icons.calendar_today,
+                                            child: Text(
+                                              "Delete".tr,
+                                              style: TextStyle(
+                                                color: Colors.red,
                                               ),
                                             ),
-                                            onTap: () async {
-                                              DateTime? newDate =
-                                                  await showDatePicker(
-                                                    context: context,
-                                                    initialDate: selectedDate,
-                                                    firstDate: DateTime(2000),
-                                                    lastDate: DateTime(2100),
-                                                  );
-                                              if (newDate != null) {
-                                                selectedDate = newDate;
-                                                dateController.text =
-                                                    "${newDate.day}/${newDate.month}/${newDate.year}";
-                                              }
+                                          ),
+                                          TextButton(
+                                            onPressed: () =>
+                                                Navigator.pop(context),
+                                            child: Text("Cancel".tr),
+                                          ),
+                                          ElevatedButton(
+                                            onPressed: () {
+                                              prov.updateExpense(
+                                                Expenses(
+                                                  docId: i
+                                                      .docId, // مهم تمرر docId عشان يعرف Firestore أي مستند يعدل
+                                                  category: selectedCategory,
+                                                  amount:
+                                                      double.tryParse(
+                                                        amountController.text,
+                                                      ) ??
+                                                      i.amount,
+                                                  date: selectedDate,
+                                                ),
+                                              );
+                                              Navigator.pop(context);
                                             },
+                                            child: Text("Save".tr),
                                           ),
                                         ],
-                                      ),
-                                    ),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () {
-                                          prov.removeExpense(index);
-                                          Navigator.pop(context);
-                                        },
-                                        child: Text(
-                                          "Delete",
-                                          style: TextStyle(color: Colors.red),
-                                        ),
-                                      ),
-                                      TextButton(
-                                        onPressed: () => Navigator.pop(context),
-                                        child: Text("Cancel"),
-                                      ),
-                                      ElevatedButton(
-                                        onPressed: () {
-                                          prov.updateExpense(
-                                            index,
-                                            Expenses(
-                                              category: selectedCategory,
-                                              amount:
-                                                  double.tryParse(
-                                                    amountController.text,
-                                                  ) ??
-                                                  i.amount,
-                                              date: selectedDate,
-                                            ),
-                                          );
-                                          Navigator.pop(context);
-                                        },
-                                        child: Text("Save"),
-                                      ),
-                                    ],
+                                      );
+                                    },
                                   );
                                 },
-                              );
-                            },
-                          ),
-                        ),
+                              ),
+                            ),
+                          );
+                        },
                       );
                     },
                   ),
@@ -330,29 +363,81 @@ class Expenses_app extends State<Expenses_w> {
 
 class exp_provider extends ChangeNotifier {
   List<Expenses> ex_p = [];
-  double get_sumexp() {
-    double sum = 0.0;
 
-    for (var i in ex_p) {
-      sum += i.amount;
-    }
-    return sum;
+  final String userId = FirebaseAuth.instance.currentUser!.uid;
+
+  CollectionReference get expensesCollection => FirebaseFirestore.instance
+      .collection('users')
+      .doc(userId)
+      .collection('expenses');
+  Stream<List<Expenses>> get expensesStream {
+    return expensesCollection.orderBy('date', descending: true).snapshots().map(
+      (snapshot) {
+        return snapshot.docs.map((doc) {
+          final data = doc.data() as Map<String, dynamic>;
+          return Expenses(
+            docId: doc.id,
+            category: data['category'],
+            amount: (data['amount'] as num).toDouble(),
+            date: (data['date'] as Timestamp).toDate(),
+          );
+        }).toList();
+      },
+    );
   }
 
-  List<Expenses> get get_listexp => ex_p;
-
-  void addExpense(Expenses e) {
-    ex_p.add(e);
-    notifyListeners();
+  Stream<double> get sumExpenses {
+    return allExpenses.map((expenseList) {
+      double sum = 0.0;
+      for (var e in expenseList) {
+        sum += e.amount;
+      }
+      return sum;
+    });
   }
 
-  void removeExpense(int index) {
-    ex_p.removeAt(index);
-    notifyListeners();
+  Stream<List<Expenses>> get allExpenses {
+    final userId = FirebaseAuth.instance.currentUser!.uid;
+
+    return FirebaseFirestore.instance
+        .collection('users')
+        .doc(userId)
+        .collection('expenses')
+        .orderBy('date', descending: true)
+        .snapshots()
+        .map((snapshot) {
+          return snapshot.docs.map((doc) {
+            final data = doc.data();
+            return Expenses(
+              docId: doc.id,
+              category: data['category'] ?? '',
+              amount: (data['amount'] ?? 0).toDouble(),
+              date: (data['date'] as Timestamp).toDate(),
+            );
+          }).toList();
+        });
   }
 
-  void updateExpense(int index, Expenses e) {
-    ex_p[index] = e;
-    notifyListeners();
+  Future<void> removeExpense(Expenses e) async {
+    if (e.docId.isEmpty) return;
+    await expensesCollection.doc(e.docId).delete();
+  }
+
+  Future<void> updateExpense(Expenses e) async {
+    if (e.docId.isEmpty) return;
+    await expensesCollection.doc(e.docId).update({
+      'category': e.category,
+      'amount': e.amount,
+      'date': e.date,
+    });
+  }
+
+  Future<void> addExpense(Expenses e) async {
+    await expensesCollection.add({
+      'category': e.category,
+      'amount': e.amount,
+      'date': e.date,
+      'created_at': FieldValue.serverTimestamp(),
+    });
   }
 }

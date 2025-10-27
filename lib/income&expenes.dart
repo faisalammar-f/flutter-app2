@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'Income.dart';
 import 'Expenses.dart';
 
@@ -14,11 +15,11 @@ class Income_expenses extends State<Inex> {
       length: 2,
       child: Scaffold(
         appBar: AppBar(
-          title: Text("Income & Expenses"),
+          title: Text("Income & Expenses".tr),
           bottom: TabBar(
             tabs: [
-              Tab(text: "Income"),
-              Tab(text: "Expenses"),
+              Tab(text: "Income".tr),
+              Tab(text: "Expenses".tr),
             ],
           ),
         ),

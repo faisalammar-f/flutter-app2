@@ -1,5 +1,7 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:get/get.dart';
 import 'home.dart';
 
 class VerifyCodePage extends StatefulWidget {
@@ -14,89 +16,145 @@ class VerifyCodePage extends StatefulWidget {
 class _VerifyCodePageState extends State<VerifyCodePage> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   bool isLoading = false;
-  String statusMessage = "Please verify your email, then press the button.";
+  bool canResend = true;
+  String statusMessage =
+      "📩 تحقق من بريدك الإلكتروني ثم اضغط على الزر أدناه.".tr;
+  Timer? _timer;
 
-  Future<void> checkEmailVerified() async {
-    setState(() {
-      isLoading = true;
-      statusMessage = "Checking verification...";
+  @override
+  void initState() {
+    super.initState();
+    // بدء التحقق التلقائي كل 2 ثانية
+    _timer = Timer.periodic(const Duration(seconds: 2), (timer) {
+      checkEmailVerified(auto: true);
     });
+  }
 
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  /// ✅ التحقق من حالة التفعيل
+  Future<void> checkEmailVerified({bool auto = false}) async {
     try {
-      await _auth.currentUser!.reload();
-      bool isVerified = _auth.currentUser!.emailVerified;
+      User? user = _auth.currentUser;
+      await user?.reload();
+      user = _auth.currentUser;
 
-      if (isVerified) {
+      if (user != null && user.emailVerified) {
+        if (!auto) {
+          setState(() => isLoading = true);
+        }
+        _timer?.cancel(); // إيقاف التحقق التلقائي
         setState(() {
-          statusMessage = "✅ Email verified successfully!";
+          statusMessage = "✅ تم التحقق من البريد بنجاح!".tr;
         });
+
+        // الانتقال إلى الصفحة الرئيسية
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (_) => HomePage()),
+          (Route<dynamic> route) => false,
+        );
       } else {
-        setState(() {
-          statusMessage = "❌ Email not verified yet. Please check your inbox.";
-        });
+        if (!auto) {
+          setState(() {
+            statusMessage =
+                "❌ البريد لم يتم تفعيله بعد. تحقق من الرسالة المرسلة.".tr;
+          });
+        }
       }
     } catch (e) {
-      setState(() {
-        statusMessage = "❌ Error verifying email: $e";
-      });
+      if (!auto) {
+        setState(() {
+          statusMessage = "❌ خطأ أثناء التحقق: $e".tr;
+        });
+      }
     } finally {
-      setState(() => isLoading = false);
+      if (!auto) setState(() => isLoading = false);
     }
   }
 
+  /// 📩 إعادة إرسال رسالة التحقق
   Future<void> resendVerificationEmail() async {
+    if (!canResend) return;
+
+    setState(() {
+      isLoading = true;
+      canResend = false;
+      statusMessage = "⏳ جاري إرسال رسالة تحقق جديدة...".tr;
+    });
+
     try {
-      User? user = _auth.currentUser;
+      final user = _auth.currentUser;
+      await user?.reload();
+
       if (user != null && !user.emailVerified) {
         await user.sendEmailVerification();
         setState(() {
-          statusMessage = "📩 Verification email re-sent to ${user.email}";
+          statusMessage =
+              "📨 تم إرسال رسالة التحقق مرة أخرى إلى ${user.email}".tr;
         });
       } else {
         setState(() {
-          statusMessage = "✅ Email is already verified.";
+          statusMessage = "✅ البريد مفعّل بالفعل.".tr;
         });
       }
+
+      // إعادة تمكين الإرسال بعد 60 ثانية
+      Future.delayed(const Duration(seconds: 60), () {
+        if (mounted) setState(() => canResend = true);
+      });
     } catch (e) {
       setState(() {
-        statusMessage = "❌ Error resending email: $e";
+        statusMessage = "❌ خطأ أثناء إعادة الإرسال: $e".tr;
       });
+    } finally {
+      if (mounted) setState(() => isLoading = false);
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Verify Email")),
+      appBar: AppBar(title: Text("Email Verification".tr)),
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(statusMessage),
-            const SizedBox(height: 20),
-            isLoading
-                ? const CircularProgressIndicator()
-                : Column(
-                    children: [
-                      ElevatedButton(
-                        onPressed: checkEmailVerified,
-                        child: const Text("Check Verification"),
-                      ),
-                      const SizedBox(height: 10),
-                      ElevatedButton(
-                        onPressed: resendVerificationEmail,
-                        child: const Text("Resend Verification Email"),
-                      ),
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.of(context).pushReplacement(
-                            MaterialPageRoute(builder: (context) => HomePage()),
-                          );
-                        },
-                        child: const Text("Skip"),
-                      ),
-                    ],
+            Text(
+              statusMessage,
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontSize: 16),
+            ),
+            const SizedBox(height: 30),
+            if (isLoading)
+              const CircularProgressIndicator()
+            else
+              Column(
+                children: [
+                  ElevatedButton(
+                    onPressed: () => checkEmailVerified(),
+                    child: Text("✅ Check Verification".tr),
                   ),
+                  const SizedBox(height: 10),
+                  ElevatedButton(
+                    onPressed: resendVerificationEmail,
+                    child: Text("📩 Resend Verification Email".tr),
+                  ),
+                  const SizedBox(height: 10),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(builder: (_) => HomePage()),
+                      );
+                    },
+                    child: Text("⏭️ Skip".tr),
+                  ),
+                ],
+              ),
           ],
         ),
       ),
