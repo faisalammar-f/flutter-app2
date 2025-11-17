@@ -26,13 +26,14 @@ class Expenses_w extends StatefulWidget {
 
 class Expenses_app extends State<Expenses_w> {
   List<String> categorytype = [
-    "Transportation",
-    "Food",
-    "Electricity",
-    "Rent",
-    "Loan",
-    "Personal",
-    "Social occasions",
+    "Transportation".tr,
+    "Tuition fees and materials".tr,
+    "Food".tr,
+    "Electricity".tr,
+    "Rent".tr,
+    "Loan".tr,
+    "Personal".tr,
+    "Social occasions".tr,
   ];
   String? selectedcategory;
   DateTime d = DateTime.now();
@@ -178,11 +179,12 @@ class Expenses_app extends State<Expenses_w> {
                       final expenses = snapshot.data!;
                       return ListView.builder(
                         shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
+                        physics: AlwaysScrollableScrollPhysics(),
                         itemCount: expenses.length,
                         itemBuilder: (context, index) {
                           final i = expenses[index];
                           return Card(
+                            key: ValueKey(i.docId),
                             margin: const EdgeInsets.symmetric(vertical: 8),
                             elevation: 3,
                             child: ListTile(
@@ -371,19 +373,24 @@ class exp_provider extends ChangeNotifier {
       .doc(userId)
       .collection('expenses');
   Stream<List<Expenses>> get expensesStream {
-    return expensesCollection.orderBy('date', descending: true).snapshots().map(
-      (snapshot) {
-        return snapshot.docs.map((doc) {
-          final data = doc.data() as Map<String, dynamic>;
-          return Expenses(
-            docId: doc.id,
-            category: data['category'],
-            amount: (data['amount'] as num).toDouble(),
-            date: (data['date'] as Timestamp).toDate(),
-          );
-        }).toList();
-      },
-    );
+    return expensesCollection
+        .orderBy('created_at', descending: true)
+        .snapshots()
+        .map((snapshot) {
+          return snapshot.docs.map((doc) {
+            final data = doc.data() as Map<String, dynamic>;
+            // ignore: unused_local_variable
+            final createdAt = data['created_at'] != null
+                ? (data['created_at'] as Timestamp).toDate()
+                : DateTime.now();
+            return Expenses(
+              docId: doc.id,
+              category: data['category'],
+              amount: (data['amount'] as num).toDouble(),
+              date: (data['date'] as Timestamp).toDate(),
+            );
+          }).toList();
+        });
   }
 
   Stream<double> get sumExpenses {
@@ -403,11 +410,15 @@ class exp_provider extends ChangeNotifier {
         .collection('users')
         .doc(userId)
         .collection('expenses')
-        .orderBy('date', descending: true)
+        .orderBy('created_at', descending: true)
         .snapshots()
         .map((snapshot) {
           return snapshot.docs.map((doc) {
             final data = doc.data();
+            // ignore: unused_local_variable
+            final createdAt = data['created_at'] != null
+                ? (data['created_at'] as Timestamp).toDate()
+                : DateTime.now();
             return Expenses(
               docId: doc.id,
               category: data['category'] ?? '',

@@ -32,23 +32,23 @@ class Ttasktype extends State<Taskt> {
   final TextEditingController desc_con = TextEditingController();
   final TextEditingController date_con = TextEditingController();
   List<String> tasktype = [
-    "Work",
-    "Study",
-    "Personal",
-    "Free time",
-    "Social occasions",
-    "Attend lectures",
-    "Complete assignments",
-    "Prepare presentations",
-    "Submit reports",
-    "Group study sessions",
-    "Project research",
-    "Team meetings",
-    "Daily exercise",
-    "Plan weekly schedule",
-    "Call family/friends",
-    "Review work emails",
-    "Work on internship tasks",
+    "Work".tr,
+    "Study".tr,
+    "Personal".tr,
+    "Free time".tr,
+    "Social occasions".tr,
+    "Attend lectures".tr,
+    "Complete assignments".tr,
+    "Prepare presentations".tr,
+    "Submit reports".tr,
+    "Group study sessions".tr,
+    "Project research".tr,
+    "Team meetings".tr,
+    "Daily exercise".tr,
+    "Plan weekly schedule".tr,
+    "Call family/friends".tr,
+    "Review work emails".tr,
+    "Work on internship tasks".tr,
   ];
 
   String? selectedtasktype;
@@ -181,12 +181,13 @@ class Ttasktype extends State<Taskt> {
 
                     return ListView.builder(
                       shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
+                      physics: AlwaysScrollableScrollPhysics(),
                       itemCount: tasks.length,
                       itemBuilder: (context, index) {
                         final t = tasks[index];
 
                         return Card(
+                          key: ValueKey(t.docId),
                           margin: const EdgeInsets.symmetric(vertical: 8),
                           child: Padding(
                             padding: const EdgeInsets.all(12),
@@ -451,14 +452,14 @@ class task_provider extends ChangeNotifier {
         .snapshots()
         .map((snapshot) {
           return snapshot.docs.map((doc) {
-            final data = doc.data();
+            final data = doc.data() as Map<String, dynamic>? ?? {};
 
             return Tasks(
-              docId: doc.id, // نحفظ الـ document ID
+              docId: doc.id,
               description: data['description'] ?? '',
               tasktype: data['tasktype'] ?? '',
-              d: (data['d'] as Timestamp)
-                  .toDate(), // تحويل Timestamp إلى DateTime
+              d: (data['date'] as Timestamp)
+                  .toDate(), // ✅ كمان لازم تتأكد إنها "date" مش "d"
               isdone: data['isdone'] ?? false,
             );
           }).toList();
@@ -472,11 +473,12 @@ class task_provider extends ChangeNotifier {
         .collection('users')
         .doc(userId)
         .collection('tasks')
-        .orderBy('d', descending: false) // ترتيب حسب التاريخ مثلاً (اختياري)
+        // ترتيب حسب التاريخ مثلاً (اختياري)
         .snapshots()
         .map((snapshot) {
           return snapshot.docs.map((doc) {
             final data = doc.data();
+
             return Tasks(
               docId: doc.id,
               description: data['description'] ?? '',
@@ -489,21 +491,19 @@ class task_provider extends ChangeNotifier {
   }
 
   Stream<List<Tasks>> get taskStream {
-    return taskCollection
-        .orderBy('created_at', descending: true)
-        .snapshots()
-        .map(
-          (snapshot) => snapshot.docs.map((doc) {
-            final data = doc.data() as Map<String, dynamic>;
-            return Tasks(
-              docId: doc.id,
-              description: data['description'],
-              tasktype: data['tasktype'],
-              d: (data['date'] as Timestamp).toDate(),
-              isdone: data['isdone'] ?? false,
-            );
-          }).toList(),
+    return taskCollection.snapshots().map(
+      (snapshot) => snapshot.docs.map((doc) {
+        final data = doc.data() as Map<String, dynamic>;
+
+        return Tasks(
+          docId: doc.id,
+          description: data['description'],
+          tasktype: data['tasktype'],
+          d: (data['date'] as Timestamp).toDate(),
+          isdone: data['isdone'] ?? false,
         );
+      }).toList(),
+    );
   }
 
   // إضافة مهمة

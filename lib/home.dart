@@ -10,6 +10,7 @@ import 'Expenses.dart';
 import 'Income.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'translation.dart';
+import 'message.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({super.key});
@@ -358,7 +359,11 @@ class _HomePageState extends State<HomePage> {
               child: ListTile(
                 leading: Icon(Icons.contact_mail),
                 title: Text("Contact Us".tr),
-                onTap: () {},
+                onTap: () {
+                  Navigator.of(
+                    context,
+                  ).push(MaterialPageRoute(builder: (context) => Support()));
+                },
               ),
             ),
             Card(
@@ -454,11 +459,12 @@ class _Home_pState extends State<Home_p> {
                                 context: context,
                                 builder: (context) => Container(
                                   padding: EdgeInsets.all(12),
-                                  height: 300,
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.5,
                                   color: Colors.white,
                                   child: ListView.builder(
                                     shrinkWrap: true,
-                                    physics: NeverScrollableScrollPhysics(),
+                                    physics: AlwaysScrollableScrollPhysics(),
                                     itemCount: incompletetasks.length,
                                     itemBuilder: (context, index) {
                                       final task = incompletetasks[index];
@@ -570,11 +576,12 @@ class _Home_pState extends State<Home_p> {
                                 context: context,
                                 builder: (context) => Container(
                                   padding: EdgeInsets.all(12),
-                                  height: 300,
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.5,
                                   color: Colors.white,
                                   child: ListView.builder(
                                     shrinkWrap: true,
-                                    physics: NeverScrollableScrollPhysics(),
+                                    physics: AlwaysScrollableScrollPhysics(),
                                     itemCount: incomes.length,
                                     itemBuilder: (context, index) {
                                       final item = incomes[index];
@@ -656,13 +663,15 @@ class _Home_pState extends State<Home_p> {
                             onTap: () {
                               showBottomSheet(
                                 context: context,
+
                                 builder: (context) => Container(
                                   padding: EdgeInsets.all(12),
-                                  height: 300,
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.5,
                                   color: Colors.white,
                                   child: ListView.builder(
                                     shrinkWrap: true,
-                                    physics: NeverScrollableScrollPhysics(),
+                                    physics: AlwaysScrollableScrollPhysics(),
                                     itemCount: expenses.length,
                                     itemBuilder: (context, index) {
                                       final e = expenses[index];

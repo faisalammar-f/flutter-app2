@@ -14,9 +14,12 @@ class Mylocal implements Translations {
       ...incomeexpensesTranslation["ar"]!,
       ...incomeTranslation["ar"]!,
       ...expTranslations["ar"]!,
+      ...taskTypeMapEnToAr,
+      ...sourceTypeMapEnToAr,
+      ...categoryTypeMapEnToAr,
     },
     "en": {
-      ...authAr,
+      ...authEn,
       ...authTranslation["en"]!,
       ...sendTranslation["en"]!,
       ...verifyEmailTranslation["en"]!,
@@ -25,6 +28,9 @@ class Mylocal implements Translations {
       ...incomeexpensesTranslation["en"]!,
       ...incomeTranslation["en"]!,
       ...expTranslations["en"]!,
+      ...taskTypeMap,
+      ...sourceTypeMapArToEn,
+      ...categoryTypeMapArToEn,
     },
   };
 }
@@ -41,22 +47,23 @@ class Lang extends StatelessWidget {
         backgroundColor: Colors.purple,
         title: Center(
           child: Text(
-            "Settings",
+            "Settings".tr,
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
         ),
       ),
       body: SingleChildScrollView(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
             SizedBox(height: 20),
             Text(
-              "Language:",
+              "choose your Language:".tr,
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
               textAlign: TextAlign.right,
             ),
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(height: 20),
@@ -87,7 +94,7 @@ class Lang extends StatelessWidget {
 }
 
 class Mycon extends GetxController {
-  void changlang(String ch) {
+  void changlang(String ch) async {
     Locale l = Locale(ch);
     Get.updateLocale(l);
   }
@@ -305,6 +312,8 @@ final Map<String, Map<String, String>> homeTranslations = {
     "Add Income": "إضافة دخل",
     "Add Expense": "إضافة مصروف",
     "تم انجاز المهمة": "تم إنجاز المهمة",
+    "إعدادات": "Settings",
+    "choose your Language:": "اختر لغتك:",
   },
   "en": {
     "Smart Plan": "Smart Plan",
@@ -372,6 +381,7 @@ final Map<String, Map<String, String>> homeTranslations = {
     "Add Income": "Add Income",
     "Add Expense": "Add Expense",
     "تم انجاز المهمة": "Task Completed",
+    "choose your Language:": "choose your Language:",
   },
 };
 final Map<String, Map<String, String>> taskTranslations = {
@@ -482,4 +492,84 @@ final Map<String, Map<String, String>> expTranslations = {
     "Cancel": "إلغاء",
     "Save": "حفظ",
   },
+};
+Map<String, String> taskTypeMap = {
+  "العمل": "Work",
+  "الدراسة": "Study",
+  "شخصي": "Personal",
+  "وقت الفراغ": "Free time",
+  "المناسبات الاجتماعية": "Social occasions",
+  "حضور المحاضرات": "Attend lectures",
+  "إنجاز الواجبات": "Complete assignments",
+  "تحضير العروض التقديمية": "Prepare presentations",
+  "تسليم التقارير": "Submit reports",
+  "جلسات دراسة جماعية": "Group study sessions",
+  "بحث المشروع": "Project research",
+  "اجتماعات الفريق": "Team meetings",
+  "التمارين اليومية": "Daily exercise",
+  "تخطيط الجدول الأسبوعي": "Plan weekly schedule",
+  "الاتصال بالعائلة/الأصدقاء": "Call family/friends",
+  "مراجعة رسائل العمل": "Review work emails",
+  "العمل على مهام التدريب": "Work on internship tasks",
+};
+Map<String, String> taskTypeMapEnToAr = {
+  "Work": "العمل",
+  "Study": "الدراسة",
+  "Personal": "شخصي",
+  "Free time": "وقت الفراغ",
+  "Social occasions": "المناسبات الاجتماعية",
+  "Attend lectures": "حضور المحاضرات",
+  "Complete assignments": "إنجاز الواجبات",
+  "Prepare presentations": "تحضير العروض التقديمية",
+  "Submit reports": "تسليم التقارير",
+  "Group study sessions": "جلسات دراسة جماعية",
+  "Project research": "بحث المشروع",
+  "Team meetings": "اجتماعات الفريق",
+  "Daily exercise": "التمارين اليومية",
+  "Plan weekly schedule": "تخطيط الجدول الأسبوعي",
+  "Call family/friends": "الاتصال بالعائلة/الأصدقاء",
+  "Review work emails": "مراجعة رسائل العمل",
+  "Work on internship tasks": "العمل على مهام التدريب",
+};
+Map<String, String> sourceTypeMapArToEn = {
+  "الراتب الشهري": "month salary",
+  "العمل الحر": "freelance",
+  "منح التفوق": "Granting excellence",
+  "منح الحاجة المالية": "Financial need grants",
+  "التداول": "trading",
+  "الاستثمار": "investment",
+  "الأعمال التجارية": "business",
+  "المكافآت والبدلات": "Bonuses & Allowances",
+  "الدعم العائلي": "Family support",
+};
+Map<String, String> sourceTypeMapEnToAr = {
+  "month salary": "الراتب الشهري",
+  "freelance": "العمل الحر",
+  "trading": "التداول",
+  "Granting excellence": "منح التفوق",
+  "Financial need grants": "منح الحاجة المالية",
+  "Bonuses & Allowances": "المكافآت والبدلات",
+  "investment": "الاستثمار",
+  "Family support": "الدعم العائلي",
+  "business": "الأعمال التجارية",
+};
+Map<String, String> categoryTypeMapArToEn = {
+  "المواصلات": "Transportation",
+  "الطعام": "Food",
+  "الكهرباء": "Electricity",
+  "الإيجار": "Rent",
+  "القرض": "Loan",
+  "رسوم الدراسة والمواد": "Tuition fees and materials",
+  "شخصي": "Personal",
+  "المناسبات الاجتماعية": "Social occasions",
+};
+Map<String, String> categoryTypeMapEnToAr = {
+  "Transportation": "المواصلات",
+  "Tuition fees and materials": "رسوم الدراسة والمواد",
+  "Food": "الطعام",
+  "Electricity": "الكهرباء",
+  "Rent": "الإيجار",
+  "Loan": "القرض",
+  "Personal": "شخصي",
+  "Social occasions": "المناسبات الاجتماعية",
 };

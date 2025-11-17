@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_24/message.dart';
 import 'package:flutter_application_24/translation.dart';
 import 'package:flutter_application_24/verfiycod.dart';
 import 'package:get/get.dart';
@@ -23,6 +24,7 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (context) => massprov()),
         ChangeNotifierProvider(create: (context) => prof()),
         ChangeNotifierProvider(create: (context) => exp_provider()),
         ChangeNotifierProvider(create: (context) => income_provider()),

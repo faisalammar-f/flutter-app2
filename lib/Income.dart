@@ -25,11 +25,15 @@ class Income_w extends StatefulWidget {
 
 class Income_app extends State<Income_w> {
   List<String> source_type = [
-    "month salary",
-    "freelance",
-    "trading",
-    "investment",
-    "business",
+    "month salary".tr,
+    "freelance".tr,
+    "trading".tr,
+    "investment".tr,
+    "business".tr,
+    "Granting excellence".tr,
+    "Financial need grants".tr,
+    "Bonuses & Allowances".tr,
+    "Family support".tr,
   ];
   String? selectedsourcetype;
   GlobalKey<FormState> _formkey = GlobalKey();
@@ -58,7 +62,7 @@ class Income_app extends State<Income_w> {
                     fontSize: 18,
                   ),
                 ),
-                const SizedBox(height: 8),
+
                 DropdownButtonFormField<String>(
                   decoration: InputDecoration(border: OutlineInputBorder()),
                   items: source_type
@@ -76,6 +80,7 @@ class Income_app extends State<Income_w> {
                   validator: (value) =>
                       value == null ? "Please select a type".tr : null,
                 ),
+
                 const SizedBox(height: 20),
                 Text(
                   "Amount".tr,
@@ -175,12 +180,13 @@ class Income_app extends State<Income_w> {
 
                       return ListView.builder(
                         shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
+                        physics: AlwaysScrollableScrollPhysics(),
                         itemCount: incomeList.length,
                         itemBuilder: (context, index) {
                           final i = incomeList[index];
 
                           return Card(
+                            key: ValueKey(i.docId),
                             margin: const EdgeInsets.symmetric(vertical: 8),
                             elevation: 3,
                             child: ListTile(
@@ -381,11 +387,15 @@ class income_provider extends ChangeNotifier {
         .collection('users')
         .doc(userId)
         .collection('income')
-        .orderBy('date', descending: true)
+        .orderBy('created_at', descending: true)
         .snapshots()
         .map((snapshot) {
           return snapshot.docs.map((doc) {
             final data = doc.data();
+            // ignore: unused_local_variable
+            final createdAt = data['created_at'] != null
+                ? (data['created_at'] as Timestamp).toDate()
+                : DateTime.now();
             return Income(
               docId: doc.id,
               source: data['source'] ?? '',
@@ -407,11 +417,15 @@ class income_provider extends ChangeNotifier {
 
   Stream<List<Income>> get incomeStream {
     return incomeCollection
-        .orderBy('date', descending: true)
+        .orderBy('created_at', descending: true)
         .snapshots()
         .map(
           (snapshot) => snapshot.docs.map((doc) {
             final data = doc.data() as Map<String, dynamic>;
+            // ignore: unused_local_variable
+            final createdAt = data['created_at'] != null
+                ? (data['created_at'] as Timestamp).toDate()
+                : DateTime.now();
             return Income(
               docId: doc.id,
               source: data['source'],
