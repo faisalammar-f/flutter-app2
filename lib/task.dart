@@ -53,8 +53,27 @@ class Ttasktype extends State<Taskt> {
 
   String? selectedtasktype;
   DateTime d1 = DateTime.now();
+  void deletetaskexpired() async {
+    DateTime now = DateTime.now();
+    final snapshot = await FirebaseFirestore.instance
+        .collection("users")
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .collection("tasks")
+        .get();
+    for (var doc in snapshot.docs) {
+      final d = (doc['date'] as Timestamp).toDate();
+      if (now.isAfter(d)) {
+        await doc.reference.delete();
+      }
+    }
+  }
 
   @override
+  void initState() {
+    super.initState();
+    deletetaskexpired();
+  }
+
   Widget build(BuildContext context) {
     final prov = Provider.of<task_provider>(context);
 
