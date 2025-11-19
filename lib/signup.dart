@@ -439,10 +439,6 @@ class _SignuState extends State<Signu> {
                               }
                             }
 
-                            if (!credential.user!.emailVerified) {
-                              await credential.user!.sendEmailVerification();
-                            }
-
                             final provider1 = Provider.of<provider_sign>(
                               context,
                               listen: false,

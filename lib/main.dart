@@ -117,6 +117,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  String isadmin = "faisalammar147@gmail.com";
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
@@ -142,7 +143,12 @@ class _LoginPageState extends State<LoginPage> {
 
         // 2️⃣ الوصول إلى Provider
         final provider = Provider.of<provider_sign>(context, listen: false);
-
+        if (user.email == isadmin) {
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => adminSupport()),
+          );
+          return;
+        }
         // 3️⃣ التحقق من Firestore
         final doc = await FirebaseFirestore.instance
             .collection('users')

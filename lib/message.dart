@@ -278,6 +278,22 @@ class massprov extends ChangeNotifier {
         );
   }
 
+  Stream<List<Message>> get adminmessagestream {
+    return massCollection.snapshots().map(
+      (snapshot) => snapshot.docs.map((doc) {
+        final data = doc.data() as Map<String, dynamic>;
+        return Message(
+          userid: data["userId"] ?? "",
+          message: data["message"] ?? "",
+          replay: data["reply"] ?? "",
+          id: doc.id,
+          useremail: data["userEmail"] ?? "",
+          timestamp: data["timestamp"] ?? Timestamp.now(),
+        );
+      }).toList(),
+    );
+  }
+
   Future<void> addmass(Message m) async {
     final docref = await massCollection.add({
       "message": m.message,
@@ -307,5 +323,247 @@ class massprov extends ChangeNotifier {
   Future<void> removemass(Message m) async {
     if (m.id.isEmpty) return;
     await massCollection.doc(m.id).delete();
+  }
+}
+
+// ignore: must_be_immutable
+class adminSupport extends StatelessWidget {
+  adminSupport({super.key});
+  Message? selectedMessage;
+
+  TextEditingController message = TextEditingController();
+  GlobalKey<FormState> _k = GlobalKey();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Color(0xFF6A1B9A),
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: Icon(Icons.arrow_back),
+        ),
+        title: Row(
+          children: [
+            Icon(Icons.chat, size: 20),
+            Text(
+              "Message me",
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            ),
+          ],
+        ),
+      ),
+      body: SafeArea(
+        child: Form(
+          key: _k,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Expanded(
+                child: Container(
+                  height: MediaQuery.of(context).size.height * 0.6,
+                  child: StreamBuilder<List<Message>>(
+                    stream: Provider.of<massprov>(context).adminmessagestream,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Center(child: CircularProgressIndicator());
+                      }
+
+                      if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                        return Center(child: Text("لا توجد رسائل حاليا"));
+                      }
+                      final mass = snapshot.data!;
+                      return ListView.builder(
+                        shrinkWrap: true,
+                        physics: AlwaysScrollableScrollPhysics(),
+                        itemCount: mass.length,
+                        itemBuilder: (context, index) {
+                          final m = mass[index];
+                          final TextEditingController editController =
+                              TextEditingController(text: m.replay);
+                          return ListTile(
+                            onTap: () {
+                              selectedMessage = m;
+                            },
+                            trailing: Text(
+                              m.message,
+                              style: TextStyle(
+                                color: Colors.blueAccent,
+                                decoration: TextDecoration.underline,
+                              ),
+                            ),
+
+                            subtitle: InkWell(
+                              onTap: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialog(
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                      title: Text("تعديل / حذف الرسالة"),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          TextFormField(
+                                            controller: editController,
+                                            decoration: InputDecoration(
+                                              labelText: "الرسالة",
+                                              border: OutlineInputBorder(),
+                                            ),
+                                            maxLines: 3,
+                                          ),
+                                          const SizedBox(height: 16),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.end,
+                                            children: [
+                                              ElevatedButton(
+                                                onPressed: () async {
+                                                  final newText = editController
+                                                      .text
+                                                      .trim();
+                                                  if (newText.isNotEmpty) {
+                                                    final pro =
+                                                        Provider.of<massprov>(
+                                                          context,
+                                                          listen: false,
+                                                        );
+
+                                                    await pro.updatemassrep(
+                                                      m,
+                                                      newText,
+                                                    );
+                                                    Navigator.pop(context);
+                                                    ScaffoldMessenger.of(
+                                                      context,
+                                                    ).showSnackBar(
+                                                      SnackBar(
+                                                        content: Text(
+                                                          "✅ تم تعديل الرسالة بنجاح",
+                                                        ),
+                                                      ),
+                                                    );
+                                                  }
+                                                },
+                                                child: Text("Save"),
+                                              ),
+                                              const SizedBox(width: 10),
+                                              ElevatedButton(
+                                                style: ElevatedButton.styleFrom(
+                                                  backgroundColor: Colors.red,
+                                                ),
+                                                onPressed: () async {
+                                                  final pro =
+                                                      Provider.of<massprov>(
+                                                        context,
+                                                        listen: false,
+                                                      );
+
+                                                  await pro.removemass(m);
+                                                  Navigator.pop(context);
+                                                  ScaffoldMessenger.of(
+                                                    context,
+                                                  ).showSnackBar(
+                                                    SnackBar(
+                                                      content: Text(
+                                                        "🗑️ تم حذف الرسالة بنجاح",
+                                                      ),
+                                                    ),
+                                                  );
+                                                },
+                                                child: Text("Delete"),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                );
+                              },
+                              child: Text(m.replay),
+                            ),
+                          );
+                        },
+                      );
+                    },
+                  ),
+                ),
+              ),
+              Container(
+                decoration: BoxDecoration(
+                  border: Border(top: BorderSide(width: 2)),
+                ),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      child: TextFormField(
+                        controller: message,
+                        decoration: InputDecoration(
+                          hintText: "Write your message here",
+                          contentPadding: EdgeInsets.symmetric(
+                            vertical: 10,
+                            horizontal: 20,
+                          ),
+                        ),
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return "cannot be empty";
+                          } else {
+                            return null;
+                          }
+                        },
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+
+                    TextButton(
+                      onPressed: () async {
+                        if (_k.currentState!.validate()) {
+                          if (selectedMessage == null) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text("اختر رسالة أولاً للرد عليها"),
+                              ),
+                            );
+                            return;
+                          }
+                          final pro = Provider.of<massprov>(
+                            context,
+                            listen: false,
+                          );
+
+                          await pro.updatemassrep(
+                            selectedMessage!,
+                            message.text,
+                          );
+                          message.clear();
+                        }
+                      },
+                      child: Text(
+                        "Send",
+                        style: TextStyle(
+                          color: Colors.blueAccent,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }

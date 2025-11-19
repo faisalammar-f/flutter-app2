@@ -147,6 +147,17 @@ class Ttasktype extends State<Taskt> {
                 onPressed: () {
                   if (_formkey.currentState!.validate() &&
                       selectedtasktype != null) {
+                    DateTime now = DateTime.now();
+
+                    if (d1.isBefore(now)) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text("Cannot add task with past date".tr),
+                        ),
+                      );
+                      return;
+                    }
+
                     prov.addTask(
                       Tasks(
                         description: desc_con.text,
@@ -508,6 +519,11 @@ class task_provider extends ChangeNotifier {
 
   // إضافة مهمة
   Future<void> addTask(Tasks t) async {
+    DateTime now = DateTime.now();
+
+    if (t.d.isBefore(now)) {
+      throw Exception("Cannot add task with past date");
+    }
     final docRef = await taskCollection.add({
       'description': t.description,
       'tasktype': t.tasktype,

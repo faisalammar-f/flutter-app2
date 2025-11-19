@@ -17,6 +17,7 @@ class _VerifyCodePageState extends State<VerifyCodePage> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   bool isLoading = false;
   bool canResend = true;
+  bool _navigated = false; // لضمان التنقل مرة واحدة
   String statusMessage =
       "📩 تحقق من بريدك الإلكتروني ثم اضغط على الزر أدناه.".tr;
   Timer? _timer;
@@ -24,8 +25,8 @@ class _VerifyCodePageState extends State<VerifyCodePage> {
   @override
   void initState() {
     super.initState();
-    // بدء التحقق التلقائي كل 2 ثانية
-    _timer = Timer.periodic(const Duration(seconds: 2), (timer) {
+    // بدء التحقق التلقائي كل 5 ثواني
+    _timer = Timer.periodic(const Duration(seconds: 5), (timer) {
       checkEmailVerified(auto: true);
     });
   }
@@ -44,19 +45,19 @@ class _VerifyCodePageState extends State<VerifyCodePage> {
       user = _auth.currentUser;
 
       if (user != null && user.emailVerified) {
-        if (!auto) {
-          setState(() => isLoading = true);
-        }
         _timer?.cancel(); // إيقاف التحقق التلقائي
-        setState(() {
-          statusMessage = "✅ تم التحقق من البريد بنجاح!".tr;
-        });
-
-        // الانتقال إلى الصفحة الرئيسية
-        Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (_) => HomePage()),
-          (Route<dynamic> route) => false,
-        );
+        if (!_navigated) {
+          _navigated = true;
+          setState(() {
+            statusMessage = "✅ تم التحقق من البريد بنجاح!".tr;
+            isLoading = true;
+          });
+          // الانتقال إلى الصفحة الرئيسية
+          Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (_) => HomePage()),
+            (Route<dynamic> route) => false,
+          );
+        }
       } else {
         if (!auto) {
           setState(() {
@@ -66,13 +67,13 @@ class _VerifyCodePageState extends State<VerifyCodePage> {
         }
       }
     } catch (e) {
-      if (!auto) {
+      if (!auto && mounted) {
         setState(() {
           statusMessage = "❌ خطأ أثناء التحقق: $e".tr;
         });
       }
     } finally {
-      if (!auto) setState(() => isLoading = false);
+      if (!auto && mounted) setState(() => isLoading = false);
     }
   }
 
@@ -92,14 +93,18 @@ class _VerifyCodePageState extends State<VerifyCodePage> {
 
       if (user != null && !user.emailVerified) {
         await user.sendEmailVerification();
-        setState(() {
-          statusMessage =
-              "📨 تم إرسال رسالة التحقق مرة أخرى إلى ${user.email}".tr;
-        });
+        if (mounted) {
+          setState(() {
+            statusMessage =
+                "📨 تم إرسال رسالة التحقق مرة أخرى إلى ${user.email}".tr;
+          });
+        }
       } else {
-        setState(() {
-          statusMessage = "✅ البريد مفعّل بالفعل.".tr;
-        });
+        if (mounted) {
+          setState(() {
+            statusMessage = "✅ البريد مفعّل بالفعل.".tr;
+          });
+        }
       }
 
       // إعادة تمكين الإرسال بعد 60 ثانية
@@ -107,9 +112,11 @@ class _VerifyCodePageState extends State<VerifyCodePage> {
         if (mounted) setState(() => canResend = true);
       });
     } catch (e) {
-      setState(() {
-        statusMessage = "❌ خطأ أثناء إعادة الإرسال: $e".tr;
-      });
+      if (mounted) {
+        setState(() {
+          statusMessage = "❌ خطأ أثناء إعادة الإرسال: $e".tr;
+        });
+      }
     } finally {
       if (mounted) setState(() => isLoading = false);
     }
@@ -143,15 +150,6 @@ class _VerifyCodePageState extends State<VerifyCodePage> {
                   ElevatedButton(
                     onPressed: resendVerificationEmail,
                     child: Text("📩 Resend Verification Email".tr),
-                  ),
-                  const SizedBox(height: 10),
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(builder: (_) => HomePage()),
-                      );
-                    },
-                    child: Text("⏭️ Skip".tr),
                   ),
                 ],
               ),

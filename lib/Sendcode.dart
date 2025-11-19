@@ -14,22 +14,15 @@ class SendCodePage extends StatefulWidget {
 }
 
 class _SendCodePageState extends State<SendCodePage> {
+  // ignore: unused_field
   final FirebaseAuth _auth = FirebaseAuth.instance;
   bool isLoading = false;
   bool canResend = true;
 
-  /// 🔄 تحديث المرجع الحالي للمستخدم
-  Future<User?> getUpdatedUser() async {
-    await _auth.currentUser?.reload();
-    return _auth.currentUser;
-  }
-
   Future<void> sendEmailVerification() async {
     if (!canResend) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text("⏳ يرجى الانتظار قبل إعادة الإرسال مرة أخرى.".tr),
-        ),
+        SnackBar(content: Text("⏳ يرجى الانتظار قبل إعادة الإرسال.")),
       );
       return;
     }
@@ -40,48 +33,18 @@ class _SendCodePageState extends State<SendCodePage> {
     });
 
     try {
-      // ignore: unused_local_variable
-      UserCredential userCred;
+      final user = FirebaseAuth.instance.currentUser;
 
-      try {
-        // حاول إنشاء حساب جديد
-        userCred = await _auth.createUserWithEmailAndPassword(
-          email: widget.email,
-          password: widget.password,
-        );
-      } on FirebaseAuthException catch (e) {
-        if (e.code == 'email-already-in-use') {
-          // لو الإيميل موجود مسبقًا، قم بتسجيل الدخول مباشرة
-          userCred = await _auth.signInWithEmailAndPassword(
-            email: widget.email,
-            password: widget.password,
-          );
-        } else {
-          rethrow;
-        }
+      if (user == null) {
+        throw Exception("حدث خطأ: المستخدم غير موجود");
       }
 
-      // الحصول على المستخدم المحدث
-      final updatedUser = await getUpdatedUser();
-      if (updatedUser == null) throw Exception("User not found".tr);
+      await user.sendEmailVerification();
 
-      // إرسال رسالة التحقق لو لم يكن مفعل
-      if (!updatedUser.emailVerified) {
-        await updatedUser.sendEmailVerification();
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              "📩 تم إرسال رسالة التحقق إلى ${updatedUser.email}".tr,
-            ),
-          ),
-        );
-      } else {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text("✅ البريد مفعّل مسبقًا".tr)));
-      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("📩 تم إرسال رسالة التحقق إلى ${user.email}")),
+      );
 
-      // الانتقال لصفحة التحقق
       Navigator.push(
         context,
         MaterialPageRoute(builder: (_) => VerifyCodePage(email: widget.email)),
@@ -93,7 +56,7 @@ class _SendCodePageState extends State<SendCodePage> {
     } catch (e) {
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(SnackBar(content: Text("❌ خطأ: $e".tr)));
+      ).showSnackBar(SnackBar(content: Text("❌ خطأ: $e")));
     } finally {
       if (mounted) setState(() => isLoading = false);
     }
@@ -108,7 +71,7 @@ class _SendCodePageState extends State<SendCodePage> {
             ? const CircularProgressIndicator()
             : ElevatedButton(
                 onPressed: sendEmailVerification,
-                child: Text("Register/Sign In & Verify Email".tr),
+                child: Text("Send Verification Email".tr),
               ),
       ),
     );
