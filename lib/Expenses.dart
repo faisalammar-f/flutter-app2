@@ -97,8 +97,18 @@ class Expenses_app extends State<Expenses_w> {
                     label: Text("0.00"),
                     border: OutlineInputBorder(),
                   ),
-                  validator: (value) =>
-                      value!.isEmpty ? "Field is empty".tr : null,
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return "Field is empty".tr;
+                    }
+                    final number = double.tryParse(value);
+
+                    if (number! < 0) {
+                      return "A negative value cannot be entered".tr;
+                    }
+
+                    return null;
+                  },
                 ),
                 const SizedBox(height: 20),
                 Text(
@@ -270,6 +280,20 @@ class Expenses_app extends State<Expenses_w> {
                                                 decoration: InputDecoration(
                                                   labelText: "Amount".tr,
                                                 ),
+                                                onChanged: (value) {
+                                                  if (value.isEmpty ||
+                                                      double.tryParse(value) ==
+                                                          null) {
+                                                    print("Field is empty");
+                                                  } else if (double.parse(
+                                                        value,
+                                                      ) <
+                                                      0) {
+                                                    print(
+                                                      "A negative value cannot be entered.",
+                                                    );
+                                                  }
+                                                },
                                               ),
                                               const SizedBox(height: 10),
                                               TextField(
@@ -366,12 +390,17 @@ class Expenses_app extends State<Expenses_w> {
 class exp_provider extends ChangeNotifier {
   List<Expenses> ex_p = [];
 
-  final String userId = FirebaseAuth.instance.currentUser!.uid;
+  CollectionReference get expensesCollection {
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+    if (uid == null) {
+      throw Exception("User not logged in");
+    }
+    return FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid)
+        .collection('expenses');
+  }
 
-  CollectionReference get expensesCollection => FirebaseFirestore.instance
-      .collection('users')
-      .doc(userId)
-      .collection('expenses');
   Stream<List<Expenses>> get expensesStream {
     return expensesCollection
         .orderBy('created_at', descending: true)
@@ -404,11 +433,12 @@ class exp_provider extends ChangeNotifier {
   }
 
   Stream<List<Expenses>> get allExpenses {
-    final userId = FirebaseAuth.instance.currentUser!.uid;
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+    if (uid == null) return const Stream.empty();
 
     return FirebaseFirestore.instance
         .collection('users')
-        .doc(userId)
+        .doc(uid)
         .collection('expenses')
         .orderBy('created_at', descending: true)
         .snapshots()

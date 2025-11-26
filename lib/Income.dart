@@ -98,8 +98,18 @@ class Income_app extends State<Income_w> {
                     label: Text("0.00"),
                     border: OutlineInputBorder(),
                   ),
-                  validator: (value) =>
-                      value!.isEmpty ? "Field is empty".tr : null,
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return "Field is empty".tr;
+                    }
+                    final number = double.tryParse(value);
+
+                    if (number! < 0) {
+                      return "A negative value cannot be entered".tr;
+                    }
+
+                    return null;
+                  },
                 ),
                 const SizedBox(height: 20),
                 Text(
@@ -272,6 +282,20 @@ class Income_app extends State<Income_w> {
                                                 decoration: InputDecoration(
                                                   labelText: "Amount".tr,
                                                 ),
+                                                onChanged: (value) {
+                                                  if (value.isEmpty ||
+                                                      double.tryParse(value) ==
+                                                          null) {
+                                                    print("Field is empty");
+                                                  } else if (double.parse(
+                                                        value,
+                                                      ) <
+                                                      0) {
+                                                    print(
+                                                      "A negative value cannot be entered.",
+                                                    );
+                                                  }
+                                                },
                                               ),
                                               const SizedBox(height: 10),
                                               TextField(
@@ -381,11 +405,12 @@ class income_provider extends ChangeNotifier {
   }
 
   Stream<List<Income>> get allIncome {
-    final userId = FirebaseAuth.instance.currentUser!.uid;
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return const Stream.empty();
 
     return FirebaseFirestore.instance
         .collection('users')
-        .doc(userId)
+        .doc(user.uid)
         .collection('income')
         .orderBy('created_at', descending: true)
         .snapshots()
@@ -406,21 +431,36 @@ class income_provider extends ChangeNotifier {
         });
   }
 
-  final String userId = FirebaseAuth.instance.currentUser!.uid;
+  CollectionReference get incomeCollection {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      return FirebaseFirestore.instance
+          .collection('users')
+          .doc("invalid") // مسار خاطئ لمنع الكراش
+          .collection('income');
+    }
 
-  CollectionReference get incomeCollection => FirebaseFirestore.instance
-      .collection('users')
-      .doc(userId)
-      .collection('income');
+    return FirebaseFirestore.instance
+        .collection('users')
+        .doc(user.uid)
+        .collection('income');
+  }
 
   // جلب البيانات من Firestore
 
   Stream<List<Income>> get incomeStream {
-    return incomeCollection
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return const Stream.empty();
+
+    return FirebaseFirestore.instance
+        .collection('users')
+        .doc(user.uid)
+        .collection('income')
         .orderBy('created_at', descending: true)
         .snapshots()
         .map(
           (snapshot) => snapshot.docs.map((doc) {
+            // ignore: unnecessary_cast
             final data = doc.data() as Map<String, dynamic>;
             // ignore: unused_local_variable
             final createdAt = data['created_at'] != null

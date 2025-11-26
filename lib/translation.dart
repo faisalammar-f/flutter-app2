@@ -446,6 +446,7 @@ final Map<String, Map<String, String>> incomeTranslation = {
     "Please select a type": "يرجى اختيار النوع",
     "Field is empty": "الحقل فارغ",
     "cannot be empty": "لا يمكن أن يكون فارغًا",
+    "A negative value cannot be entered": "لا يجوز ادخال قيمة سالبة",
   },
   "en": {
     "Source": "Source",
@@ -460,6 +461,7 @@ final Map<String, Map<String, String>> incomeTranslation = {
     "Please select a type": "Please select a type",
     "Field is empty": "Field is empty",
     "cannot be empty": "Cannot be empty",
+    "A negative value cannot be entered": "A negative value cannot be entered",
   },
 };
 

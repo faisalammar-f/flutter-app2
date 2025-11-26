@@ -453,12 +453,13 @@ class Ttasktype extends State<Taskt> {
 
 class task_provider extends ChangeNotifier {
   List<Tasks> task_p = [];
-  final String userId = FirebaseAuth.instance.currentUser!.uid;
-
-  CollectionReference get taskCollection => FirebaseFirestore.instance
-      .collection('users')
-      .doc(userId)
-      .collection('tasks');
+  CollectionReference get taskCollection {
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+    return FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid)
+        .collection('tasks');
+  }
 
   // جلب المهام من Firestore
   Stream<int> get incompleteCount {
@@ -521,23 +522,38 @@ class task_provider extends ChangeNotifier {
   }
 
   Stream<List<Tasks>> get taskStream {
-    return taskCollection.snapshots().map(
-      (snapshot) => snapshot.docs.map((doc) {
-        final data = doc.data() as Map<String, dynamic>;
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return const Stream.empty();
+    return FirebaseFirestore.instance
+        .collection("users")
+        .doc(user.uid)
+        .collection("tasks")
+        .snapshots()
+        .map(
+          (snapshot) => snapshot.docs.map((doc) {
+            // ignore: unnecessary_cast
+            final data = doc.data() as Map<String, dynamic>;
 
-        return Tasks(
-          docId: doc.id,
-          description: data['description'],
-          tasktype: data['tasktype'],
-          d: (data['date'] as Timestamp).toDate(),
-          isdone: data['isdone'] ?? false,
+            return Tasks(
+              docId: doc.id,
+              description: data['description'],
+              tasktype: data['tasktype'],
+              d: (data['date'] as Timestamp).toDate(),
+              isdone: data['isdone'] ?? false,
+            );
+          }).toList(),
         );
-      }).toList(),
-    );
   }
 
   // إضافة مهمة
   Future<void> addTask(Tasks t) async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+
+    final taskCollection = FirebaseFirestore.instance
+        .collection('users')
+        .doc(user.uid)
+        .collection('tasks');
     DateTime now = DateTime.now();
 
     if (t.d.isBefore(now)) {
@@ -555,6 +571,13 @@ class task_provider extends ChangeNotifier {
 
   // تحديث مهمة
   Future<void> updateTask(Tasks t) async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+
+    final taskCollection = FirebaseFirestore.instance
+        .collection('users')
+        .doc(user.uid)
+        .collection('tasks');
     if (t.docId.isEmpty) return;
     await taskCollection.doc(t.docId).update({
       'description': t.description,
@@ -567,12 +590,26 @@ class task_provider extends ChangeNotifier {
   // حذف مهمة
 
   Future<void> removeTask(Tasks t) async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+
+    final taskCollection = FirebaseFirestore.instance
+        .collection('users')
+        .doc(user.uid)
+        .collection('tasks');
     if (t.docId.isEmpty) return;
     await taskCollection.doc(t.docId).delete();
   }
 
   // تبديل حالة المهمة
   Future<void> toggleDone(Tasks t, bool val) async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+
+    final taskCollection = FirebaseFirestore.instance
+        .collection('users')
+        .doc(user.uid)
+        .collection('tasks');
     if (t.docId.isEmpty) return;
     await taskCollection.doc(t.docId).update({'isdone': val});
   }
