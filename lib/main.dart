@@ -136,6 +136,12 @@ class _LoginPageState extends State<LoginPage> {
       final user = userCredential.user;
 
       if (user != null && user.emailVerified) {
+        if (user.email == isadmin) {
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => adminSupport()),
+          );
+          return;
+        }
         // 1️⃣ إعداد SharedPreferences
         final prefs = await SharedPreferences.getInstance();
         await prefs.setBool("isLoggedIn", true);
@@ -143,12 +149,7 @@ class _LoginPageState extends State<LoginPage> {
 
         // 2️⃣ الوصول إلى Provider
         final provider = Provider.of<provider_sign>(context, listen: false);
-        if (user.email == isadmin) {
-          Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => adminSupport()),
-          );
-          return;
-        }
+
         // 3️⃣ التحقق من Firestore
         final doc = await FirebaseFirestore.instance
             .collection('users')

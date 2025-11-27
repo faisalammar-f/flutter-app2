@@ -222,10 +222,10 @@ class Support extends StatelessWidget {
                             listen: false,
                           );
                           final msg = Message(
-                            userid: pro.userId,
+                            userid: pro.userId!,
                             message: message.text.trim(),
                             replay: "",
-                            useremail: pro.userEmail,
+                            useremail: pro.userEmail!,
                             timestamp: Timestamp.now(),
                           );
                           await pro.addmass(msg);
@@ -253,15 +253,18 @@ class Support extends StatelessWidget {
 }
 
 class massprov extends ChangeNotifier {
-  String userId = FirebaseAuth.instance.currentUser!.uid;
-  String userEmail = FirebaseAuth.instance.currentUser!.email!;
+  String? get userId => FirebaseAuth.instance.currentUser?.uid;
+
+  String? get userEmail => FirebaseAuth.instance.currentUser?.email;
 
   CollectionReference get massCollection =>
       FirebaseFirestore.instance.collection("messages");
 
   Stream<List<Message>> get messagestream {
+    final uid = userId;
+    if (uid == null) return const Stream.empty();
     return massCollection
-        .where("userId", isEqualTo: userId)
+        .where("userId", isEqualTo: uid)
         .snapshots()
         .map(
           (snapshot) => snapshot.docs.map((doc) {
@@ -295,11 +298,15 @@ class massprov extends ChangeNotifier {
   }
 
   Future<void> addmass(Message m) async {
+    final uid = userId;
+    final email = userEmail;
+
+    if (uid == null || email == null) return;
     final docref = await massCollection.add({
       "message": m.message,
       "reply": m.replay,
-      "userEmail": userEmail,
-      "userId": userId,
+      "userEmail": email,
+      "userId": uid,
       "timestamp": FieldValue.serverTimestamp(),
     });
     m.id = docref.id;
