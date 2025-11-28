@@ -585,7 +585,6 @@ class provider_sign extends ChangeNotifier {
         final data = doc.data()!;
         fullname = data['fullname'] ?? '';
         email = data['email'] ?? '';
-        password = data['password'] ?? '';
         phonenumber = data['phonenumber'] ?? '';
         gender = data['gender'] ?? '';
         dateofbirth =

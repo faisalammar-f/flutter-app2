@@ -137,9 +137,9 @@ class _LoginPageState extends State<LoginPage> {
 
       if (user != null && user.emailVerified) {
         if (user.email == isadmin) {
-          Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => adminSupport()),
-          );
+          Navigator.of(
+            context,
+          ).push(MaterialPageRoute(builder: (context) => adminSupport()));
           return;
         }
         // 1️⃣ إعداد SharedPreferences
@@ -449,7 +449,7 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                           TextButton(
                             onPressed: () {
-                              Navigator.pushReplacement(
+                              Navigator.push(
                                 context,
                                 MaterialPageRoute(builder: (_) => Signu()),
                               );
