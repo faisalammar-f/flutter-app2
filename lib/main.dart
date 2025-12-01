@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_24/ai.dart';
 import 'package:flutter_application_24/message.dart';
 import 'package:flutter_application_24/translation.dart';
 import 'package:flutter_application_24/verfiycod.dart';
@@ -30,6 +31,7 @@ void main() async {
         ChangeNotifierProvider(create: (context) => income_provider()),
         ChangeNotifierProvider(create: (context) => task_provider()),
         ChangeNotifierProvider(create: (context) => provider_sign()),
+        ChangeNotifierProvider(create: (context) => ai_prov()),
       ],
 
       child: MyApp(),
@@ -50,7 +52,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         useMaterial3: false,
         colorScheme: ColorScheme.fromSeed(
-          seedColor: kPrimaryColor,
+          seedColor: const Color.fromRGBO(106, 27, 154, 1),
           primary: kPrimaryColor,
         ),
         scaffoldBackgroundColor: const Color(0xFFF5F5F5), // <- خلفية الشاشة
@@ -162,9 +164,11 @@ class _LoginPageState extends State<LoginPage> {
           await provider.setuserdata(
             full_name: data['fullname'] ?? '',
             email_u: data['email'] ?? email,
-            phone_number: data['phonenumber'] ?? '',
-            birthofdate:
-                DateTime.tryParse(data['dateofbirth'] ?? '') ?? DateTime.now(),
+            phone_number: data['phone'] ?? '',
+            birthofdate: data['dateofbirth'] != null
+                ? (data['dateofbirth'] as Timestamp).toDate()
+                : DateTime.now(),
+
             gender_u: data['gender'] ?? '',
             password_u: provider.password, // ابقِ الباسورد كما هو في Provider
           );

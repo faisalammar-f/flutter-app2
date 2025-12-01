@@ -314,6 +314,7 @@ final Map<String, Map<String, String>> homeTranslations = {
     "تم انجاز المهمة": "تم إنجاز المهمة",
     "إعدادات": "Settings",
     "choose your Language:": "اختر لغتك:",
+    "change password": "تغيير كلمة المرور",
   },
   "en": {
     "Smart Plan": "Smart Plan",
@@ -382,6 +383,7 @@ final Map<String, Map<String, String>> homeTranslations = {
     "Add Expense": "Add Expense",
     "تم انجاز المهمة": "Task Completed",
     "choose your Language:": "choose your Language:",
+    "change password": "change password",
   },
 };
 final Map<String, Map<String, String>> taskTranslations = {

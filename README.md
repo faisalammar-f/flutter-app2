@@ -1,4 +1,4 @@
-# apppp
+# Smart Plan
 
 A new Flutter project.
 

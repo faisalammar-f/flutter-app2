@@ -1,4 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_24/ai.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'main.dart';
@@ -20,30 +23,35 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  void showEditUserDialog(BuildContext context) {
+  void showEditUserDialog(BuildContext context) async {
     final provider = Provider.of<provider_sign>(context, listen: false);
 
-    TextEditingController fullnameController = TextEditingController(
-      text: provider.fullname,
-    );
-    TextEditingController emailController = TextEditingController(
-      text: provider.email,
-    );
-    TextEditingController passwordController = TextEditingController(
-      text: provider.password,
-    );
-    TextEditingController phoneController = TextEditingController(
-      text: provider.phonenumber,
-    );
-    TextEditingController dateController = TextEditingController(
-      text:
-          "${provider.dateofbirth.day}/${provider.dateofbirth.month}/${provider.dateofbirth.year}",
-    );
+    TextEditingController fullnameController = TextEditingController();
+    TextEditingController emailController = TextEditingController();
+    TextEditingController phoneController = TextEditingController();
+    TextEditingController dateController = TextEditingController();
 
-    String gender = provider.gender;
-    DateTime selectedDate = provider.dateofbirth;
-    bool isObsecure = true;
-
+    late String gender;
+    DateTime selectedDate = DateTime.now();
+    DocumentSnapshot doc = await FirebaseFirestore.instance
+        .collection("users")
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .get();
+    if (doc.exists) {
+      Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+      phoneController.text = data["phone"] ?? "";
+      fullnameController.text = data["fullname"] ?? "";
+      emailController.text = data["email"] ?? "";
+      gender = data["gender"] ?? "";
+      if (data["dateofbirth"] != null) {
+        selectedDate = (data["dateofbirth"] as Timestamp).toDate();
+        dateController.text =
+            "${selectedDate.day}/${selectedDate.month}/${selectedDate.year}";
+      } else {
+        selectedDate = DateTime.now();
+        dateController.text = "";
+      }
+    }
     showDialog(
       context: context,
       builder: (context) {
@@ -63,23 +71,26 @@ class _HomePageState extends State<HomePage> {
                       controller: emailController,
                       decoration: InputDecoration(labelText: 'Email'.tr),
                     ),
-                    TextField(
-                      controller: passwordController,
-                      obscureText: isObsecure,
-                      decoration: InputDecoration(
-                        labelText: 'Password'.tr,
-                        suffixIcon: IconButton(
-                          icon: Icon(
-                            isObsecure
-                                ? Icons.visibility_off
-                                : Icons.visibility,
-                          ),
-                          onPressed: () {
-                            setState(() {
-                              isObsecure = !isObsecure;
-                            });
-                          },
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(builder: (context) => Forget()),
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: kPrimaryColor,
+                        padding: EdgeInsets.symmetric(
+                          vertical: 5,
+                          horizontal: 5,
                         ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+
+                      child: Text(
+                        "change password",
+                        style: TextStyle(color: Colors.white, fontSize: 16),
                       ),
                     ),
                     TextField(
@@ -146,15 +157,26 @@ class _HomePageState extends State<HomePage> {
                   child: Text('Cancel'.tr),
                 ),
                 ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async {
                     provider.setuserdata(
                       full_name: fullnameController.text,
                       email_u: emailController.text,
-                      password_u: passwordController.text,
+                      password_u: provider.password,
                       phone_number: phoneController.text,
                       birthofdate: selectedDate,
                       gender_u: gender,
                     );
+                    await FirebaseFirestore.instance
+                        .collection("users")
+                        .doc(FirebaseAuth.instance.currentUser!.uid)
+                        .set({
+                          'fullname': fullnameController.text.trim(),
+                          'email': emailController.text.trim(),
+                          'phone': phoneController.text,
+                          'dateofbirth': Timestamp.fromDate(selectedDate),
+                          'gender': gender,
+                          'created_at': FieldValue.serverTimestamp(),
+                        });
                     Navigator.of(context).pop();
                   },
                   child: Text('Save'.tr),
@@ -168,7 +190,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   int s = 0;
-  List<Widget> l = [Home_p(), Taskt(), Inex(), Text("AI Assistant".tr)];
+  List<Widget> l = [Home_p(), Taskt(), Inex(), Ai()];
 
   Future<void> _logout(BuildContext context) async {
     final prefs = await SharedPreferences.getInstance();
