@@ -1,8 +1,10 @@
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'import_schedule_screen.dart';
 
 class Tasks {
   String docId;
@@ -79,6 +81,24 @@ class Ttasktype extends State<Taskt> {
 
     return Scaffold(
       appBar: AppBar(title: Text("Task Management".tr), centerTitle: true),
+      floatingActionButton: ElevatedButton.icon(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.deepPurple,
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+        ),
+
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => const ImportScheduleScreen()),
+          );
+        },
+        icon: const Icon(Icons.camera_alt),
+        label: const Text("Import Study Schedule"),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Form(
@@ -176,7 +196,6 @@ class Ttasktype extends State<Taskt> {
                       );
                       return;
                     }
-
                     prov.addTask(
                       Tasks(
                         description: desc_con.text,
@@ -184,6 +203,7 @@ class Ttasktype extends State<Taskt> {
                         d: d1,
                       ),
                     );
+
                     desc_con.clear();
                     date_con.clear();
                     setState(() => selectedtasktype = null);
@@ -567,6 +587,25 @@ class task_provider extends ChangeNotifier {
       'created_at': FieldValue.serverTimestamp(),
     });
     t.docId = docRef.id;
+    DateTime date = t.d;
+    await AwesomeNotifications().createNotification(
+      content: NotificationContent(
+        id: date.millisecondsSinceEpoch ~/ 1000,
+        channelKey: "tasks_channel",
+        body: t.tasktype,
+        title: " تذكير مهمة:  ${t.description}  ",
+      ),
+      schedule: NotificationCalendar(
+        year: date.year,
+        month: date.month,
+        day: date.day,
+        hour: date.hour,
+        minute: date.minute,
+        second: 0,
+        repeats: false,
+        preciseAlarm: true,
+      ),
+    );
   }
 
   // تحديث مهمة

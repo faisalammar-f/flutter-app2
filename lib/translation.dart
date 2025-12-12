@@ -44,7 +44,7 @@ class Lang extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.purple,
+        backgroundColor: Color(0xFF6A1B9A),
         title: Center(
           child: Text(
             "Settings".tr,
@@ -315,6 +315,19 @@ final Map<String, Map<String, String>> homeTranslations = {
     "إعدادات": "Settings",
     "choose your Language:": "اختر لغتك:",
     "change password": "تغيير كلمة المرور",
+    "Calendar": "التقوبم",
+    "There are no tasks currently": "لا توجد مهام حاليا",
+    "Deadline:": ":الموعدالنهائي",
+    "Task Today": "مهمة اليوم",
+    "Smart Insights for you": "رؤى ذكية لك",
+    "based on your recent tasks and spending , here are personalized tips: ":
+        "بناءً على مهامك ونفقاتك الأخيرة، إليك بعض النصائح الشخصية: ",
+    "Get New Suggestions": "احصل على اقتراحات جديدة",
+    "No summary found": "لم يتم العثور على ملخص",
+    "Top Category:": "الفئة الأعلى:",
+    "Advice:": "نصيحة:",
+    "Total Expense:": "إجمالي النفقات:",
+    "Total Income:": "إجمالي الدخل:",
   },
   "en": {
     "Smart Plan": "Smart Plan",
@@ -384,6 +397,19 @@ final Map<String, Map<String, String>> homeTranslations = {
     "تم انجاز المهمة": "Task Completed",
     "choose your Language:": "choose your Language:",
     "change password": "change password",
+    "Calendar": "Calendar",
+    "There are no tasks currently": "There are no tasks currently",
+    "Deadline:": "Deadline:",
+    "Task Today": "Task Today",
+    "Smart Insights for you": "Smart Insights for you",
+    "based on your recent tasks and spending , here are personalized tips: ":
+        "based on your recent tasks and spending , here are personalized tips: ",
+    "Get New Suggestions": "Get New Suggestions",
+    "No summary found": "No summary found",
+    "Top Category:": "Top Category:",
+    "Advice:": "Advice:",
+    "Total Expense:": "Total Expense:",
+    "Total Income:": "Total Income:",
   },
 };
 final Map<String, Map<String, String>> taskTranslations = {
@@ -403,6 +429,8 @@ final Map<String, Map<String, String>> taskTranslations = {
     "Cancel": "إلغاء",
     "Delete": "حذف",
     "تم إنجاز المهمة": "تم إنجاز المهمة",
+    "Task Title:": ":عنوان المهمة",
+    "Task Type:": ":نوع المهمة",
   },
   "en": {
     "Task Management": "Task Management",
@@ -420,6 +448,8 @@ final Map<String, Map<String, String>> taskTranslations = {
     "Cancel": "Cancel",
     "Delete": "Delete",
     "تم إنجاز المهمة": "Task Done",
+    "Task Title:": "Task Title:",
+    "Task Type:": "Task Type:",
   },
 };
 Map<String, Map<String, String>> incomeexpensesTranslation = {

@@ -2,7 +2,7 @@
     package="com.timer"> <!-- ✅ هنا -->
     
     <application
-        android:label="apppp"
+        android:label="Smart Plan"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         

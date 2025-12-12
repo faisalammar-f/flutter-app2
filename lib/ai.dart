@@ -42,7 +42,7 @@ class Ai_ass extends State<Ai> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Text(
-              "Smart Insights for you",
+              "Smart Insights for you".tr,
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 color: Colors.black,
@@ -50,7 +50,8 @@ class Ai_ass extends State<Ai> {
               ),
             ),
             Text(
-              "based on your recent tasks and spending , here are personalized tips: ",
+              "based on your recent tasks and spending , here are personalized tips: "
+                  .tr,
               style: TextStyle(
                 fontSize: 15,
                 fontWeight: FontWeight.bold,
@@ -73,7 +74,7 @@ class Ai_ass extends State<Ai> {
                 });
               },
               label: Text(
-                "Get New Suggestions",
+                "Get New Suggestions".tr,
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w300,
@@ -92,7 +93,7 @@ class Ai_ass extends State<Ai> {
                     }
 
                     if (!snapshot.hasData || snapshot.data == null) {
-                      return Center(child: Text("No summary found"));
+                      return Center(child: Text("No summary found".tr));
                     }
                     final summary = snapshot.data!;
                     return Container(
@@ -105,7 +106,7 @@ class Ai_ass extends State<Ai> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Text(
-                            "Top Category: ${summary.topcategory}",
+                            "Top Category: ${summary.topcategory}".tr,
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
@@ -113,17 +114,17 @@ class Ai_ass extends State<Ai> {
                           ),
                           SizedBox(height: 20),
                           Text(
-                            "Advice: ${summary.advise}",
+                            "Advice: ${summary.advise}".tr,
                             style: TextStyle(fontSize: 16),
                           ),
                           SizedBox(height: 8),
                           Text(
-                            "Total Expense: ${summary.sumex}",
+                            "Total Expense: ${summary.sumex}".tr,
                             style: TextStyle(fontSize: 16),
                           ),
                           SizedBox(height: 8),
                           Text(
-                            "Total Income: ${summary.sumin}",
+                            "Total Income: ${summary.sumin}".tr,
                             style: TextStyle(fontSize: 16),
                           ),
                         ],

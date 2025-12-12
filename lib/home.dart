@@ -2,8 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_24/ai.dart';
+import 'package:flutter_application_24/calender.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'import_schedule_screen.dart';
 import 'main.dart';
 import 'task.dart';
 import 'signup.dart';
@@ -396,6 +398,31 @@ class _HomePageState extends State<HomePage> {
                   Navigator.of(
                     context,
                   ).push(MaterialPageRoute(builder: (context) => Lang()));
+                },
+              ),
+            ),
+            Card(
+              child: ListTile(
+                leading: Icon(Icons.calendar_month),
+                title: Text("Calendar".tr),
+                onTap: () {
+                  Navigator.of(
+                    context,
+                  ).push(MaterialPageRoute(builder: (context) => Callender()));
+                },
+              ),
+            ),
+            Card(
+              child: ListTile(
+                leading: const Icon(Icons.schedule),
+                title: const Text('Import Study Schedule'),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => const ImportScheduleScreen(),
+                    ),
+                  );
                 },
               ),
             ),

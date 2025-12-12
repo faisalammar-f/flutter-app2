@@ -15,13 +15,29 @@ import 'task.dart';
 import 'Income.dart';
 import 'Expenses.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:awesome_notifications/awesome_notifications.dart';
 
 const kPrimaryColor = Color(0xFF6A1B9A);
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  await AwesomeNotifications().initialize(null, [
+    NotificationChannel(
+      channelKey: "tasks_channel",
+      channelName: "task reminder",
+      channelDescription: "reminder of task",
+      importance: NotificationImportance.Max,
+      playSound: true,
+      enableLights: true,
+      enableVibration: true,
+    ),
+  ], debug: true);
 
+  bool isAllowed = await AwesomeNotifications().isNotificationAllowed();
+  if (!isAllowed) {
+    AwesomeNotifications().requestPermissionToSendNotifications();
+  }
   runApp(
     MultiProvider(
       providers: [
