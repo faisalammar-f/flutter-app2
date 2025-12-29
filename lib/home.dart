@@ -422,7 +422,7 @@ class _HomePageState extends State<HomePage> {
             Card(
               child: ListTile(
                 leading: const Icon(Icons.schedule),
-                title: const Text('Import Study Schedule'),
+                title: Text('Import Study Schedule'.tr),
                 onTap: () {
                   Navigator.push(
                     context,

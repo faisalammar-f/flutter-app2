@@ -93,7 +93,7 @@ class Ai_ass extends State<Ai> {
                               color: Colors.white,
                             ),
                             Text(
-                              "Your financial report",
+                              "Your financial report:".tr,
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
@@ -107,7 +107,7 @@ class Ai_ass extends State<Ai> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Text(
-                              "💰Total Income:",
+                              "💰Total Income:".tr,
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
@@ -121,7 +121,7 @@ class Ai_ass extends State<Ai> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Text(
-                              "📉 Total Expenses:",
+                              "📉 Total Expenses:".tr,
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
@@ -135,7 +135,7 @@ class Ai_ass extends State<Ai> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Text(
-                              "📊Financial Score:",
+                              "📊Financial Score:".tr,
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
@@ -147,7 +147,7 @@ class Ai_ass extends State<Ai> {
                         SizedBox(height: 12),
 
                         Text(
-                          "💡 Main Insight:",
+                          "💡 Main Insight:".tr,
                           style: TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.bold,
@@ -160,7 +160,7 @@ class Ai_ass extends State<Ai> {
 
                         SizedBox(height: 12),
                         Text(
-                          "💸 Saving Opportunity:",
+                          "💸 Saving Opportunity:".tr,
                           style: TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.bold,
@@ -179,7 +179,7 @@ class Ai_ass extends State<Ai> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Text(
-                              "⚖️ Balance:",
+                              "⚖️ Balance:".tr,
                               style: TextStyle(
                                 fontSize: 15,
                                 fontWeight: FontWeight.bold,
@@ -195,7 +195,7 @@ class Ai_ass extends State<Ai> {
                         SizedBox(height: 12),
 
                         Text(
-                          "📝 Summary:",
+                          "📝 Summary:".tr,
                           style: TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.bold,
@@ -271,10 +271,10 @@ class ai_prov extends ChangeNotifier {
   void calculatefinscore() {
     if (totalincome == 0) {
       financialScore = 0;
-      financialLabel = "Risk";
-      mainInsight = "no income data available.";
+      financialLabel = "Risk".tr;
+      mainInsight = "no income data available.".tr;
       savingOpportunity = "";
-      summary = "You have no income recorded for this month.";
+      summary = "You have no income recorded for this month.".tr;
       balance = -totalexp;
       notifyListeners();
       return;
@@ -285,15 +285,15 @@ class ai_prov extends ChangeNotifier {
             .round()
             .clamp(0, 100);
     if (financialScore >= 70) {
-      financialLabel = "Excellent";
+      financialLabel = "Excellent".tr;
     } else if (financialScore >= 50) {
-      financialLabel = "Moderate";
+      financialLabel = "Moderate".tr;
     } else {
-      financialLabel = "High risk";
+      financialLabel = "High risk".tr;
     }
 
     if (topcat.isEmpty) {
-      mainInsight = "No expense category data.";
+      mainInsight = "No expense category data.".tr;
     } else {
       double percent = (totalincome == 0)
           ? 0
@@ -309,10 +309,10 @@ class ai_prov extends ChangeNotifier {
           "You can save ${possiblesaving.toStringAsFixed(0)} JOD by reducing $topcat expenses by 10%. ";
     }
     summary = (financialScore >= 70)
-        ? "Your monthly financial health is good."
+        ? "Your monthly financial health is good.".tr
         : (financialScore >= 50)
-        ? "Your financial situation is moderate and needs monitoring."
-        : "Your expenses are high and need control.";
+        ? "Your financial situation is moderate and needs monitoring.".tr
+        : "Your expenses are high and need control.".tr;
 
     notifyListeners();
   }

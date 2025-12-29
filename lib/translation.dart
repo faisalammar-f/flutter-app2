@@ -324,10 +324,35 @@ final Map<String, Map<String, String>> homeTranslations = {
         "بناءً على مهامك ونفقاتك الأخيرة، إليك بعض النصائح الشخصية: ",
     "Get New Suggestions": "احصل على اقتراحات جديدة",
     "No summary found": "لم يتم العثور على ملخص",
-    "Top Category:": "الفئة الأعلى:",
-    "Advice:": "نصيحة:",
-    "Total Expense:": "إجمالي النفقات:",
-    "Total Income:": "إجمالي الدخل:",
+    "💰Total Income:": "إجمالي الدخل:",
+    "📉 Total Expenses:": "📉 إجمالي المصاريف:",
+    "Your financial report:": "تقريرك المالي:",
+    "📝 Summary:": "📝 ملخص:",
+    "⚖️ Balance:": "⚖️ التوازن:",
+    "💸 Saving Opportunity:": "💸 فرصة للتوفير:",
+    "💡 Main Insight:": "💡 الفكرة الرئيسية:",
+    "📊Financial Score:": "📊التقييم المالي:",
+    "Unknown": "مجهول",
+    "no income data available.": "لا تتوفر بيانات الدخل.",
+    "Risk": "مخاطرة",
+    "You have no income recorded for this month.":
+        "ليس لديك أي دخل مسجل لهذا الشهر.",
+    "Excellent": "ممتاز",
+    "Moderate": "معتدل",
+    "High risk": "عالي الخطورة",
+    "No expense category data.": "لا توجد بيانات عن فئات المصاريف.",
+    "Your monthly financial health is good.": "وضعك المالي الشهري جيد.",
+    "Your financial situation is moderate and needs monitoring.":
+        "وضعك المالي متوسط ​​ويحتاج إلى متابعة.",
+    "Your expenses are high and need control.": "نفقاتك مرتفعة وتحتاج إلى ضبط.",
+    ".ما قدرنا نستخرج جدول واضح من الصورة":
+        ".ما قدرنا نستخرج جدول واضح من الصورة",
+    ' ما قدرنا نطلع جدول واضح': ' ما قدرنا نطلع جدول واضح',
+
+    'Import Study Schedule': "استيراد جدول دراسة",
+    'Choose a table image': ' اختيار صورة الجدول',
+    'اختاري صورة جدولك وشوفي النص هون': 'اختاري صورة جدولك وشوفي النص هون',
+    "Add to Tasks": "إضافة إلى المهام",
   },
   "en": {
     "Smart Plan": "Smart Plan",
@@ -406,10 +431,38 @@ final Map<String, Map<String, String>> homeTranslations = {
         "based on your recent tasks and spending , here are personalized tips: ",
     "Get New Suggestions": "Get New Suggestions",
     "No summary found": "No summary found",
-    "Top Category:": "Top Category:",
-    "Advice:": "Advice:",
-    "Total Expense:": "Total Expense:",
-    "Total Income:": "Total Income:",
+    "💰Total Income:": "💰Total Income:",
+    "📉 Total Expenses:": "📉 Total Expenses:",
+    "Your financial report:": "Your financial report:",
+    "📝 Summary:": "📝 Summary:",
+    "⚖️ Balance:": "⚖️ Balance:",
+    "💸 Saving Opportunity:": "💸 Saving Opportunity:",
+    "💡 Main Insight:": "💡 Main Insight:",
+    "📊Financial Score:": "📊Financial Score:",
+    "Unknown": "Unknown",
+    "no income data available.": "no income data available.",
+    "Risk": "Risk",
+    "You have no income recorded for this month.":
+        "You have no income recorded for this month.",
+    "Excellent": "Excellent",
+    "Moderate": "Moderate",
+    "High risk": "High risk",
+    "No expense category data.": "No expense category data.",
+    "Your monthly financial health is good.":
+        "Your monthly financial health is good.",
+    "Your financial situation is moderate and needs monitoring.":
+        "Your financial situation is moderate and needs monitoring.",
+    "Your expenses are high and need control.":
+        "Your expenses are high and need control.",
+    ".ما قدرنا نستخرج جدول واضح من الصورة":
+        "We were unable to extract a clear table from the image.",
+    ' ما قدرنا نطلع جدول واضح': "We couldn't come up with a clear schedule",
+    'Import Study Schedule': 'Import Study Schedule',
+
+    'Choose a table image': 'Choose a table image',
+    'اختاري صورة جدولك وشوفي النص هون':
+        'Choose a picture of your schedule and see the text here',
+    "Add to Tasks": "Add to Tasks",
   },
 };
 final Map<String, Map<String, String>> taskTranslations = {

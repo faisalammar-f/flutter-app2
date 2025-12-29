@@ -98,7 +98,7 @@ class _ImportScheduleScreenState extends State<ImportScheduleScreen> {
     final items = _parseScheduleLines(_lines);
     if (items.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('ما قدرنا نستخرج جدول واضح من الصورة')),
+        SnackBar(content: Text(".ما قدرنا نستخرج جدول واضح من الصورة".tr)),
       );
       return;
     }
@@ -303,7 +303,7 @@ class _ImportScheduleScreenState extends State<ImportScheduleScreen> {
     if (items.isEmpty) {
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(const SnackBar(content: Text('ما قدرنا نطلع جدول واضح')));
+      ).showSnackBar(SnackBar(content: Text('ما قدرنا نطلع جدول واضح'.tr)));
       return;
     }
 
@@ -328,7 +328,7 @@ class _ImportScheduleScreenState extends State<ImportScheduleScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Import Study Schedule')),
+      appBar: AppBar(title: Text('Import Study Schedule'.tr)),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -337,8 +337,8 @@ class _ImportScheduleScreenState extends State<ImportScheduleScreen> {
               width: double.infinity,
               child: ElevatedButton.icon(
                 onPressed: _pickImage,
-                icon: const Icon(Icons.upload_file),
-                label: const Text('اختيار صورة الجدول'),
+                icon: Icon(Icons.upload_file),
+                label: Text('Choose a table image'.tr),
               ),
             ),
             const SizedBox(height: 12),
@@ -370,7 +370,7 @@ class _ImportScheduleScreenState extends State<ImportScheduleScreen> {
                 ),
                 padding: const EdgeInsets.all(8),
                 child: _lines.isEmpty
-                    ? const Text('اختاري صورة جدولك وشوفي النص هون')
+                    ? Text('اختاري صورة جدولك وشوفي النص هون'.tr)
                     : ListView.builder(
                         itemCount: _lines.length,
                         itemBuilder: (_, i) => Text('- ${_lines[i]}'),
@@ -383,7 +383,7 @@ class _ImportScheduleScreenState extends State<ImportScheduleScreen> {
                 width: double.infinity,
                 child: ElevatedButton.icon(
                   icon: const Icon(Icons.playlist_add),
-                  label: const Text('إضافة إلى Tasks'),
+                  label: Text("Add to Tasks".tr),
                   onPressed: () => _autoImportToTasks(),
                 ),
               ),

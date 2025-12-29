@@ -96,8 +96,8 @@ class Ttasktype extends State<Taskt> {
             MaterialPageRoute(builder: (_) => const ImportScheduleScreen()),
           );
         },
-        icon: const Icon(Icons.camera_alt),
-        label: const Text("Import Study Schedule"),
+        icon: Icon(Icons.camera_alt),
+        label: Text("Import Study Schedule".tr),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
