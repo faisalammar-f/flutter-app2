@@ -388,8 +388,6 @@ class Expenses_app extends State<Expenses_w> {
 }
 
 class exp_provider extends ChangeNotifier {
-  List<Expenses> ex_p = [];
-
   CollectionReference get expensesCollection {
     final uid = FirebaseAuth.instance.currentUser?.uid;
     if (uid == null) {
@@ -429,6 +427,44 @@ class exp_provider extends ChangeNotifier {
         sum += e.amount;
       }
       return sum;
+    });
+  }
+
+  Stream<double> get topCategoryAmount {
+    return allExpenses.map((expenseList) {
+      if (expenseList.isEmpty) return 0.0;
+
+      // 1️⃣ نحسب مجموع كل فئة
+      Map<String, double> categoryTotals = {};
+      for (var e in expenseList) {
+        categoryTotals[e.category] =
+            (categoryTotals[e.category] ?? 0) + e.amount;
+      }
+
+      // 2️⃣ نطلع القيمة الأعلى
+      double maxAmount = categoryTotals.values.reduce((a, b) => a > b ? a : b);
+
+      return maxAmount;
+    });
+  }
+
+  Stream<String> get topcategory {
+    return allExpenses.map((expenseList) {
+      if (expenseList.isEmpty) return 'No Data';
+
+      Map<String, double> categoryTotals = {};
+
+      for (var e in expenseList) {
+        categoryTotals[e.category] =
+            (categoryTotals[e.category] ?? 0) + e.amount;
+      }
+
+      // 2️⃣ نطلع الفئة ذات المجموع الأعلى
+      String topCat = categoryTotals.entries
+          .reduce((a, b) => a.value > b.value ? a : b)
+          .key;
+
+      return topCat;
     });
   }
 

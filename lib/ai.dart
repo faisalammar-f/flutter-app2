@@ -1,24 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
-class Summary {
-  Timestamp lastupdate;
-  String advise;
-  String topcategory;
-  num sumex;
-  num sumin;
-  Timestamp month;
-  Summary({
-    required this.advise,
-    required this.lastupdate,
-    required this.month,
-    required this.sumex,
-    required this.sumin,
-    required this.topcategory,
-  });
-}
+import 'package:provider/provider.dart';
 
 class Ai extends StatefulWidget {
   Ai({super.key});
@@ -29,6 +12,7 @@ class Ai_ass extends State<Ai> {
   bool isopen = false;
   @override
   Widget build(BuildContext context) {
+    final a = Provider.of<ai_prov>(context);
     return Scaffold(
       appBar: AppBar(
         title: Text("AI Assistant".tr),
@@ -36,104 +20,197 @@ class Ai_ass extends State<Ai> {
         elevation: 0,
         foregroundColor: Colors.black,
       ),
-      body: Padding(
-        padding: EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Text(
-              "Smart Insights for you".tr,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
-                fontSize: 22,
-              ),
-            ),
-            Text(
-              "based on your recent tasks and spending , here are personalized tips: "
-                  .tr,
-              style: TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.bold,
-                color: Colors.grey,
-              ),
-            ),
-            ElevatedButton.icon(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blueAccent,
-                shape: RoundedSuperellipseBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                elevation: 2,
-              ),
-              icon: Icon(Icons.lightbulb, color: Colors.white, size: 24),
-              onPressed: () {
-                setState(() {
-                  isopen = !isopen;
-                });
-              },
-              label: Text(
-                "Get New Suggestions".tr,
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w300,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-            SizedBox(height: 20),
-            if (isopen)
-              Expanded(
-                child: StreamBuilder<Summary?>(
-                  stream: ai_prov().summarystream,
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Center(child: CircularProgressIndicator());
-                    }
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
 
-                    if (!snapshot.hasData || snapshot.data == null) {
-                      return Center(child: Text("No summary found".tr));
-                    }
-                    final summary = snapshot.data!;
-                    return Container(
-                      padding: EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: Colors.blue.shade50,
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Top Category: ${summary.topcategory}".tr,
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          SizedBox(height: 20),
-                          Text(
-                            "Advice: ${summary.advise}".tr,
-                            style: TextStyle(fontSize: 16),
-                          ),
-                          SizedBox(height: 8),
-                          Text(
-                            "Total Expense: ${summary.sumex}".tr,
-                            style: TextStyle(fontSize: 16),
-                          ),
-                          SizedBox(height: 8),
-                          Text(
-                            "Total Income: ${summary.sumin}".tr,
-                            style: TextStyle(fontSize: 16),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
+            children: [
+              Text(
+                "Smart Insights for you".tr,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                  fontSize: 22,
                 ),
               ),
-          ],
+              Text(
+                "based on your recent tasks and spending , here are personalized tips: "
+                    .tr,
+                style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.grey,
+                ),
+              ),
+              ElevatedButton.icon(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blueAccent,
+                  shape: RoundedSuperellipseBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                  elevation: 2,
+                ),
+                icon: Icon(Icons.lightbulb, color: Colors.white, size: 24),
+                onPressed: () {
+                  setState(() {
+                    isopen = !isopen;
+                  });
+                },
+                label: Text(
+                  "Get New Suggestions".tr,
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w300,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+              SizedBox(height: 20),
+
+              if (isopen)
+                Card(
+                  elevation: 5,
+                  margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                  color: Colors.blue.shade50,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.analytics,
+                              size: 30,
+                              color: Colors.white,
+                            ),
+                            Text(
+                              "Your financial report",
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
+                        ),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Text(
+                              "💰Total Income:",
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Text("${a.totalincome.toStringAsFixed(2)} JOD"),
+                          ],
+                        ),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Text(
+                              "📉 Total Expenses:",
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Text("${a.totalexp.toStringAsFixed(2)} JOD"),
+                          ],
+                        ),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Text(
+                              "📊Financial Score:",
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Text("${a.financialScore} ${a.financialLabel}"),
+                          ],
+                        ),
+                        SizedBox(height: 12),
+
+                        Text(
+                          "💡 Main Insight:",
+                          style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(height: 6),
+
+                        // ignore: unnecessary_string_interpolations
+                        Text("${a.mainInsight}", softWrap: true),
+
+                        SizedBox(height: 12),
+                        Text(
+                          "💸 Saving Opportunity:",
+                          style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(height: 6),
+
+                        Text(
+                          // ignore: unnecessary_string_interpolations
+                          "${a.savingOpportunity}",
+                          softWrap: true,
+                        ),
+
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Text(
+                              "⚖️ Balance:",
+                              style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            SizedBox(width: 10),
+                            // ignore: unnecessary_string_interpolations
+                            Flexible(
+                              child: Text("${a.balance}", softWrap: true),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 12),
+
+                        Text(
+                          "📝 Summary:",
+                          style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(height: 6),
+
+                        // ignore: unnecessary_string_interpolations
+                        Text("${a.summary}", softWrap: true),
+                      ],
+                    ),
+                  ),
+                ),
+            ],
+          ),
         ),
       ),
     );
@@ -141,46 +218,130 @@ class Ai_ass extends State<Ai> {
 }
 
 class ai_prov extends ChangeNotifier {
-  DocumentReference get summrydoc {
-    final user = FirebaseAuth.instance.currentUser!;
-    // ignore: unnecessary_null_comparison
-    if (user == null) {
-      return FirebaseFirestore.instance
-          .collection("users")
-          .doc("invalid")
-          .collection("analysis")
-          .doc("summary");
-    }
-    return FirebaseFirestore.instance
-        .collection("users")
-        .doc(user.uid)
-        .collection("analysis")
-        .doc("summary");
+  final dynamic income;
+  final dynamic expenses;
+  ai_prov({required this.expenses, required this.income}) {
+    init();
+  }
+  void init() {
+    _listenToStreams();
   }
 
-  Stream<Summary?> get summarystream {
-    final user = FirebaseAuth.instance.currentUser!;
-    // ignore: unnecessary_null_comparison
-    if (user == null) {
-      return const Stream.empty();
+  double totalincome = 0;
+  double totalexp = 0;
+  String topcat = '';
+  double topcatamount = 0;
+  double balance = 0;
+  StreamSubscription? _incomeSub;
+  StreamSubscription? _expSub;
+  StreamSubscription? _topCatSub;
+  StreamSubscription? _topCatAmtSub;
+
+  // ignore: unused_element
+  void _listenToStreams() {
+    _incomeSub?.cancel();
+    _expSub?.cancel();
+    _topCatSub?.cancel();
+    _topCatAmtSub?.cancel();
+    _incomeSub = income.sumIncome.listen((value) {
+      totalincome = value;
+      calculatefinscore();
+    });
+
+    _expSub = expenses.sumExpenses.listen((value) {
+      totalexp = value;
+      calculatefinscore();
+    });
+
+    _topCatSub = expenses.topcategory.listen((value) {
+      topcat = value;
+      calculatefinscore();
+    });
+    _topCatAmtSub = expenses.topCategoryAmount.listen((value) {
+      topcatamount = value;
+      calculatefinscore();
+    });
+  }
+
+  String financialLabel = "Unknown";
+  String savingOpportunity = "";
+  String mainInsight = "";
+  String summary = "";
+  int financialScore = 0;
+  void calculatefinscore() {
+    if (totalincome == 0) {
+      financialScore = 0;
+      financialLabel = "Risk";
+      mainInsight = "no income data available.";
+      savingOpportunity = "";
+      summary = "You have no income recorded for this month.";
+      balance = -totalexp;
+      notifyListeners();
+      return;
     }
-    return FirebaseFirestore.instance
-        .collection("users")
-        .doc(user.uid)
-        .collection("analysis")
-        .doc("summary")
-        .snapshots()
-        .map((snapshot) {
-          if (!snapshot.exists) return null;
-          final data = snapshot.data() as Map<String, dynamic>;
-          return Summary(
-            advise: data["advice"] ?? "",
-            lastupdate: data["-last_update"] ?? Timestamp.now(),
-            month: data["month"] ?? Timestamp.now(),
-            sumex: data["total_expense"] ?? 0,
-            sumin: data["total_income"] ?? 0,
-            topcategory: data["top_category"] ?? "",
-          );
-        });
+    balance = totalincome - totalexp;
+    financialScore = financialScore =
+        ((100 - (totalexp / totalincome) * 50 - (topcatamount / totalexp) * 30))
+            .round()
+            .clamp(0, 100);
+    if (financialScore >= 70) {
+      financialLabel = "Excellent";
+    } else if (financialScore >= 50) {
+      financialLabel = "Moderate";
+    } else {
+      financialLabel = "High risk";
+    }
+
+    if (topcat.isEmpty) {
+      mainInsight = "No expense category data.";
+    } else {
+      double percent = (totalincome == 0)
+          ? 0
+          : (topcatamount / totalincome) * 100;
+      mainInsight =
+          "Most of your spending went to $topcat,consuming ${percent.toStringAsFixed(0)}% of your income. ";
+    }
+    if (topcat.isEmpty || totalexp == 0) {
+      savingOpportunity = "";
+    } else {
+      double possiblesaving = 0.1 * topcatamount;
+      savingOpportunity =
+          "You can save ${possiblesaving.toStringAsFixed(0)} JOD by reducing $topcat expenses by 10%. ";
+    }
+    summary = (financialScore >= 70)
+        ? "Your monthly financial health is good."
+        : (financialScore >= 50)
+        ? "Your financial situation is moderate and needs monitoring."
+        : "Your expenses are high and need control.";
+
+    notifyListeners();
+  }
+
+  @override
+  void dispose() {
+    _incomeSub?.cancel();
+    _expSub?.cancel();
+    _topCatSub?.cancel();
+    _topCatAmtSub?.cancel();
+    super.dispose();
+  }
+
+  void clearData() {
+    _incomeSub?.cancel();
+    _expSub?.cancel();
+    _topCatSub?.cancel();
+    _topCatAmtSub?.cancel();
+
+    totalincome = 0;
+    totalexp = 0;
+    topcat = '';
+    topcatamount = 0;
+    balance = 0;
+    financialScore = 0;
+    financialLabel = "Unknown";
+    savingOpportunity = "";
+    mainInsight = "";
+    summary = "";
+    notifyListeners();
   }
 }

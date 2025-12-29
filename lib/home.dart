@@ -45,8 +45,14 @@ class _HomePageState extends State<HomePage> {
       fullnameController.text = data["fullname"] ?? "";
       emailController.text = data["email"] ?? "";
       gender = data["gender"] ?? "";
-      if (data["dateofbirth"] != null) {
-        selectedDate = (data["dateofbirth"] as Timestamp).toDate();
+      final dob = data["dateofbirth"];
+
+      if (dob is Timestamp) {
+        selectedDate = dob.toDate();
+        dateController.text =
+            "${selectedDate.day}/${selectedDate.month}/${selectedDate.year}";
+      } else if (dob is String) {
+        selectedDate = DateTime.tryParse(dob) ?? DateTime.now();
         dateController.text =
             "${selectedDate.day}/${selectedDate.month}/${selectedDate.year}";
       } else {
@@ -197,10 +203,11 @@ class _HomePageState extends State<HomePage> {
   Future<void> _logout(BuildContext context) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool("isLoggedIn", false);
-
-    Navigator.pushReplacement(
+    Provider.of<ai_prov>(context, listen: false).clearData();
+    Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(builder: (_) => LoginPage()),
+      (route) => false,
     );
   }
 

@@ -585,10 +585,18 @@ class provider_sign extends ChangeNotifier {
         final data = doc.data()!;
         fullname = data['fullname'] ?? '';
         email = data['email'] ?? '';
-        phonenumber = data['phonenumber'] ?? '';
+        phonenumber = data['phone'] ?? '';
         gender = data['gender'] ?? '';
-        dateofbirth =
-            DateTime.tryParse(data['dateofbirth'] ?? '') ?? DateTime.now();
+
+        final dob = data['dateofbirth'];
+
+        if (dob is Timestamp) {
+          dateofbirth = dob.toDate();
+        } else if (dob is String) {
+          dateofbirth = DateTime.tryParse(dob) ?? DateTime.now();
+        } else {
+          dateofbirth = DateTime.now();
+        }
         notifyListeners();
 
         print('✅ تم تحميل بيانات المستخدم من Firestore بنجاح');
@@ -606,10 +614,10 @@ class provider_sign extends ChangeNotifier {
       'email': email,
       'phonenumber': phonenumber,
       'gender': gender,
-      'birthDate': Timestamp.fromDate(
+      'dateofbirth': Timestamp.fromDate(
         dateofbirth,
       ), // تحويل من DateTime → Timestamp
-      'createdAt': Timestamp.now(),
+      'createdat': FieldValue.serverTimestamp(),
     };
   }
 }

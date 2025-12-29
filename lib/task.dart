@@ -110,7 +110,7 @@ class Ttasktype extends State<Taskt> {
                 "Task Title".tr,
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 20),
               TextFormField(
                 controller: desc_con,
                 decoration: InputDecoration(
@@ -248,11 +248,13 @@ class Ttasktype extends State<Taskt> {
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Text(
-                                      t.description,
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 16,
+                                    Expanded(
+                                      child: Text(
+                                        t.description,
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16,
+                                        ),
                                       ),
                                     ),
                                     IconButton(

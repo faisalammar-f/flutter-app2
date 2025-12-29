@@ -168,15 +168,26 @@ class Support extends StatelessWidget {
                                   },
                                 );
                               },
+
                               child: Text(
                                 m.message,
-                                style: TextStyle(
+                                style: const TextStyle(
                                   color: Colors.blueAccent,
-                                  decoration: TextDecoration.underline,
+                                  fontSize: 15,
                                 ),
                               ),
                             ),
-                            subtitle: Text(m.replay),
+
+                            subtitle: Text(
+                              m.replay,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.grey.shade800,
+                                fontStyle: FontStyle.italic,
+                              ),
+                            ),
                           );
                         },
                       );
@@ -252,6 +263,45 @@ class Support extends StatelessWidget {
   }
 }
 
+class adminyou extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Users"),
+        backgroundColor: Color(0xFF6A1B9A),
+        centerTitle: true,
+      ),
+      body: StreamBuilder(
+        stream: massprov().userstream(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) return CircularProgressIndicator();
+          final user = snapshot.data!;
+          return ListView.builder(
+            itemBuilder: (context, Index) {
+              final users = user[Index];
+              return Card(
+                child: ListTile(
+                  leading: Icon(Icons.person, size: 40),
+                  title: Text("User: $users"),
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => adminSupport(user: users),
+                      ),
+                    );
+                  },
+                ),
+              );
+            },
+            itemCount: user.length,
+          );
+        },
+      ),
+    );
+  }
+}
+
 class massprov extends ChangeNotifier {
   String? get userId => FirebaseAuth.instance.currentUser?.uid;
 
@@ -260,9 +310,38 @@ class massprov extends ChangeNotifier {
   CollectionReference get massCollection =>
       FirebaseFirestore.instance.collection("messages");
 
+  Stream<List<String>> userstream() {
+    return massCollection.snapshots().map((snapshot) {
+      final users = snapshot.docs
+          .map((doc) => doc['userId'] as String)
+          .toSet()
+          .toList();
+      return users;
+    });
+  }
+
   Stream<List<Message>> get messagestream {
     final uid = userId;
     if (uid == null) return const Stream.empty();
+    return massCollection
+        .where("userId", isEqualTo: uid)
+        .snapshots()
+        .map(
+          (snapshot) => snapshot.docs.map((doc) {
+            final data = doc.data() as Map<String, dynamic>;
+            return Message(
+              userid: data["userId"] ?? "",
+              message: data["message"] ?? "",
+              replay: data["reply"] ?? "",
+              id: doc.id,
+              useremail: data["userEmail"] ?? "",
+              timestamp: data["timestamp"] ?? Timestamp.now(),
+            );
+          }).toList(),
+        );
+  }
+
+  Stream<List<Message>> adminmessagestreamuser(String uid) {
     return massCollection
         .where("userId", isEqualTo: uid)
         .snapshots()
@@ -300,7 +379,6 @@ class massprov extends ChangeNotifier {
   Future<void> addmass(Message m) async {
     final uid = userId;
     final email = userEmail;
-
     if (uid == null || email == null) return;
     final docref = await massCollection.add({
       "message": m.message,
@@ -310,6 +388,7 @@ class massprov extends ChangeNotifier {
       "timestamp": FieldValue.serverTimestamp(),
     });
     m.id = docref.id;
+    notifyListeners();
   }
 
   Future<void> updatemass(Message m, String newm) async {
@@ -331,11 +410,20 @@ class massprov extends ChangeNotifier {
     if (m.id.isEmpty) return;
     await massCollection.doc(m.id).delete();
   }
+
+  Future<void> deletereply(Message m) async {
+    if (m.id.isEmpty) return;
+
+    await massCollection.doc(m.id).update({'reply': null});
+
+    notifyListeners();
+  }
 }
 
 // ignore: must_be_immutable
 class adminSupport extends StatelessWidget {
-  adminSupport({super.key});
+  final String user;
+  adminSupport({super.key, required this.user});
   Message? selectedMessage;
 
   TextEditingController message = TextEditingController();
@@ -373,7 +461,9 @@ class adminSupport extends StatelessWidget {
                 child: Container(
                   height: MediaQuery.of(context).size.height * 0.6,
                   child: StreamBuilder<List<Message>>(
-                    stream: Provider.of<massprov>(context).adminmessagestream,
+                    stream: Provider.of<massprov>(
+                      context,
+                    ).adminmessagestreamuser(user),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return Center(child: CircularProgressIndicator());
@@ -391,15 +481,17 @@ class adminSupport extends StatelessWidget {
                           final m = mass[index];
                           final TextEditingController editController =
                               TextEditingController(text: m.replay);
+                          selectedMessage = m;
                           return ListTile(
-                            onTap: () {
-                              selectedMessage = m;
-                            },
-                            trailing: Text(
-                              m.message,
-                              style: TextStyle(
-                                color: Colors.blueAccent,
-                                decoration: TextDecoration.underline,
+                            trailing: Padding(
+                              padding: EdgeInsets.only(top: 6),
+
+                              child: Text(
+                                m.message,
+                                style: TextStyle(
+                                  color: Colors.blueAccent,
+                                  fontSize: 15,
+                                ),
                               ),
                             ),
 
@@ -471,7 +563,7 @@ class adminSupport extends StatelessWidget {
                                                         listen: false,
                                                       );
 
-                                                  await pro.removemass(m);
+                                                  await pro.deletereply(m);
                                                   Navigator.pop(context);
                                                   ScaffoldMessenger.of(
                                                     context,
@@ -493,7 +585,17 @@ class adminSupport extends StatelessWidget {
                                   },
                                 );
                               },
-                              child: Text(m.replay),
+
+                              child: Text(
+                                m.replay,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontSize: 13,
+                                  color: Colors.grey.shade800,
+                                  fontStyle: FontStyle.italic,
+                                ),
+                              ),
                             ),
                           );
                         },

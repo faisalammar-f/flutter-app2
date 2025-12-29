@@ -1,8 +1,10 @@
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_24/task.dart';
-import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:get/get.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import 'package:provider/provider.dart';
 
@@ -45,6 +47,98 @@ class _ImportScheduleScreenState extends State<ImportScheduleScreen> {
     x = x.replaceAll(RegExp(r'\s+'), ' ');
     x = x.replaceAll('O', '0').replaceAll('o', '0');
     return x;
+  }
+
+  Future<Set<String>> _fetchExistingTaskKeys() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return {};
+
+    final snap = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(user.uid)
+        .collection('tasks')
+        .get();
+
+    return snap.docs.map((doc) {
+      final data = doc.data();
+      final desc = (data['description'] ?? '').toString().trim().toLowerCase();
+      final type = (data['tasktype'] ?? '').toString().trim().toLowerCase();
+
+      DateTime dt;
+      final rawDate = data['date'];
+      if (rawDate is Timestamp) {
+        dt = rawDate.toDate();
+      } else if (rawDate is DateTime) {
+        dt = rawDate;
+      } else {
+        dt = DateTime(2000);
+      }
+
+      final dtKey =
+          "${dt.year}-${dt.month.toString().padLeft(2, '0')}-${dt.day.toString().padLeft(2, '0')} "
+          "${dt.hour.toString().padLeft(2, '0')}:${dt.minute.toString().padLeft(2, '0')}";
+
+      return "$desc|$type|$dtKey";
+    }).toSet();
+  }
+
+  String _makeKey(String description, String tasktype, DateTime d) {
+    final desc = description.trim().toLowerCase();
+    final type = tasktype.trim().toLowerCase();
+    final dtKey =
+        "${d.year}-${d.month.toString().padLeft(2, '0')}-${d.day.toString().padLeft(2, '0')} "
+        "${d.hour.toString().padLeft(2, '0')}:${d.minute.toString().padLeft(2, '0')}";
+    return "$desc|$type|$dtKey";
+  }
+
+  // ignore: unused_element
+  Future<void> _autoImportToTasks() async {
+    if (_lines.isEmpty) return;
+
+    final items = _parseScheduleLines(_lines);
+    if (items.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('ما قدرنا نستخرج جدول واضح من الصورة')),
+      );
+      return;
+    }
+
+    final prov = Provider.of<task_provider>(context, listen: false);
+
+    final existingKeys = await _fetchExistingTaskKeys();
+
+    int added = 0;
+    int skipped = 0;
+
+    for (final it in items) {
+      final dt = _taskDateTime(it);
+
+      // نفس صيغة الوصف اللي عندك
+      final desc = "${it.subject} (${it.day} ${it.timeText})";
+      final type = "Study".tr;
+
+      // رفض التاريخ الماضي
+      if (dt.isBefore(DateTime.now())) {
+        skipped++;
+        continue;
+      }
+
+      // منع التكرار
+      final key = _makeKey(desc, type, dt);
+      if (existingKeys.contains(key)) {
+        skipped++;
+        continue;
+      }
+
+      await prov.addTask(Tasks(description: desc, tasktype: type, d: dt));
+
+      existingKeys.add(key);
+      added++;
+    }
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text("انضاف $added | اترفض $skipped (مكرر/غير صالح)")),
+    );
   }
 
   String? _extractDay(String s) {
@@ -199,8 +293,11 @@ class _ImportScheduleScreenState extends State<ImportScheduleScreen> {
       _isLoading = false;
       _lines = out;
     });
+
+    await _autoImportToTasks();
   }
 
+  // ignore: unused_element
   void _addToTasks(BuildContext context) {
     final items = _parseScheduleLines(_lines);
     if (items.isEmpty) {
@@ -287,7 +384,7 @@ class _ImportScheduleScreenState extends State<ImportScheduleScreen> {
                 child: ElevatedButton.icon(
                   icon: const Icon(Icons.playlist_add),
                   label: const Text('إضافة إلى Tasks'),
-                  onPressed: () => _addToTasks(context),
+                  onPressed: () => _autoImportToTasks(),
                 ),
               ),
           ],

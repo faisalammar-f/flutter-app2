@@ -32,6 +32,15 @@ void main() async {
       enableLights: true,
       enableVibration: true,
     ),
+    NotificationChannel(
+      channelKey: "messageadmin",
+      channelName: "Messages",
+      channelDescription: "notifications ",
+      importance: NotificationImportance.Max,
+      playSound: true,
+      enableLights: true,
+      enableVibration: true,
+    ),
   ], debug: true);
 
   bool isAllowed = await AwesomeNotifications().isNotificationAllowed();
@@ -47,7 +56,12 @@ void main() async {
         ChangeNotifierProvider(create: (context) => income_provider()),
         ChangeNotifierProvider(create: (context) => task_provider()),
         ChangeNotifierProvider(create: (context) => provider_sign()),
-        ChangeNotifierProvider(create: (context) => ai_prov()),
+        ChangeNotifierProvider(
+          create: (context) => ai_prov(
+            income: context.read<income_provider>(),
+            expenses: context.read<exp_provider>(),
+          ),
+        ),
       ],
 
       child: MyApp(),
@@ -157,7 +171,7 @@ class _LoginPageState extends State<LoginPage> {
         if (user.email == isadmin) {
           Navigator.of(
             context,
-          ).push(MaterialPageRoute(builder: (context) => adminSupport()));
+          ).push(MaterialPageRoute(builder: (context) => adminyou()));
           return;
         }
         // 1️⃣ إعداد SharedPreferences
@@ -177,13 +191,22 @@ class _LoginPageState extends State<LoginPage> {
         if (doc.exists) {
           // ✅ تحميل البيانات الموجودة من Firestore
           final data = doc.data()!;
+          DateTime birthDate;
+
+          final dob = data['dateofbirth'];
+
+          if (dob is Timestamp) {
+            birthDate = dob.toDate();
+          } else if (dob is String) {
+            birthDate = DateTime.tryParse(dob) ?? DateTime.now();
+          } else {
+            birthDate = DateTime.now();
+          }
           await provider.setuserdata(
             full_name: data['fullname'] ?? '',
             email_u: data['email'] ?? email,
             phone_number: data['phone'] ?? '',
-            birthofdate: data['dateofbirth'] != null
-                ? (data['dateofbirth'] as Timestamp).toDate()
-                : DateTime.now(),
+            birthofdate: birthDate,
 
             gender_u: data['gender'] ?? '',
             password_u: provider.password, // ابقِ الباسورد كما هو في Provider
@@ -209,12 +232,14 @@ class _LoginPageState extends State<LoginPage> {
 
           print('☁️ تم رفع بيانات المستخدم إلى Firestore للمرة الأولى');
         }
-
-        // 4️⃣ الانتقال للصفحة الرئيسية
+        Provider.of<ai_prov>(context, listen: false).init();
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (_) => HomePage()),
+          MaterialPageRoute(
+            builder: (context) => HomePage(), // انتقل مباشرة
+          ),
         );
+        // 4️⃣ الانتقال للصفحة الرئيسية
       } else if (user != null && !user.emailVerified) {
         // البريد غير مفعل
         await user.sendEmailVerification();
