@@ -209,7 +209,7 @@ class _LoginPageState extends State<LoginPage> {
             birthofdate: birthDate,
 
             gender_u: data['gender'] ?? '',
-            password_u: provider.password, // ابقِ الباسورد كما هو في Provider
+            password_u: provider.password,
           );
 
           print('✅ تم تحميل بيانات المستخدم من Firestore بنجاح');
