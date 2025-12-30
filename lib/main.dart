@@ -51,7 +51,6 @@ void main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => massprov()),
-        ChangeNotifierProvider(create: (context) => prof()),
         ChangeNotifierProvider(create: (context) => exp_provider()),
         ChangeNotifierProvider(create: (context) => income_provider()),
         ChangeNotifierProvider(create: (context) => task_provider()),
@@ -428,61 +427,37 @@ class _LoginPageState extends State<LoginPage> {
                         children: [
                           TextButton(
                             onPressed: () async {
-                              final provider = Provider.of<provider_sign>(
-                                context,
-                                listen: false,
-                              );
-                              final p = Provider.of<prof>(
-                                context,
-                                listen: false,
-                              );
+                              final email = emailController.text.trim();
 
-                              // تحقق من كلمة المرور وعرض رسالة فقط
-                              if (passwordController.text.isEmpty ||
-                                  passwordController.text !=
-                                      provider.password) {
+                              if (email.isEmpty) {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
                                     content: Text(
-                                      'الرجاء التأكد من كلمة المرور أولاً',
+                                      'الرجاء إدخال البريد الإلكتروني'.tr,
                                     ),
                                   ),
                                 );
-                                // لا نضع return هنا → الكود يكمل ويفتح Forget
+                                return;
                               }
 
-                              User? user = FirebaseAuth.instance.currentUser;
+                              try {
+                                await FirebaseAuth.instance
+                                    .sendPasswordResetEmail(email: email);
 
-                              if (user != null) {
-                                await user.reload();
-                                if (user.emailVerified) {
-                                  p.setemailf(em: emailController.text);
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                      builder: (context) => Forget(),
-                                    ),
-                                  );
-                                } else {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text(
-                                        'الرجاء تفعيل بريدك الإلكتروني أولاً',
-                                      ),
-                                    ),
-                                  );
-                                  Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (_) => VerifyCodePage(
-                                        email: emailController.text,
-                                      ),
-                                    ),
-                                  );
-                                }
-                              } else {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
-                                    content: Text('لم يتم تسجيل الدخول'),
+                                    content: Text(
+                                      'تم إرسال رابط إعادة تعيين كلمة المرور'
+                                          .tr,
+                                    ),
+                                  ),
+                                );
+                              } catch (e) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      'الإيميل غير صحيح أو غير مسجل'.tr,
+                                    ),
                                   ),
                                 );
                               }
@@ -512,243 +487,6 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ),
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class prof extends ChangeNotifier {
-  String email = "";
-  void setemailf({required String em}) {
-    email = em;
-  }
-}
-
-class Forget extends StatefulWidget {
-  Forget({super.key});
-  State<Forget> createState() => Forgetpass();
-}
-
-class Forgetpass extends State<Forget> {
-  TextEditingController passcontroller = TextEditingController();
-  TextEditingController confpasscontroller = TextEditingController();
-  bool isObscure = true;
-  GlobalKey<FormState> _k = GlobalKey();
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text("Forget password:")),
-      body: Form(
-        key: _k,
-        child: Column(
-          children: [
-            const SizedBox(height: 20),
-
-            // Password
-            Text(
-              " New Password".tr,
-              style: TextStyle(
-                color: Color(0xFF444444),
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
-              ),
-            ),
-            const SizedBox(height: 8),
-            TextFormField(
-              controller: passcontroller,
-              obscureText: isObscure,
-              keyboardType: TextInputType.visiblePassword,
-              decoration: InputDecoration(
-                suffixIcon: IconButton(
-                  icon: Icon(
-                    isObscure ? Icons.visibility_off : Icons.visibility,
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      isObscure = !isObscure;
-                    });
-                  },
-                ),
-                contentPadding: const EdgeInsets.symmetric(
-                  vertical: 8,
-                  horizontal: 12,
-                ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                filled: true,
-                fillColor: Colors.white,
-              ),
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return "Password cannot be empty".tr;
-                }
-                if (value.length < 8) {
-                  return "Password must be at least 8 characters".tr;
-                }
-                if (!RegExp(r'[A-Z]').hasMatch(value)) {
-                  return "Must contain at least 1 uppercase letter".tr;
-                }
-                if (!RegExp(r'[0-9]').hasMatch(value)) {
-                  return "Must contain at least 1 number".tr;
-                }
-                if (!RegExp(r'[!@#\$&*~]').hasMatch(value)) {
-                  return "Must contain at least 1 special character (!@#\$&*~)"
-                      .tr;
-                }
-                return null;
-              },
-            ),
-
-            const SizedBox(height: 20),
-
-            Text(
-              "Confirm New Password".tr,
-              style: TextStyle(
-                color: Color(0xFF444444),
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
-              ),
-            ),
-            const SizedBox(height: 8),
-            TextFormField(
-              controller: confpasscontroller,
-              obscureText: isObscure,
-              keyboardType: TextInputType.visiblePassword,
-              decoration: InputDecoration(
-                suffixIcon: IconButton(
-                  icon: Icon(
-                    isObscure ? Icons.visibility_off : Icons.visibility,
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      isObscure = !isObscure;
-                    });
-                  },
-                ),
-                contentPadding: const EdgeInsets.symmetric(
-                  vertical: 8,
-                  horizontal: 12,
-                ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                filled: true,
-                fillColor: Colors.white,
-              ),
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return "Password cannot be empty".tr;
-                }
-                if (value != passcontroller.text) {
-                  return "Password does not match".tr;
-                }
-                return null;
-              },
-            ),
-            const SizedBox(height: 20),
-
-            SizedBox(
-              width: 280,
-              child: ElevatedButton(
-                onPressed: () async {
-                  if (_k.currentState!.validate()) {
-                    final p = Provider.of<prof>(context, listen: false);
-                    final newPassword = passcontroller.text;
-                    final email = p.email;
-
-                    final user = FirebaseAuth.instance.currentUser;
-
-                    if (user != null) {
-                      try {
-                        // نحاول تحديث الباسورد مباشرة
-                        await user.updatePassword(newPassword);
-
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('تم تغيير كلمة المرور بنجاح'),
-                          ),
-                        );
-                        Navigator.pop(context);
-                      } catch (e) {
-                        // إذا ظهر الخطأ بسبب recent login → نرسل رابط إعادة تعيين
-                        if (e.toString().contains('requires-recent-login')) {
-                          try {
-                            await FirebaseAuth.instance.sendPasswordResetEmail(
-                              email: email,
-                            );
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text(
-                                  'لم يتم تحديث كلمة المرور مباشرة بسبب أمان الحساب.\nتم إرسال رابط إعادة تعيين كلمة المرور إلى بريدك الإلكتروني',
-                                ),
-                              ),
-                            );
-                            Navigator.pop(context);
-                          } catch (err) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text('حدث خطأ: $err')),
-                            );
-                          }
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('حدث خطأ: $e')),
-                          );
-                        }
-                      }
-                    } else {
-                      // المستخدم غير مسجل دخول → نرسل رابط إعادة تعيين فقط
-                      try {
-                        await FirebaseAuth.instance.sendPasswordResetEmail(
-                          email: email,
-                        );
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text(
-                              'تم إرسال رابط إعادة تعيين كلمة المرور إلى بريدك الإلكتروني',
-                            ),
-                          ),
-                        );
-                        Navigator.pop(context);
-                      } catch (err) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('حدث خطأ: $err')),
-                        );
-                      }
-                    }
-                  }
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.transparent,
-                  shadowColor: Colors.transparent,
-                  padding: EdgeInsets.zero,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-                child: Ink(
-                  decoration: BoxDecoration(
-                    gradient: const LinearGradient(
-                      colors: [Color(0xFFFF6A00), Color(0xFFEE0979)],
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                    ),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Container(
-                    alignment: Alignment.center,
-                    height: 50,
-                    child: Text(
-                      "Save".tr,
-                      style: TextStyle(fontSize: 30, color: Colors.white),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ],
         ),
       ),
     );

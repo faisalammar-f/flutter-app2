@@ -80,10 +80,40 @@ class _HomePageState extends State<HomePage> {
                       decoration: InputDecoration(labelText: 'Email'.tr),
                     ),
                     ElevatedButton(
-                      onPressed: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(builder: (context) => Forget()),
-                        );
+                      onPressed: () async {
+                        final user = FirebaseAuth.instance.currentUser;
+
+                        if (user == null || user.email == null) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                'حدث خطأ، يرجى إعادة تسجيل الدخول'.tr,
+                              ),
+                            ),
+                          );
+                          return;
+                        }
+
+                        try {
+                          await FirebaseAuth.instance.sendPasswordResetEmail(
+                            email: user.email!,
+                          );
+
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                'تم إرسال رابط تغيير كلمة المرور إلى بريدك الإلكتروني'
+                                    .tr,
+                              ),
+                            ),
+                          );
+                        } catch (e) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('حدث خطأ أثناء إرسال الرابط'.tr),
+                            ),
+                          );
+                        }
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: kPrimaryColor,
@@ -97,7 +127,7 @@ class _HomePageState extends State<HomePage> {
                       ),
 
                       child: Text(
-                        "change password",
+                        "change password".tr,
                         style: TextStyle(color: Colors.white, fontSize: 16),
                       ),
                     ),

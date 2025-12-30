@@ -114,6 +114,15 @@ final Map<String, String> authAr = {
   "error_user_not_found": "لا يوجد حساب بهذا البريد",
   "error_wrong_password": "كلمة المرور غير صحيحة",
   "error_invalid_email": "صيغة البريد غير صحيحة",
+  'الرجاء إدخال البريد الإلكتروني': 'الرجاء إدخال البريد الإلكتروني',
+  'تم إرسال رابط إعادة تعيين كلمة المرور':
+      'تم إرسال رابط إعادة تعيين كلمة المرور',
+  'الإيميل غير صحيح أو غير مسجل': 'الإيميل غير صحيح أو غير مسجل',
+  'حدث خطأ، يرجى إعادة تسجيل الدخول': 'حدث خطأ، يرجى إعادة تسجيل الدخول',
+  'تم إرسال رابط تغيير كلمة المرور إلى بريدك الإلكتروني':
+      'تم إرسال رابط تغيير كلمة المرور إلى بريدك الإلكتروني',
+  'حدث خطأ أثناء إرسال الرابط': 'حدث خطأ أثناء إرسال الرابط',
+  "change password": "تغيير كلمة المرور",
 };
 
 final Map<String, String> authEn = {
@@ -130,6 +139,16 @@ final Map<String, String> authEn = {
   "error_user_not_found": "No user found with this email",
   "error_wrong_password": "Incorrect password",
   "error_invalid_email": "Invalid email format",
+  'الرجاء إدخال البريد الإلكتروني': 'Please enter your email address.',
+  'تم إرسال رابط إعادة تعيين كلمة المرور':
+      'A password reset link has been sent',
+  'الإيميل غير صحيح أو غير مسجل':
+      'The email address is invalid or not registered',
+  'حدث خطأ، يرجى إعادة تسجيل الدخول': 'An error occurred, please log in again.',
+  'تم إرسال رابط تغيير كلمة المرور إلى بريدك الإلكتروني':
+      'A password change link has been sent to your email.',
+  'حدث خطأ أثناء إرسال الرابط': 'An error occurred while sending the link.',
+  "change password": "change password",
 };
 final Map<String, Map<String, String>> authTranslation = {
   "en": {
