@@ -58,7 +58,9 @@ class Income_app extends State<Income_w> {
                   "Source".tr,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    color: Colors.black87,
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? Colors.white
+                        : Colors.black,
                     fontSize: 18,
                   ),
                 ),
@@ -86,7 +88,9 @@ class Income_app extends State<Income_w> {
                   "Amount".tr,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    color: Colors.black87,
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? Colors.white
+                        : Colors.black,
                     fontSize: 18,
                   ),
                 ),
@@ -116,7 +120,9 @@ class Income_app extends State<Income_w> {
                   "Date".tr,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    color: Colors.black87,
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? Colors.white
+                        : Colors.black,
                     fontSize: 18,
                   ),
                 ),
@@ -134,7 +140,9 @@ class Income_app extends State<Income_w> {
                       borderRadius: BorderRadius.circular(10),
                     ),
                     filled: true,
-                    fillColor: Colors.white,
+                    fillColor: Theme.of(context).brightness == Brightness.dark
+                        ? Colors.grey[800]
+                        : Colors.white,
                   ),
                   validator: (value) => value == null || value.isEmpty
                       ? " cannot be empty".tr

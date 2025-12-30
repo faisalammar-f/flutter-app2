@@ -254,9 +254,23 @@ class _HomePageState extends State<HomePage> {
 
   Widget build(BuildContext context) {
     final provider1 = Provider.of<provider_sign>(context);
-
     return Scaffold(
-      appBar: AppBar(title: Text("Smart Plan".tr)),
+      appBar: AppBar(
+        title: Text("Smart Plan".tr),
+        actions: [
+          GetBuilder<ThemePro>(
+            builder: (controller) => IconButton(
+              onPressed: () {
+                controller.toggletheme();
+              },
+              icon: Icon(
+                controller.isDark ? Icons.light_mode : Icons.dark_mode,
+              ),
+            ),
+          ),
+        ],
+      ),
+
       drawer: Drawer(
         child: ListView(
           children: [

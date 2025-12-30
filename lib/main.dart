@@ -21,6 +21,10 @@ const kPrimaryColor = Color(0xFF6A1B9A);
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  final themeController = Get.put(ThemePro());
+  await themeController.loadTheme();
+  Mycon c = Get.put(Mycon());
+  String savedLang = await c.getSavedLang();
   await Firebase.initializeApp();
   await AwesomeNotifications().initialize(null, [
     NotificationChannel(
@@ -55,6 +59,7 @@ void main() async {
         ChangeNotifierProvider(create: (context) => income_provider()),
         ChangeNotifierProvider(create: (context) => task_provider()),
         ChangeNotifierProvider(create: (context) => provider_sign()),
+
         ChangeNotifierProvider(
           create: (context) => ai_prov(
             income: context.read<income_provider>(),
@@ -63,23 +68,52 @@ void main() async {
         ),
       ],
 
-      child: MyApp(),
+      child: MyApp(savedLang: savedLang, themeController: themeController),
     ),
   );
 }
 
 class MyApp extends StatelessWidget {
-  MyApp({super.key});
+  final String savedLang;
+  final ThemePro themeController;
+
+  MyApp({super.key, required this.savedLang, required this.themeController});
 
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       translations: Mylocal(),
-      locale: Get.deviceLocale,
+      locale: Locale(savedLang),
       title: 'Smart Plan'.tr,
+      themeMode: themeController.thememode,
+      darkTheme: ThemeData(
+        brightness: Brightness.dark,
+        scaffoldBackgroundColor: Colors.black,
+        appBarTheme: AppBarTheme(
+          backgroundColor: Colors.black,
+          iconTheme: const IconThemeData(color: Colors.white),
+          titleTextStyle: GoogleFonts.poppins(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ),
+        bottomNavigationBarTheme: BottomNavigationBarThemeData(
+          backgroundColor: Colors.white,
+          selectedItemColor: kPrimaryColor,
+          unselectedItemColor: Colors.grey,
+        ),
+        inputDecorationTheme: InputDecorationTheme(
+          filled: true,
+          fillColor: Colors.white,
+          labelStyle: TextStyle(color: Colors.black),
+        ),
+        textTheme: GoogleFonts.poppinsTextTheme(),
+      ),
       theme: ThemeData(
         useMaterial3: false,
+        brightness: Brightness.light,
         colorScheme: ColorScheme.fromSeed(
           seedColor: const Color.fromRGBO(106, 27, 154, 1),
           primary: kPrimaryColor,
@@ -97,6 +131,7 @@ class MyApp extends StatelessWidget {
           iconTheme: IconThemeData(color: Colors.white),
           centerTitle: true,
         ),
+
         bottomNavigationBarTheme: BottomNavigationBarThemeData(
           backgroundColor: Colors.white,
           elevation: 8,
@@ -268,9 +303,11 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [Color(0xFF4FACFE), Color(0xFF6E7AFE)],
+            colors: Theme.of(context).brightness == Brightness.dark
+                ? [Colors.grey[900]!, Colors.black]
+                : [Color(0xFF4FACFE), Color(0xFF6E7AFE)],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
           ),
@@ -301,7 +338,13 @@ class _LoginPageState extends State<LoginPage> {
                         SizedBox(width: 10),
                         Text(
                           "app_title".tr,
-                          style: TextStyle(color: Colors.white, fontSize: 40),
+                          style: TextStyle(
+                            color:
+                                Theme.of(context).brightness == Brightness.dark
+                                ? Colors.white
+                                : Colors.black,
+                            fontSize: 40,
+                          ),
                           textAlign: TextAlign.center,
                         ),
                       ],
@@ -324,7 +367,10 @@ class _LoginPageState extends State<LoginPage> {
                             borderRadius: BorderRadius.circular(10),
                           ),
                           filled: true,
-                          fillColor: Colors.white,
+                          fillColor:
+                              Theme.of(context).brightness == Brightness.dark
+                              ? Colors.grey[800]
+                              : Colors.white,
                         ),
                         validator: (value) {
                           if (value!.isEmpty) return "حقل فارغ".tr;
@@ -367,7 +413,10 @@ class _LoginPageState extends State<LoginPage> {
                             borderRadius: BorderRadius.circular(10),
                           ),
                           filled: true,
-                          fillColor: Colors.white,
+                          fillColor:
+                              Theme.of(context).brightness == Brightness.dark
+                              ? Colors.grey[800]
+                              : Colors.white,
                         ),
                         validator: (value) {
                           if (value!.isEmpty) return "حقل فارغ".tr;
@@ -410,7 +459,11 @@ class _LoginPageState extends State<LoginPage> {
                               "login_button".tr,
                               style: TextStyle(
                                 fontSize: 30,
-                                color: Colors.white,
+                                color:
+                                    Theme.of(context).brightness ==
+                                        Brightness.dark
+                                    ? Colors.grey[400]
+                                    : Colors.grey[600],
                               ),
                             ),
                           ),
@@ -464,7 +517,13 @@ class _LoginPageState extends State<LoginPage> {
                             },
                             child: Text(
                               "forget_password".tr,
-                              style: TextStyle(color: Colors.white),
+                              style: TextStyle(
+                                color:
+                                    Theme.of(context).brightness ==
+                                        Brightness.dark
+                                    ? Colors.grey[400]
+                                    : Colors.grey[600],
+                              ),
                             ),
                           ),
                           TextButton(
@@ -476,7 +535,13 @@ class _LoginPageState extends State<LoginPage> {
                             },
                             child: Text(
                               "sign_up".tr,
-                              style: TextStyle(color: Colors.white),
+                              style: TextStyle(
+                                color:
+                                    Theme.of(context).brightness ==
+                                        Brightness.dark
+                                    ? Colors.grey[400]
+                                    : Colors.grey[600],
+                              ),
                             ),
                           ),
                         ],
@@ -490,5 +555,26 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
     );
+  }
+}
+
+class ThemePro extends GetxController {
+  ThemeMode thememode = ThemeMode.light;
+  bool get isDark => thememode == ThemeMode.dark;
+  void toggletheme() async {
+    thememode = isDark ? ThemeMode.light : ThemeMode.dark;
+    Get.changeThemeMode(thememode);
+    update();
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setBool('isDarkMode', isDark);
+  }
+
+  Future<void> loadTheme() async {
+    final prefs = await SharedPreferences.getInstance();
+    bool? isDarkSaved = prefs.getBool('isDarkMode');
+    if (isDarkSaved != null) {
+      thememode = isDarkSaved ? ThemeMode.dark : ThemeMode.light;
+      update();
+    }
   }
 }

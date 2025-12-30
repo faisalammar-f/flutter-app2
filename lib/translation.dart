@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Mylocal implements Translations {
   @override
@@ -97,11 +98,18 @@ class Mycon extends GetxController {
   void changlang(String ch) async {
     Locale l = Locale(ch);
     Get.updateLocale(l);
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('lang', ch);
+  }
+
+  Future<String> getSavedLang() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('lang') ?? 'en';
   }
 }
 
 final Map<String, String> authAr = {
-  "app_title": "Smart Plan",
+  "app_title": "الخطة الذكية",
   "email_label": "البريد الإلكتروني",
   "password_label": "كلمة المرور",
   "empty_field": "حقل فارغ",

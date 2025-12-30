@@ -53,7 +53,9 @@ class _SignuState extends State<Signu> {
         // خلفية متدرجة
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [Colors.blue.shade200, Colors.blue.shade600],
+            colors: Theme.of(context).brightness == Brightness.dark
+                ? [Colors.grey[900]!, Colors.black]
+                : [Color(0xFF4FACFE), Color(0xFF6E7AFE)],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
           ),

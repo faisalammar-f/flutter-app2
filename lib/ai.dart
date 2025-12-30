@@ -31,7 +31,9 @@ class Ai_ass extends State<Ai> {
                 "Smart Insights for you".tr,
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  color: Colors.black,
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? Colors.white
+                      : Colors.black,
                   fontSize: 22,
                 ),
               ),

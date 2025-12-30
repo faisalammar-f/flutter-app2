@@ -58,7 +58,9 @@ class Expenses_app extends State<Expenses_w> {
                   "Category".tr,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    color: Colors.black87,
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? Colors.white
+                        : Colors.black,
                     fontSize: 18,
                   ),
                 ),
@@ -85,7 +87,9 @@ class Expenses_app extends State<Expenses_w> {
                   "Amount".tr,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    color: Colors.black87,
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? Colors.white
+                        : Colors.black,
                     fontSize: 18,
                   ),
                 ),
@@ -115,7 +119,9 @@ class Expenses_app extends State<Expenses_w> {
                   "Date".tr,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    color: Colors.black87,
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? Colors.white
+                        : Colors.black,
                     fontSize: 18,
                   ),
                 ),
@@ -133,7 +139,9 @@ class Expenses_app extends State<Expenses_w> {
                       borderRadius: BorderRadius.circular(10),
                     ),
                     filled: true,
-                    fillColor: Colors.white,
+                    fillColor: Theme.of(context).brightness == Brightness.dark
+                        ? Colors.grey[800]
+                        : Colors.white,
                   ),
                   validator: (value) => value == null || value.isEmpty
                       ? " cannot be empty".tr
