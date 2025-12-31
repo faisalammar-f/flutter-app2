@@ -84,6 +84,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                     TextField(
                       controller: emailController,
+
                       decoration: InputDecoration(labelText: 'Email'.tr),
                     ),
                     ElevatedButton(
