@@ -99,6 +99,20 @@ class _SignuState extends State<Signu> {
                       controller: fullname,
                       keyboardType: TextInputType.name,
                       decoration: InputDecoration(
+                        filled: true,
+                        fillColor: Theme.of(context).colorScheme.surface,
+
+                        labelStyle: TextStyle(
+                          color: Theme.of(context).brightness == Brightness.dark
+                              ? Colors.white
+                              : Colors.black,
+                        ),
+
+                        floatingLabelStyle: TextStyle(
+                          color: Theme.of(context).brightness == Brightness.dark
+                              ? Colors.white
+                              : Colors.black,
+                        ),
                         contentPadding: const EdgeInsets.symmetric(
                           vertical: 8,
                           horizontal: 12,
@@ -106,8 +120,6 @@ class _SignuState extends State<Signu> {
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        filled: true,
-                        fillColor: Colors.white,
                       ),
                       validator: (value) {
                         if (value!.isEmpty) return "empty field".tr;
@@ -130,6 +142,20 @@ class _SignuState extends State<Signu> {
                       controller: email,
                       keyboardType: TextInputType.emailAddress,
                       decoration: InputDecoration(
+                        filled: true,
+                        fillColor: Theme.of(context).colorScheme.surface,
+
+                        labelStyle: TextStyle(
+                          color: Theme.of(context).brightness == Brightness.dark
+                              ? Colors.white
+                              : Colors.black,
+                        ),
+
+                        floatingLabelStyle: TextStyle(
+                          color: Theme.of(context).brightness == Brightness.dark
+                              ? Colors.white
+                              : Colors.black,
+                        ),
                         contentPadding: const EdgeInsets.symmetric(
                           vertical: 8,
                           horizontal: 12,
@@ -137,8 +163,6 @@ class _SignuState extends State<Signu> {
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        filled: true,
-                        fillColor: Colors.white,
                       ),
                       validator: (value) {
                         if (value!.isEmpty) return "empty field".tr;
@@ -184,7 +208,19 @@ class _SignuState extends State<Signu> {
                           borderRadius: BorderRadius.circular(10),
                         ),
                         filled: true,
-                        fillColor: Colors.white,
+                        fillColor: Theme.of(context).colorScheme.surface,
+
+                        labelStyle: TextStyle(
+                          color: Theme.of(context).brightness == Brightness.dark
+                              ? Colors.white
+                              : Colors.black,
+                        ),
+
+                        floatingLabelStyle: TextStyle(
+                          color: Theme.of(context).brightness == Brightness.dark
+                              ? Colors.white
+                              : Colors.black,
+                        ),
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -242,7 +278,19 @@ class _SignuState extends State<Signu> {
                           borderRadius: BorderRadius.circular(10),
                         ),
                         filled: true,
-                        fillColor: Colors.white,
+                        fillColor: Theme.of(context).colorScheme.surface,
+
+                        labelStyle: TextStyle(
+                          color: Theme.of(context).brightness == Brightness.dark
+                              ? Colors.white
+                              : Colors.black,
+                        ),
+
+                        floatingLabelStyle: TextStyle(
+                          color: Theme.of(context).brightness == Brightness.dark
+                              ? Colors.white
+                              : Colors.black,
+                        ),
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -274,16 +322,35 @@ class _SignuState extends State<Signu> {
                           decoration: BoxDecoration(
                             border: Border.all(color: Colors.grey),
                             borderRadius: BorderRadius.circular(8),
-                            color: Colors.white,
+                            color: Theme.of(context).colorScheme.surface,
                           ),
                           child: DropdownButton<String>(
                             value: selectedCountryCode,
-                            underline: SizedBox(), // يخفي الخط السفلي
+
+                            underline: SizedBox(),
+                            style: TextStyle(
+                              color: Theme.of(
+                                context,
+                              ).colorScheme.onSurface, // نص واضح دائمًا
+                            ),
+
+                            dropdownColor: Theme.of(
+                              context,
+                            ).colorScheme.surface, // قائمة واضحة
+                            // يخفي الخط السفلي
                             items: arab_contries.map((country) {
                               return DropdownMenuItem<String>(
                                 value: country['code'],
+
                                 child: Text(
                                   '${country['name']} (${country['code']})',
+                                  style: TextStyle(
+                                    color:
+                                        Theme.of(context).brightness ==
+                                            Brightness.dark
+                                        ? Colors.white
+                                        : Colors.black,
+                                  ),
                                 ),
                               );
                             }).toList(),
@@ -310,7 +377,23 @@ class _SignuState extends State<Signu> {
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               filled: true,
-                              fillColor: Colors.white,
+                              fillColor: Theme.of(context).colorScheme.surface,
+
+                              labelStyle: TextStyle(
+                                color:
+                                    Theme.of(context).brightness ==
+                                        Brightness.dark
+                                    ? Colors.white
+                                    : Colors.black,
+                              ),
+
+                              floatingLabelStyle: TextStyle(
+                                color:
+                                    Theme.of(context).brightness ==
+                                        Brightness.dark
+                                    ? Colors.white
+                                    : Colors.black,
+                              ),
                               labelText: 'رقم الهاتف'.tr,
                             ),
                           ),
@@ -339,7 +422,19 @@ class _SignuState extends State<Signu> {
                           borderRadius: BorderRadius.circular(10),
                         ),
                         filled: true,
-                        fillColor: Colors.white,
+                        fillColor: Theme.of(context).colorScheme.surface,
+
+                        labelStyle: TextStyle(
+                          color: Theme.of(context).brightness == Brightness.dark
+                              ? Colors.white
+                              : Colors.black,
+                        ),
+
+                        floatingLabelStyle: TextStyle(
+                          color: Theme.of(context).brightness == Brightness.dark
+                              ? Colors.white
+                              : Colors.black,
+                        ),
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -368,7 +463,9 @@ class _SignuState extends State<Signu> {
                     Text(
                       "Gender".tr,
                       style: TextStyle(
-                        color: Color(0xFF444444),
+                        color: Theme.of(context).brightness == Brightness.dark
+                            ? const Color(0xFF121212) // لون داكن
+                            : Color(0xFF444444),
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
                       ),

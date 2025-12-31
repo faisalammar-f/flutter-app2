@@ -80,12 +80,44 @@ class _HomePageState extends State<HomePage> {
                   children: [
                     TextField(
                       controller: fullnameController,
-                      decoration: InputDecoration(labelText: 'Full Name'.tr),
+                      decoration: InputDecoration(
+                        labelText: 'Full Name'.tr,
+                        filled: true,
+                        fillColor: Theme.of(context).colorScheme.surface,
+
+                        labelStyle: TextStyle(
+                          color: Theme.of(context).brightness == Brightness.dark
+                              ? Colors.white
+                              : Colors.black,
+                        ),
+
+                        floatingLabelStyle: TextStyle(
+                          color: Theme.of(context).brightness == Brightness.dark
+                              ? Colors.white
+                              : Colors.black,
+                        ),
+                      ),
                     ),
                     TextField(
                       controller: emailController,
 
-                      decoration: InputDecoration(labelText: 'Email'.tr),
+                      decoration: InputDecoration(
+                        labelText: 'Email'.tr,
+                        filled: true,
+                        fillColor: Theme.of(context).colorScheme.surface,
+
+                        labelStyle: TextStyle(
+                          color: Theme.of(context).brightness == Brightness.dark
+                              ? Colors.white
+                              : Colors.black,
+                        ),
+
+                        floatingLabelStyle: TextStyle(
+                          color: Theme.of(context).brightness == Brightness.dark
+                              ? Colors.white
+                              : Colors.black,
+                        ),
+                      ),
                     ),
                     ElevatedButton(
                       onPressed: () async {
@@ -173,13 +205,43 @@ class _HomePageState extends State<HomePage> {
                     TextField(
                       controller: phoneController,
                       keyboardType: TextInputType.phone,
-                      decoration: InputDecoration(labelText: 'Phone Number'.tr),
+                      decoration: InputDecoration(
+                        labelText: 'Phone Number'.tr,
+                        filled: true,
+                        fillColor: Theme.of(context).colorScheme.surface,
+
+                        labelStyle: TextStyle(
+                          color: Theme.of(context).brightness == Brightness.dark
+                              ? Colors.white
+                              : Colors.black,
+                        ),
+
+                        floatingLabelStyle: TextStyle(
+                          color: Theme.of(context).brightness == Brightness.dark
+                              ? Colors.white
+                              : Colors.black,
+                        ),
+                      ),
                     ),
                     TextField(
                       controller: dateController,
                       readOnly: true,
                       decoration: InputDecoration(
                         labelText: 'Date of Birth'.tr,
+                        filled: true,
+                        fillColor: Theme.of(context).colorScheme.surface,
+
+                        labelStyle: TextStyle(
+                          color: Theme.of(context).brightness == Brightness.dark
+                              ? Colors.white
+                              : Colors.black,
+                        ),
+
+                        floatingLabelStyle: TextStyle(
+                          color: Theme.of(context).brightness == Brightness.dark
+                              ? Colors.white
+                              : Colors.black,
+                        ),
                       ),
                       onTap: () async {
                         DateTime? newDate = await showDatePicker(

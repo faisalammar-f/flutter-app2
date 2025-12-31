@@ -76,7 +76,9 @@ class Ai_ass extends State<Ai> {
                 Card(
                   elevation: 5,
                   margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                  color: Colors.blue.shade50,
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? const Color(0xFF121212) // لون داكن
+                      : Colors.blue.shade50,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15),
                   ),
@@ -99,6 +101,11 @@ class Ai_ass extends State<Ai> {
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
+                                color:
+                                    Theme.of(context).brightness ==
+                                        Brightness.dark
+                                    ? Colors.white
+                                    : Colors.black,
                               ),
                               textAlign: TextAlign.center,
                             ),
@@ -113,9 +120,23 @@ class Ai_ass extends State<Ai> {
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
+                                color:
+                                    Theme.of(context).brightness ==
+                                        Brightness.dark
+                                    ? Colors.white
+                                    : Colors.black,
                               ),
                             ),
-                            Text("${a.totalincome.toStringAsFixed(2)} JOD"),
+                            Text(
+                              "${a.totalincome.toStringAsFixed(2)} JOD",
+                              style: TextStyle(
+                                color:
+                                    Theme.of(context).brightness ==
+                                        Brightness.dark
+                                    ? Colors.white
+                                    : Colors.black,
+                              ),
+                            ),
                           ],
                         ),
                         Row(
@@ -127,9 +148,23 @@ class Ai_ass extends State<Ai> {
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
+                                color:
+                                    Theme.of(context).brightness ==
+                                        Brightness.dark
+                                    ? Colors.white
+                                    : Colors.black,
                               ),
                             ),
-                            Text("${a.totalexp.toStringAsFixed(2)} JOD"),
+                            Text(
+                              "${a.totalexp.toStringAsFixed(2)} JOD",
+                              style: TextStyle(
+                                color:
+                                    Theme.of(context).brightness ==
+                                        Brightness.dark
+                                    ? Colors.white
+                                    : Colors.black,
+                              ),
+                            ),
                           ],
                         ),
                         Row(
@@ -141,9 +176,23 @@ class Ai_ass extends State<Ai> {
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
+                                color:
+                                    Theme.of(context).brightness ==
+                                        Brightness.dark
+                                    ? Colors.white
+                                    : Colors.black,
                               ),
                             ),
-                            Text("${a.financialScore} ${a.financialLabel}"),
+                            Text(
+                              "${a.financialScore} ${a.financialLabel}",
+                              style: TextStyle(
+                                color:
+                                    Theme.of(context).brightness ==
+                                        Brightness.dark
+                                    ? Colors.white
+                                    : Colors.black,
+                              ),
+                            ),
                           ],
                         ),
                         SizedBox(height: 12),
@@ -153,12 +202,25 @@ class Ai_ass extends State<Ai> {
                           style: TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.bold,
+                            color:
+                                Theme.of(context).brightness == Brightness.dark
+                                ? Colors.white
+                                : Colors.black,
                           ),
                         ),
                         SizedBox(height: 6),
 
                         // ignore: unnecessary_string_interpolations
-                        Text("${a.mainInsight}", softWrap: true),
+                        Text(
+                          "${a.mainInsight}",
+                          softWrap: true,
+                          style: TextStyle(
+                            color:
+                                Theme.of(context).brightness == Brightness.dark
+                                ? Colors.white
+                                : Colors.black,
+                          ),
+                        ),
 
                         SizedBox(height: 12),
                         Text(
@@ -166,6 +228,10 @@ class Ai_ass extends State<Ai> {
                           style: TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.bold,
+                            color:
+                                Theme.of(context).brightness == Brightness.dark
+                                ? Colors.white
+                                : Colors.black,
                           ),
                         ),
                         SizedBox(height: 6),
@@ -174,6 +240,12 @@ class Ai_ass extends State<Ai> {
                           // ignore: unnecessary_string_interpolations
                           "${a.savingOpportunity}",
                           softWrap: true,
+                          style: TextStyle(
+                            color:
+                                Theme.of(context).brightness == Brightness.dark
+                                ? Colors.white
+                                : Colors.black,
+                          ),
                         ),
 
                         Row(
@@ -185,12 +257,27 @@ class Ai_ass extends State<Ai> {
                               style: TextStyle(
                                 fontSize: 15,
                                 fontWeight: FontWeight.bold,
+                                color:
+                                    Theme.of(context).brightness ==
+                                        Brightness.dark
+                                    ? Colors.white
+                                    : Colors.black,
                               ),
                             ),
                             SizedBox(width: 10),
                             // ignore: unnecessary_string_interpolations
                             Flexible(
-                              child: Text("${a.balance}", softWrap: true),
+                              child: Text(
+                                "${a.balance}",
+                                softWrap: true,
+                                style: TextStyle(
+                                  color:
+                                      Theme.of(context).brightness ==
+                                          Brightness.dark
+                                      ? Colors.white
+                                      : Colors.black,
+                                ),
+                              ),
                             ),
                           ],
                         ),
@@ -201,12 +288,25 @@ class Ai_ass extends State<Ai> {
                           style: TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.bold,
+                            color:
+                                Theme.of(context).brightness == Brightness.dark
+                                ? Colors.white
+                                : Colors.black,
                           ),
                         ),
                         SizedBox(height: 6),
 
                         // ignore: unnecessary_string_interpolations
-                        Text("${a.summary}", softWrap: true),
+                        Text(
+                          "${a.summary}",
+                          softWrap: true,
+                          style: TextStyle(
+                            color:
+                                Theme.of(context).brightness == Brightness.dark
+                                ? Colors.white
+                                : Colors.black,
+                          ),
+                        ),
                       ],
                     ),
                   ),

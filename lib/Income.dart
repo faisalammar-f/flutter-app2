@@ -66,11 +66,38 @@ class Income_app extends State<Income_w> {
                 ),
 
                 DropdownButtonFormField<String>(
-                  decoration: InputDecoration(border: OutlineInputBorder()),
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: Theme.of(context).colorScheme.surface,
+
+                    labelStyle: TextStyle(
+                      color: Theme.of(context).brightness == Brightness.dark
+                          ? Colors.white
+                          : Colors.black,
+                    ),
+
+                    floatingLabelStyle: TextStyle(
+                      color: Theme.of(context).brightness == Brightness.dark
+                          ? Colors.white
+                          : Colors.black,
+                    ),
+                    border: OutlineInputBorder(),
+                  ),
                   items: source_type
                       .map(
-                        (i) =>
-                            DropdownMenuItem<String>(child: Text(i), value: i),
+                        (i) => DropdownMenuItem<String>(
+                          child: Text(
+                            i,
+                            style: TextStyle(
+                              color:
+                                  Theme.of(context).brightness ==
+                                      Brightness.dark
+                                  ? Colors.white
+                                  : Colors.black,
+                            ),
+                          ),
+                          value: i,
+                        ),
                       )
                       .toList(),
                   onChanged: (val) {
@@ -100,6 +127,20 @@ class Income_app extends State<Income_w> {
                   decoration: InputDecoration(
                     prefixIcon: Icon(Icons.attach_money),
                     label: Text("0.00"),
+                    filled: true,
+                    fillColor: Theme.of(context).colorScheme.surface,
+
+                    labelStyle: TextStyle(
+                      color: Theme.of(context).brightness == Brightness.dark
+                          ? Colors.white
+                          : Colors.black,
+                    ),
+
+                    floatingLabelStyle: TextStyle(
+                      color: Theme.of(context).brightness == Brightness.dark
+                          ? Colors.white
+                          : Colors.black,
+                    ),
                     border: OutlineInputBorder(),
                   ),
                   validator: (value) {
@@ -132,6 +173,20 @@ class Income_app extends State<Income_w> {
                   keyboardType: TextInputType.datetime,
                   decoration: InputDecoration(
                     suffixIcon: Icon(Icons.calendar_today),
+                    filled: true,
+                    fillColor: Theme.of(context).colorScheme.surface,
+
+                    labelStyle: TextStyle(
+                      color: Theme.of(context).brightness == Brightness.dark
+                          ? Colors.white
+                          : Colors.black,
+                    ),
+
+                    floatingLabelStyle: TextStyle(
+                      color: Theme.of(context).brightness == Brightness.dark
+                          ? Colors.white
+                          : Colors.black,
+                    ),
                     contentPadding: const EdgeInsets.symmetric(
                       vertical: 8,
                       horizontal: 12,
@@ -139,10 +194,6 @@ class Income_app extends State<Income_w> {
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    filled: true,
-                    fillColor: Theme.of(context).brightness == Brightness.dark
-                        ? Colors.grey[800]
-                        : Colors.white,
                   ),
                   validator: (value) => value == null || value.isEmpty
                       ? " cannot be empty".tr
@@ -267,8 +318,61 @@ class Income_app extends State<Income_w> {
                                           child: Column(
                                             mainAxisSize: MainAxisSize.min,
                                             children: [
+                                              Text(
+                                                "Source".tr,
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color:
+                                                      Theme.of(
+                                                            context,
+                                                          ).brightness ==
+                                                          Brightness.dark
+                                                      ? Colors.white
+                                                      : Colors.black,
+                                                  fontSize: 18,
+                                                ),
+                                                textAlign: TextAlign.left,
+                                              ),
+
                                               DropdownButtonFormField<String>(
                                                 value: selectedSource,
+
+                                                style: TextStyle(
+                                                  color:
+                                                      Theme.of(
+                                                            context,
+                                                          ).brightness ==
+                                                          Brightness.dark
+                                                      ? Colors.white
+                                                      : Colors.black,
+                                                ),
+                                                decoration: InputDecoration(
+                                                  filled: true,
+                                                  fillColor: Theme.of(
+                                                    context,
+                                                  ).colorScheme.surface,
+
+                                                  labelStyle: TextStyle(
+                                                    color:
+                                                        Theme.of(
+                                                              context,
+                                                            ).brightness ==
+                                                            Brightness.dark
+                                                        ? Colors.white
+                                                        : Colors.black,
+                                                  ),
+
+                                                  floatingLabelStyle: TextStyle(
+                                                    color:
+                                                        Theme.of(
+                                                              context,
+                                                            ).brightness ==
+                                                            Brightness.dark
+                                                        ? Colors.white
+                                                        : Colors.black,
+                                                  ),
+                                                ),
+
                                                 items: source_type
                                                     .map(
                                                       (type) =>
@@ -289,6 +393,30 @@ class Income_app extends State<Income_w> {
                                                     TextInputType.number,
                                                 decoration: InputDecoration(
                                                   labelText: "Amount".tr,
+                                                  filled: true,
+                                                  fillColor: Theme.of(
+                                                    context,
+                                                  ).colorScheme.surface,
+
+                                                  labelStyle: TextStyle(
+                                                    color:
+                                                        Theme.of(
+                                                              context,
+                                                            ).brightness ==
+                                                            Brightness.dark
+                                                        ? Colors.white
+                                                        : Colors.black,
+                                                  ),
+
+                                                  floatingLabelStyle: TextStyle(
+                                                    color:
+                                                        Theme.of(
+                                                              context,
+                                                            ).brightness ==
+                                                            Brightness.dark
+                                                        ? Colors.white
+                                                        : Colors.black,
+                                                  ),
                                                 ),
                                                 onChanged: (value) {
                                                   if (value.isEmpty ||
@@ -311,6 +439,30 @@ class Income_app extends State<Income_w> {
                                                 readOnly: true,
                                                 decoration: InputDecoration(
                                                   labelText: "Date".tr,
+                                                  filled: true,
+                                                  fillColor: Theme.of(
+                                                    context,
+                                                  ).colorScheme.surface,
+
+                                                  labelStyle: TextStyle(
+                                                    color:
+                                                        Theme.of(
+                                                              context,
+                                                            ).brightness ==
+                                                            Brightness.dark
+                                                        ? Colors.white
+                                                        : Colors.black,
+                                                  ),
+
+                                                  floatingLabelStyle: TextStyle(
+                                                    color:
+                                                        Theme.of(
+                                                              context,
+                                                            ).brightness ==
+                                                            Brightness.dark
+                                                        ? Colors.white
+                                                        : Colors.black,
+                                                  ),
                                                   suffixIcon: Icon(
                                                     Icons.calendar_today,
                                                   ),

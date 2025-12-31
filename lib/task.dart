@@ -128,6 +128,20 @@ class Ttasktype extends State<Taskt> {
                 controller: desc_con,
                 decoration: InputDecoration(
                   labelText: "Enter task title".tr,
+                  filled: true,
+                  fillColor: Theme.of(context).colorScheme.surface,
+
+                  labelStyle: TextStyle(
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? Colors.white
+                        : Colors.black,
+                  ),
+
+                  floatingLabelStyle: TextStyle(
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? Colors.white
+                        : Colors.black,
+                  ),
                   border: OutlineInputBorder(),
                 ),
                 validator: (value) =>
@@ -146,9 +160,38 @@ class Ttasktype extends State<Taskt> {
               ),
               const SizedBox(height: 8),
               DropdownButtonFormField<String>(
-                decoration: InputDecoration(border: OutlineInputBorder()),
+                decoration: InputDecoration(
+                  filled: true,
+                  fillColor: Theme.of(context).colorScheme.surface,
+
+                  labelStyle: TextStyle(
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? Colors.white
+                        : Colors.black,
+                  ),
+
+                  floatingLabelStyle: TextStyle(
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? Colors.white
+                        : Colors.black,
+                  ),
+                  border: OutlineInputBorder(),
+                ),
                 items: tasktype
-                    .map((i) => DropdownMenuItem(child: Text(i), value: i))
+                    .map(
+                      (i) => DropdownMenuItem(
+                        child: Text(
+                          i,
+                          style: TextStyle(
+                            color:
+                                Theme.of(context).brightness == Brightness.dark
+                                ? Colors.white
+                                : Colors.black,
+                          ),
+                        ),
+                        value: i,
+                      ),
+                    )
                     .toList(),
                 value: selectedtasktype,
                 onChanged: (val) => setState(() => selectedtasktype = val),
@@ -171,6 +214,20 @@ class Ttasktype extends State<Taskt> {
                 controller: date_con,
                 readOnly: true,
                 decoration: InputDecoration(
+                  filled: true,
+                  fillColor: Theme.of(context).colorScheme.surface,
+
+                  labelStyle: TextStyle(
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? Colors.white
+                        : Colors.black,
+                  ),
+
+                  floatingLabelStyle: TextStyle(
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? Colors.white
+                        : Colors.black,
+                  ),
                   border: OutlineInputBorder(),
                   suffixIcon: Icon(Icons.calendar_today),
                   hintText: "Select date & time".tr,
@@ -336,13 +393,92 @@ class Ttasktype extends State<Taskt> {
                                                     decoration: InputDecoration(
                                                       labelText:
                                                           "Description".tr,
+                                                      filled: true,
+                                                      fillColor: Theme.of(
+                                                        context,
+                                                      ).colorScheme.surface,
+
+                                                      labelStyle: TextStyle(
+                                                        color:
+                                                            Theme.of(
+                                                                  context,
+                                                                ).brightness ==
+                                                                Brightness.dark
+                                                            ? Colors.white
+                                                            : Colors.black,
+                                                      ),
+
+                                                      floatingLabelStyle:
+                                                          TextStyle(
+                                                            color:
+                                                                Theme.of(
+                                                                      context,
+                                                                    ).brightness ==
+                                                                    Brightness
+                                                                        .dark
+                                                                ? Colors.white
+                                                                : Colors.black,
+                                                          ),
                                                     ),
+                                                  ),
+                                                  Text(
+                                                    "Task Type".tr,
+                                                    style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 18,
+                                                      color:
+                                                          Theme.of(
+                                                                context,
+                                                              ).brightness ==
+                                                              Brightness.dark
+                                                          ? Colors.white
+                                                          : Colors.black,
+                                                    ),
+                                                    textAlign: TextAlign.left,
                                                   ),
                                                   const SizedBox(height: 10),
                                                   DropdownButtonFormField<
                                                     String
                                                   >(
                                                     value: selectedType,
+                                                    style: TextStyle(
+                                                      color:
+                                                          Theme.of(
+                                                                context,
+                                                              ).brightness ==
+                                                              Brightness.dark
+                                                          ? Colors.white
+                                                          : Colors.black,
+                                                    ),
+                                                    decoration: InputDecoration(
+                                                      filled: true,
+                                                      fillColor: Theme.of(
+                                                        context,
+                                                      ).colorScheme.surface,
+
+                                                      labelStyle: TextStyle(
+                                                        color:
+                                                            Theme.of(
+                                                                  context,
+                                                                ).brightness ==
+                                                                Brightness.dark
+                                                            ? Colors.white
+                                                            : Colors.black,
+                                                      ),
+
+                                                      floatingLabelStyle:
+                                                          TextStyle(
+                                                            color:
+                                                                Theme.of(
+                                                                      context,
+                                                                    ).brightness ==
+                                                                    Brightness
+                                                                        .dark
+                                                                ? Colors.white
+                                                                : Colors.black,
+                                                          ),
+                                                    ),
                                                     items: tasktype
                                                         .map(
                                                           (type) =>
@@ -363,6 +499,32 @@ class Ttasktype extends State<Taskt> {
                                                     readOnly: true,
                                                     decoration: InputDecoration(
                                                       labelText: "Due Date".tr,
+                                                      filled: true,
+                                                      fillColor: Theme.of(
+                                                        context,
+                                                      ).colorScheme.surface,
+
+                                                      labelStyle: TextStyle(
+                                                        color:
+                                                            Theme.of(
+                                                                  context,
+                                                                ).brightness ==
+                                                                Brightness.dark
+                                                            ? Colors.white
+                                                            : Colors.black,
+                                                      ),
+
+                                                      floatingLabelStyle:
+                                                          TextStyle(
+                                                            color:
+                                                                Theme.of(
+                                                                      context,
+                                                                    ).brightness ==
+                                                                    Brightness
+                                                                        .dark
+                                                                ? Colors.white
+                                                                : Colors.black,
+                                                          ),
                                                       suffixIcon: Icon(
                                                         Icons.calendar_today,
                                                       ),
