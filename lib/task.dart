@@ -97,7 +97,14 @@ class Ttasktype extends State<Taskt> {
           );
         },
         icon: Icon(Icons.camera_alt),
-        label: Text("Import Study Schedule".tr),
+        label: Text(
+          "Import Study Schedule".tr,
+          style: TextStyle(
+            color: Theme.of(context).brightness == Brightness.dark
+                ? Colors.white
+                : Colors.black,
+          ),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
@@ -108,7 +115,13 @@ class Ttasktype extends State<Taskt> {
               const SizedBox(height: 20),
               Text(
                 "Task Title".tr,
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? Colors.white
+                      : Colors.black,
+                ),
               ),
               const SizedBox(height: 20),
               TextFormField(
@@ -123,7 +136,13 @@ class Ttasktype extends State<Taskt> {
               const SizedBox(height: 20),
               Text(
                 "Task Type".tr,
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? Colors.white
+                      : Colors.black,
+                ),
               ),
               const SizedBox(height: 8),
               DropdownButtonFormField<String>(
@@ -139,7 +158,13 @@ class Ttasktype extends State<Taskt> {
               const SizedBox(height: 20),
               Text(
                 "Due Date".tr,
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? Colors.white
+                      : Colors.black,
+                ),
               ),
               const SizedBox(height: 8),
               TextFormField(
@@ -209,7 +234,14 @@ class Ttasktype extends State<Taskt> {
                     setState(() => selectedtasktype = null);
                   }
                 },
-                child: Text("Add Task".tr),
+                child: Text(
+                  "Add Task".tr,
+                  style: TextStyle(
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? Colors.white
+                        : Colors.black,
+                  ),
+                ),
               ),
               const SizedBox(height: 20),
               SizedBox(
@@ -253,6 +285,11 @@ class Ttasktype extends State<Taskt> {
                                         t.description,
                                         style: TextStyle(
                                           fontWeight: FontWeight.bold,
+                                          color:
+                                              Theme.of(context).brightness ==
+                                                  Brightness.dark
+                                              ? Colors.white
+                                              : Colors.black,
                                           fontSize: 16,
                                         ),
                                       ),
@@ -278,7 +315,18 @@ class Ttasktype extends State<Taskt> {
                                         showDialog(
                                           context: context,
                                           builder: (context) => AlertDialog(
-                                            title: Text("Edit Task".tr),
+                                            title: Text(
+                                              "Edit Task".tr,
+                                              style: TextStyle(
+                                                color:
+                                                    Theme.of(
+                                                          context,
+                                                        ).brightness ==
+                                                        Brightness.dark
+                                                    ? Colors.white
+                                                    : Colors.black,
+                                              ),
+                                            ),
                                             content: SingleChildScrollView(
                                               child: Column(
                                                 mainAxisSize: MainAxisSize.min,
@@ -427,7 +475,15 @@ class Ttasktype extends State<Taskt> {
                                 const SizedBox(height: 6),
                                 Text(
                                   "${t.tasktype} | ${t.d.day}/${t.d.month}/${t.d.year} ${t.d.hour.toString().padLeft(2, '0')}:${t.d.minute.toString().padLeft(2, '0')}",
+                                  style: TextStyle(
+                                    color:
+                                        Theme.of(context).brightness ==
+                                            Brightness.dark
+                                        ? Colors.white
+                                        : Colors.black,
+                                  ),
                                 ),
+
                                 const SizedBox(height: 6),
                                 Row(
                                   children: [
@@ -453,7 +509,16 @@ class Ttasktype extends State<Taskt> {
                                         });
                                       },
                                     ),
-                                    Text("تم إنجاز المهمة".tr),
+                                    Text(
+                                      "تم إنجاز المهمة".tr,
+                                      style: TextStyle(
+                                        color:
+                                            Theme.of(context).brightness ==
+                                                Brightness.dark
+                                            ? Colors.white
+                                            : Colors.black,
+                                      ),
+                                    ),
                                   ],
                                 ),
                               ],

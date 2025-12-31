@@ -561,7 +561,11 @@ class _Home_pState extends State<Home_p> {
                                   padding: EdgeInsets.all(12),
                                   height:
                                       MediaQuery.of(context).size.height * 0.5,
-                                  color: Colors.white,
+                                  color:
+                                      Theme.of(context).brightness ==
+                                          Brightness.dark
+                                      ? Colors.white
+                                      : Colors.black,
                                   child: ListView.builder(
                                     shrinkWrap: true,
                                     physics: AlwaysScrollableScrollPhysics(),
@@ -583,18 +587,56 @@ class _Home_pState extends State<Home_p> {
                                                 style: TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   fontSize: 16,
+                                                  color:
+                                                      Theme.of(
+                                                            context,
+                                                          ).brightness ==
+                                                          Brightness.dark
+                                                      ? Colors.white
+                                                      : Colors.black,
                                                 ),
                                               ),
-                                              Text("Type: ${task.tasktype}".tr),
+                                              Text(
+                                                "Type: ${task.tasktype}".tr,
+                                                style: TextStyle(
+                                                  color:
+                                                      Theme.of(
+                                                            context,
+                                                          ).brightness ==
+                                                          Brightness.dark
+                                                      ? Colors.white
+                                                      : Colors.black,
+                                                ),
+                                              ),
                                               Text(
                                                 "Date: ${task.d.day}/${task.d.month}/${task.d.year} ${task.d.hour}:${task.d.minute}"
                                                     .tr,
+                                                style: TextStyle(
+                                                  color:
+                                                      Theme.of(
+                                                            context,
+                                                          ).brightness ==
+                                                          Brightness.dark
+                                                      ? Colors.white
+                                                      : Colors.black,
+                                                ),
                                               ),
                                               Row(
                                                 mainAxisAlignment:
                                                     MainAxisAlignment.end,
                                                 children: [
-                                                  Text("تم انجاز المهمة".tr),
+                                                  Text(
+                                                    "تم انجاز المهمة".tr,
+                                                    style: TextStyle(
+                                                      color:
+                                                          Theme.of(
+                                                                context,
+                                                              ).brightness ==
+                                                              Brightness.dark
+                                                          ? Colors.white
+                                                          : Colors.black,
+                                                    ),
+                                                  ),
                                                   Checkbox(
                                                     value: task.isdone,
                                                     onChanged: (value) {
@@ -629,6 +671,11 @@ class _Home_pState extends State<Home_p> {
                                     "Tasks".tr,
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
+                                      color:
+                                          Theme.of(context).brightness ==
+                                              Brightness.dark
+                                          ? Colors.white
+                                          : Colors.black,
                                     ),
                                   ),
                                   Text(
@@ -636,12 +683,22 @@ class _Home_pState extends State<Home_p> {
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 24,
+                                      color:
+                                          Theme.of(context).brightness ==
+                                              Brightness.dark
+                                          ? Colors.white
+                                          : Colors.black,
                                     ),
                                   ),
                                   Text(
                                     "Pending".tr,
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
+                                      color:
+                                          Theme.of(context).brightness ==
+                                              Brightness.dark
+                                          ? Colors.white
+                                          : Colors.black,
                                     ),
                                   ),
                                 ],
@@ -678,7 +735,11 @@ class _Home_pState extends State<Home_p> {
                                   padding: EdgeInsets.all(12),
                                   height:
                                       MediaQuery.of(context).size.height * 0.5,
-                                  color: Colors.white,
+                                  color:
+                                      Theme.of(context).brightness ==
+                                          Brightness.dark
+                                      ? Colors.white
+                                      : Colors.black,
                                   child: ListView.builder(
                                     shrinkWrap: true,
                                     physics: AlwaysScrollableScrollPhysics(),
@@ -693,14 +754,43 @@ class _Home_pState extends State<Home_p> {
                                           padding: EdgeInsets.all(8),
                                           child: Column(
                                             children: [
-                                              Text("Source: ${item.source}".tr),
+                                              Text(
+                                                "Source: ${item.source}".tr,
+                                                style: TextStyle(
+                                                  color:
+                                                      Theme.of(
+                                                            context,
+                                                          ).brightness ==
+                                                          Brightness.dark
+                                                      ? Colors.white
+                                                      : Colors.black,
+                                                ),
+                                              ),
                                               Text(
                                                 "Amount: ${item.amount.toStringAsFixed(2)}"
                                                     .tr,
+                                                style: TextStyle(
+                                                  color:
+                                                      Theme.of(
+                                                            context,
+                                                          ).brightness ==
+                                                          Brightness.dark
+                                                      ? Colors.white
+                                                      : Colors.black,
+                                                ),
                                               ),
                                               Text(
                                                 "Date: ${item.date.day}/${item.date.month}/${item.date.year}"
                                                     .tr,
+                                                style: TextStyle(
+                                                  color:
+                                                      Theme.of(
+                                                            context,
+                                                          ).brightness ==
+                                                          Brightness.dark
+                                                      ? Colors.white
+                                                      : Colors.black,
+                                                ),
                                               ),
                                             ],
                                           ),
@@ -725,12 +815,22 @@ class _Home_pState extends State<Home_p> {
                                     "Income".tr,
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
+                                      color:
+                                          Theme.of(context).brightness ==
+                                              Brightness.dark
+                                          ? Colors.white
+                                          : Colors.black,
                                     ),
                                   ),
                                   Text(
                                     "$total",
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
+                                      color:
+                                          Theme.of(context).brightness ==
+                                              Brightness.dark
+                                          ? Colors.white
+                                          : Colors.black,
                                       fontSize: 24,
                                     ),
                                   ),
@@ -768,7 +868,11 @@ class _Home_pState extends State<Home_p> {
                                   padding: EdgeInsets.all(12),
                                   height:
                                       MediaQuery.of(context).size.height * 0.5,
-                                  color: Colors.white,
+                                  color:
+                                      Theme.of(context).brightness ==
+                                          Brightness.dark
+                                      ? Colors.white
+                                      : Colors.black,
                                   child: ListView.builder(
                                     shrinkWrap: true,
                                     physics: AlwaysScrollableScrollPhysics(),
@@ -785,14 +889,41 @@ class _Home_pState extends State<Home_p> {
                                             children: [
                                               Text(
                                                 "Category: ${e.category}".tr,
+                                                style: TextStyle(
+                                                  color:
+                                                      Theme.of(
+                                                            context,
+                                                          ).brightness ==
+                                                          Brightness.dark
+                                                      ? Colors.white
+                                                      : Colors.black,
+                                                ),
                                               ),
                                               Text(
                                                 "Amount: ${e.amount.toStringAsFixed(2)}"
                                                     .tr,
+                                                style: TextStyle(
+                                                  color:
+                                                      Theme.of(
+                                                            context,
+                                                          ).brightness ==
+                                                          Brightness.dark
+                                                      ? Colors.white
+                                                      : Colors.black,
+                                                ),
                                               ),
                                               Text(
                                                 "Date: ${e.date.day}/${e.date.month}/${e.date.year}"
                                                     .tr,
+                                                style: TextStyle(
+                                                  color:
+                                                      Theme.of(
+                                                            context,
+                                                          ).brightness ==
+                                                          Brightness.dark
+                                                      ? Colors.white
+                                                      : Colors.black,
+                                                ),
                                               ),
                                             ],
                                           ),
@@ -817,12 +948,22 @@ class _Home_pState extends State<Home_p> {
                                     "Expenses".tr,
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
+                                      color:
+                                          Theme.of(context).brightness ==
+                                              Brightness.dark
+                                          ? Colors.white
+                                          : Colors.black,
                                     ),
                                   ),
                                   Text(
                                     "$totale",
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
+                                      color:
+                                          Theme.of(context).brightness ==
+                                              Brightness.dark
+                                          ? Colors.white
+                                          : Colors.black,
                                       fontSize: 24,
                                     ),
                                   ),
@@ -840,7 +981,13 @@ class _Home_pState extends State<Home_p> {
             SizedBox(height: 20),
             Text(
               "Expenses vs Income".tr,
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? Colors.white
+                    : Colors.black,
+              ),
               textAlign: TextAlign.center,
             ),
             SizedBox(
