@@ -24,8 +24,17 @@ class Calender extends State<Callender> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Calendar".tr),
-        backgroundColor: Color(0xFF6A1B9A),
+        title: Text(
+          "Calendar".tr,
+          style: TextStyle(
+            color: Theme.of(context).brightness == Brightness.dark
+                ? Colors.white
+                : Colors.black,
+          ),
+        ),
+        backgroundColor: Theme.of(context).brightness == Brightness.dark
+            ? const Color(0xFF121212) // لون داكن
+            : const Color(0xFF6A1B9A),
         centerTitle: true,
         elevation: 0,
         foregroundColor: Colors.black,
@@ -68,7 +77,17 @@ class Calender extends State<Callender> {
                   }).toList();
 
                   if (filteredDocs.isEmpty) {
-                    return Center(child: Text("لا توجد مهام حاليا".tr));
+                    return Center(
+                      child: Text(
+                        "لا توجد مهام حاليا".tr,
+                        style: TextStyle(
+                          color: Theme.of(context).brightness == Brightness.dark
+                              ? Colors.white
+                              : Colors.black,
+                          fontSize: 15,
+                        ),
+                      ),
+                    );
                   }
                   return ListView.builder(
                     itemBuilder: (context, index) {

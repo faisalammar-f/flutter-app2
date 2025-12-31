@@ -98,7 +98,16 @@ class _ImportScheduleScreenState extends State<ImportScheduleScreen> {
     final items = _parseScheduleLines(_lines);
     if (items.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(".ما قدرنا نستخرج جدول واضح من الصورة".tr)),
+        SnackBar(
+          content: Text(
+            ".ما قدرنا نستخرج جدول واضح من الصورة".tr,
+            style: TextStyle(
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? Colors.white
+                  : Colors.black,
+            ),
+          ),
+        ),
       );
       return;
     }
@@ -301,9 +310,18 @@ class _ImportScheduleScreenState extends State<ImportScheduleScreen> {
   void _addToTasks(BuildContext context) {
     final items = _parseScheduleLines(_lines);
     if (items.isEmpty) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('ما قدرنا نطلع جدول واضح'.tr)));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'ما قدرنا نطلع جدول واضح'.tr,
+            style: TextStyle(
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? Colors.white
+                  : Colors.black,
+            ),
+          ),
+        ),
+      );
       return;
     }
 
@@ -328,7 +346,16 @@ class _ImportScheduleScreenState extends State<ImportScheduleScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Import Study Schedule'.tr)),
+      appBar: AppBar(
+        title: Text(
+          'Import Study Schedule'.tr,
+          style: TextStyle(
+            color: Theme.of(context).brightness == Brightness.dark
+                ? Colors.white
+                : Colors.black,
+          ),
+        ),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -338,7 +365,14 @@ class _ImportScheduleScreenState extends State<ImportScheduleScreen> {
               child: ElevatedButton.icon(
                 onPressed: _pickImage,
                 icon: Icon(Icons.upload_file),
-                label: Text('Choose a table image'.tr),
+                label: Text(
+                  'Choose a table image'.tr,
+                  style: TextStyle(
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? Colors.white
+                        : Colors.black,
+                  ),
+                ),
               ),
             ),
             const SizedBox(height: 12),
@@ -370,7 +404,14 @@ class _ImportScheduleScreenState extends State<ImportScheduleScreen> {
                 ),
                 padding: const EdgeInsets.all(8),
                 child: _lines.isEmpty
-                    ? Text('اختاري صورة جدولك وشوفي النص هون'.tr)
+                    ? Text(
+                        'اختاري صورة جدولك وشوفي النص هون'.tr,
+                        style: TextStyle(
+                          color: Theme.of(context).brightness == Brightness.dark
+                              ? Colors.white
+                              : Colors.black,
+                        ),
+                      )
                     : ListView.builder(
                         itemCount: _lines.length,
                         itemBuilder: (_, i) => Text('- ${_lines[i]}'),
@@ -383,7 +424,14 @@ class _ImportScheduleScreenState extends State<ImportScheduleScreen> {
                 width: double.infinity,
                 child: ElevatedButton.icon(
                   icon: const Icon(Icons.playlist_add),
-                  label: Text("Add to Tasks".tr),
+                  label: Text(
+                    "Add to Tasks".tr,
+                    style: TextStyle(
+                      color: Theme.of(context).brightness == Brightness.dark
+                          ? Colors.white
+                          : Colors.black,
+                    ),
+                  ),
                   onPressed: () => _autoImportToTasks(),
                 ),
               ),

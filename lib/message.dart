@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
 class Message {
@@ -31,7 +32,9 @@ class Support extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xFF6A1B9A),
+        backgroundColor: Theme.of(context).brightness == Brightness.dark
+            ? const Color(0xFF121212) // لون داكن
+            : const Color(0xFF6A1B9A),
         leading: IconButton(
           onPressed: () {
             Navigator.pop(context);
@@ -42,8 +45,14 @@ class Support extends StatelessWidget {
           children: [
             Icon(Icons.chat, size: 20),
             Text(
-              "Message me",
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+              "Message me".tr,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? Colors.white
+                    : Colors.black,
+              ),
             ),
           ],
         ),
@@ -66,7 +75,18 @@ class Support extends StatelessWidget {
                       }
 
                       if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                        return Center(child: Text("لا توجد رسائل حاليا"));
+                        return Center(
+                          child: Text(
+                            "لا توجد رسائل حاليا".tr,
+                            style: TextStyle(
+                              color:
+                                  Theme.of(context).brightness ==
+                                      Brightness.dark
+                                  ? Colors.white
+                                  : Colors.black,
+                            ),
+                          ),
+                        );
                       }
                       final mass = snapshot.data!;
                       return ListView.builder(
@@ -87,14 +107,23 @@ class Support extends StatelessWidget {
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(12),
                                       ),
-                                      title: Text("تعديل / حذف الرسالة"),
+                                      title: Text(
+                                        "تعديل / حذف الرسالة".tr,
+                                        style: TextStyle(
+                                          color:
+                                              Theme.of(context).brightness ==
+                                                  Brightness.dark
+                                              ? Colors.white
+                                              : Colors.black,
+                                        ),
+                                      ),
                                       content: Column(
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
                                           TextFormField(
                                             controller: editController,
                                             decoration: InputDecoration(
-                                              labelText: "الرسالة",
+                                              labelText: "الرسالة".tr,
                                               border: OutlineInputBorder(),
                                             ),
                                             maxLines: 3,
@@ -126,13 +155,35 @@ class Support extends StatelessWidget {
                                                     ).showSnackBar(
                                                       SnackBar(
                                                         content: Text(
-                                                          "✅ تم تعديل الرسالة بنجاح",
+                                                          "✅ تم تعديل الرسالة بنجاح"
+                                                              .tr,
+                                                          style: TextStyle(
+                                                            color:
+                                                                Theme.of(
+                                                                      context,
+                                                                    ).brightness ==
+                                                                    Brightness
+                                                                        .dark
+                                                                ? Colors.white
+                                                                : Colors.black,
+                                                          ),
                                                         ),
                                                       ),
                                                     );
                                                   }
                                                 },
-                                                child: Text("Save"),
+                                                child: Text(
+                                                  "Save".tr,
+                                                  style: TextStyle(
+                                                    color:
+                                                        Theme.of(
+                                                              context,
+                                                            ).brightness ==
+                                                            Brightness.dark
+                                                        ? Colors.white
+                                                        : Colors.black,
+                                                  ),
+                                                ),
                                               ),
                                               const SizedBox(width: 10),
                                               ElevatedButton(
@@ -153,12 +204,34 @@ class Support extends StatelessWidget {
                                                   ).showSnackBar(
                                                     SnackBar(
                                                       content: Text(
-                                                        "🗑️ تم حذف الرسالة بنجاح",
+                                                        "🗑️ تم حذف الرسالة بنجاح"
+                                                            .tr,
+                                                        style: TextStyle(
+                                                          color:
+                                                              Theme.of(
+                                                                    context,
+                                                                  ).brightness ==
+                                                                  Brightness
+                                                                      .dark
+                                                              ? Colors.white
+                                                              : Colors.black,
+                                                        ),
                                                       ),
                                                     ),
                                                   );
                                                 },
-                                                child: Text("Delete"),
+                                                child: Text(
+                                                  "Delete".tr,
+                                                  style: TextStyle(
+                                                    color:
+                                                        Theme.of(
+                                                              context,
+                                                            ).brightness ==
+                                                            Brightness.dark
+                                                        ? Colors.white
+                                                        : Colors.black,
+                                                  ),
+                                                ),
                                               ),
                                             ],
                                           ),
@@ -183,7 +256,7 @@ class Support extends StatelessWidget {
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
-                                fontSize: 12,
+                                fontSize: 15,
                                 color: Colors.grey.shade800,
                                 fontStyle: FontStyle.italic,
                               ),
@@ -208,7 +281,7 @@ class Support extends StatelessWidget {
                       child: TextFormField(
                         controller: message,
                         decoration: InputDecoration(
-                          hintText: "Write your message here",
+                          hintText: "Write your message here".tr,
                           contentPadding: EdgeInsets.symmetric(
                             vertical: 10,
                             horizontal: 20,
@@ -216,7 +289,7 @@ class Support extends StatelessWidget {
                         ),
                         validator: (value) {
                           if (value!.isEmpty) {
-                            return "cannot be empty";
+                            return "cannot be empty".tr;
                           } else {
                             return null;
                           }
@@ -244,7 +317,7 @@ class Support extends StatelessWidget {
                         }
                       },
                       child: Text(
-                        "Send",
+                        "Send".tr,
                         style: TextStyle(
                           color: Colors.blueAccent,
                           fontWeight: FontWeight.bold,
@@ -268,8 +341,17 @@ class adminyou extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Users"),
-        backgroundColor: Color(0xFF6A1B9A),
+        title: Text(
+          "Users".tr,
+          style: TextStyle(
+            color: Theme.of(context).brightness == Brightness.dark
+                ? Colors.white
+                : Colors.black,
+          ),
+        ),
+        backgroundColor: Theme.of(context).brightness == Brightness.dark
+            ? const Color(0xFF121212) // لون داكن
+            : const Color(0xFF6A1B9A),
         centerTitle: true,
       ),
       body: StreamBuilder(
@@ -283,7 +365,14 @@ class adminyou extends StatelessWidget {
               return Card(
                 child: ListTile(
                   leading: Icon(Icons.person, size: 40),
-                  title: Text("User: $users"),
+                  title: Text(
+                    "User: $users",
+                    style: TextStyle(
+                      color: Theme.of(context).brightness == Brightness.dark
+                          ? Colors.white
+                          : Colors.black,
+                    ),
+                  ),
                   onTap: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(
@@ -433,7 +522,9 @@ class adminSupport extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xFF6A1B9A),
+        backgroundColor: Theme.of(context).brightness == Brightness.dark
+            ? const Color(0xFF121212) // لون داكن
+            : const Color(0xFF6A1B9A),
         leading: IconButton(
           onPressed: () {
             Navigator.pop(context);
@@ -444,8 +535,14 @@ class adminSupport extends StatelessWidget {
           children: [
             Icon(Icons.chat, size: 20),
             Text(
-              "Message me",
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+              "Message me".tr,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? Colors.white
+                    : Colors.black,
+              ),
             ),
           ],
         ),
@@ -470,7 +567,18 @@ class adminSupport extends StatelessWidget {
                       }
 
                       if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                        return Center(child: Text("لا توجد رسائل حاليا"));
+                        return Center(
+                          child: Text(
+                            "لا توجد رسائل حاليا".tr,
+                            style: TextStyle(
+                              color:
+                                  Theme.of(context).brightness ==
+                                      Brightness.dark
+                                  ? Colors.white
+                                  : Colors.black,
+                            ),
+                          ),
+                        );
                       }
                       final mass = snapshot.data!;
                       return ListView.builder(
@@ -504,14 +612,23 @@ class adminSupport extends StatelessWidget {
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(12),
                                       ),
-                                      title: Text("تعديل / حذف الرسالة"),
+                                      title: Text(
+                                        "تعديل / حذف الرسالة".tr,
+                                        style: TextStyle(
+                                          color:
+                                              Theme.of(context).brightness ==
+                                                  Brightness.dark
+                                              ? Colors.white
+                                              : Colors.black,
+                                        ),
+                                      ),
                                       content: Column(
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
                                           TextFormField(
                                             controller: editController,
                                             decoration: InputDecoration(
-                                              labelText: "الرسالة",
+                                              labelText: "الرسالة".tr,
                                               border: OutlineInputBorder(),
                                             ),
                                             maxLines: 3,
@@ -543,13 +660,35 @@ class adminSupport extends StatelessWidget {
                                                     ).showSnackBar(
                                                       SnackBar(
                                                         content: Text(
-                                                          "✅ تم تعديل الرسالة بنجاح",
+                                                          "✅ تم تعديل الرسالة بنجاح"
+                                                              .tr,
+                                                          style: TextStyle(
+                                                            color:
+                                                                Theme.of(
+                                                                      context,
+                                                                    ).brightness ==
+                                                                    Brightness
+                                                                        .dark
+                                                                ? Colors.white
+                                                                : Colors.black,
+                                                          ),
                                                         ),
                                                       ),
                                                     );
                                                   }
                                                 },
-                                                child: Text("Save"),
+                                                child: Text(
+                                                  "Save".tr,
+                                                  style: TextStyle(
+                                                    color:
+                                                        Theme.of(
+                                                              context,
+                                                            ).brightness ==
+                                                            Brightness.dark
+                                                        ? Colors.white
+                                                        : Colors.black,
+                                                  ),
+                                                ),
                                               ),
                                               const SizedBox(width: 10),
                                               ElevatedButton(
@@ -570,12 +709,34 @@ class adminSupport extends StatelessWidget {
                                                   ).showSnackBar(
                                                     SnackBar(
                                                       content: Text(
-                                                        "🗑️ تم حذف الرسالة بنجاح",
+                                                        "🗑️ تم حذف الرسالة بنجاح"
+                                                            .tr,
+                                                        style: TextStyle(
+                                                          color:
+                                                              Theme.of(
+                                                                    context,
+                                                                  ).brightness ==
+                                                                  Brightness
+                                                                      .dark
+                                                              ? Colors.white
+                                                              : Colors.black,
+                                                        ),
                                                       ),
                                                     ),
                                                   );
                                                 },
-                                                child: Text("Delete"),
+                                                child: Text(
+                                                  "Delete".tr,
+                                                  style: TextStyle(
+                                                    color:
+                                                        Theme.of(
+                                                              context,
+                                                            ).brightness ==
+                                                            Brightness.dark
+                                                        ? Colors.white
+                                                        : Colors.black,
+                                                  ),
+                                                ),
                                               ),
                                             ],
                                           ),
@@ -591,7 +752,7 @@ class adminSupport extends StatelessWidget {
                                 maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
-                                  fontSize: 13,
+                                  fontSize: 15,
                                   color: Colors.grey.shade800,
                                   fontStyle: FontStyle.italic,
                                 ),
@@ -617,7 +778,7 @@ class adminSupport extends StatelessWidget {
                       child: TextFormField(
                         controller: message,
                         decoration: InputDecoration(
-                          hintText: "Write your message here",
+                          hintText: "Write your message here".tr,
                           contentPadding: EdgeInsets.symmetric(
                             vertical: 10,
                             horizontal: 20,
@@ -625,7 +786,7 @@ class adminSupport extends StatelessWidget {
                         ),
                         validator: (value) {
                           if (value!.isEmpty) {
-                            return "cannot be empty";
+                            return "cannot be empty".tr;
                           } else {
                             return null;
                           }
@@ -640,7 +801,16 @@ class adminSupport extends StatelessWidget {
                           if (selectedMessage == null) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
-                                content: Text("اختر رسالة أولاً للرد عليها"),
+                                content: Text(
+                                  "اختر رسالة أولاً للرد عليها".tr,
+                                  style: TextStyle(
+                                    color:
+                                        Theme.of(context).brightness ==
+                                            Brightness.dark
+                                        ? Colors.white
+                                        : Colors.black,
+                                  ),
+                                ),
                               ),
                             );
                             return;
@@ -658,7 +828,7 @@ class adminSupport extends StatelessWidget {
                         }
                       },
                       child: Text(
-                        "Send",
+                        "Send".tr,
                         style: TextStyle(
                           color: Colors.blueAccent,
                           fontWeight: FontWeight.bold,

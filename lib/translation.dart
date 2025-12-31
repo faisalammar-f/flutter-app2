@@ -45,11 +45,18 @@ class Lang extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xFF6A1B9A),
+        backgroundColor: Theme.of(context).brightness == Brightness.dark
+            ? const Color(0xFF121212) // لون داكن
+            : const Color(0xFF6A1B9A),
         title: Center(
           child: Text(
             "Settings".tr,
-            style: TextStyle(fontWeight: FontWeight.bold),
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? Colors.white
+                  : Colors.black,
+            ),
           ),
         ),
       ),
@@ -60,7 +67,13 @@ class Lang extends StatelessWidget {
             SizedBox(height: 20),
             Text(
               "choose your Language:".tr,
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 18,
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? Colors.white
+                    : Colors.black,
+              ),
               textAlign: TextAlign.right,
             ),
             Row(
@@ -75,7 +88,14 @@ class Lang extends StatelessWidget {
                   onPressed: () {
                     i.changlang("ar");
                   },
-                  child: Text("العربية"),
+                  child: Text(
+                    "العربية",
+                    style: TextStyle(
+                      color: Theme.of(context).brightness == Brightness.dark
+                          ? Colors.white
+                          : Colors.black,
+                    ),
+                  ),
                 ),
                 SizedBox(height: 20),
                 ElevatedButton(
@@ -83,7 +103,14 @@ class Lang extends StatelessWidget {
                   onPressed: () {
                     i.changlang("en");
                   },
-                  child: Text("English"),
+                  child: Text(
+                    "English",
+                    style: TextStyle(
+                      color: Theme.of(context).brightness == Brightness.dark
+                          ? Colors.white
+                          : Colors.black,
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -131,6 +158,18 @@ final Map<String, String> authAr = {
       'تم إرسال رابط تغيير كلمة المرور إلى بريدك الإلكتروني',
   'حدث خطأ أثناء إرسال الرابط': 'حدث خطأ أثناء إرسال الرابط',
   "change password": "تغيير كلمة المرور",
+  "Send": "يرسل",
+  "اختر رسالة أولاً للرد عليها": "اختر رسالة أولاً للرد عليها",
+  "Write your message here": "اكتب رسالتك هنا",
+  "🗑️ تم حذف الرسالة بنجاح": "🗑️ تم حذف الرسالة بنجاح",
+  "✅ تم تعديل الرسالة بنجاح": "✅ تم تعديل الرسالة بنجاح",
+  "الرسالة": "الرسالة",
+  "تعديل / حذف الرسالة": "تعديل / حذف الرسالة",
+  "لا توجد رسائل حاليا": "لا توجد رسائل حاليا",
+  "Message me": "راسلني",
+  "Users": "المستخدمون",
+  "• Categorize expenses (food, transport, books, etc.).":
+      "• تصنيف النفقات (الطعام، المواصلات، الكتب، إلخ).",
 };
 
 final Map<String, String> authEn = {
@@ -157,6 +196,18 @@ final Map<String, String> authEn = {
       'A password change link has been sent to your email.',
   'حدث خطأ أثناء إرسال الرابط': 'An error occurred while sending the link.',
   "change password": "change password",
+  "Send": "Send",
+  "اختر رسالة أولاً للرد عليها": "Choose a message first to reply to",
+  "Write your message here": "Write your message here",
+  "🗑️ تم حذف الرسالة بنجاح": "🗑️ The message was successfully deleted",
+  "✅ تم تعديل الرسالة بنجاح": "✅ Message successfully edited",
+  "الرسالة": "message",
+  "تعديل / حذف الرسالة": "Edit/Delete Message",
+  "لا توجد رسائل حاليا": "No messages at the moment",
+  "Message me": "Message me",
+  "Users": "Users",
+  "• Categorize expenses (food, transport, books, etc.).":
+      "• Categorize expenses (food, transport, books, etc.).",
 };
 final Map<String, Map<String, String>> authTranslation = {
   "en": {

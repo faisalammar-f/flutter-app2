@@ -66,7 +66,14 @@ class _HomePageState extends State<HomePage> {
         return StatefulBuilder(
           builder: (context, setState) {
             return AlertDialog(
-              title: Text('Edit User Info'.tr),
+              title: Text(
+                'Edit User Info'.tr,
+                style: TextStyle(
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? Colors.white
+                      : Colors.black,
+                ),
+              ),
               content: SingleChildScrollView(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
@@ -88,6 +95,13 @@ class _HomePageState extends State<HomePage> {
                             SnackBar(
                               content: Text(
                                 'حدث خطأ، يرجى إعادة تسجيل الدخول'.tr,
+                                style: TextStyle(
+                                  color:
+                                      Theme.of(context).brightness ==
+                                          Brightness.dark
+                                      ? Colors.white
+                                      : Colors.black,
+                                ),
                               ),
                             ),
                           );
@@ -104,19 +118,38 @@ class _HomePageState extends State<HomePage> {
                               content: Text(
                                 'تم إرسال رابط تغيير كلمة المرور إلى بريدك الإلكتروني'
                                     .tr,
+                                style: TextStyle(
+                                  color:
+                                      Theme.of(context).brightness ==
+                                          Brightness.dark
+                                      ? Colors.white
+                                      : Colors.black,
+                                ),
                               ),
                             ),
                           );
                         } catch (e) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
-                              content: Text('حدث خطأ أثناء إرسال الرابط'.tr),
+                              content: Text(
+                                'حدث خطأ أثناء إرسال الرابط'.tr,
+                                style: TextStyle(
+                                  color:
+                                      Theme.of(context).brightness ==
+                                          Brightness.dark
+                                      ? Colors.white
+                                      : Colors.black,
+                                ),
+                              ),
                             ),
                           );
                         }
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: kPrimaryColor,
+                        backgroundColor:
+                            Theme.of(context).brightness == Brightness.dark
+                            ? const Color(0xFF121212) // لون داكن
+                            : const Color(0xFF6A1B9A),
                         padding: EdgeInsets.symmetric(
                           vertical: 5,
                           horizontal: 5,
@@ -128,7 +161,12 @@ class _HomePageState extends State<HomePage> {
 
                       child: Text(
                         "change password".tr,
-                        style: TextStyle(color: Colors.white, fontSize: 16),
+                        style: TextStyle(
+                          color: Theme.of(context).brightness == Brightness.dark
+                              ? Colors.white
+                              : Colors.black,
+                          fontSize: 16,
+                        ),
                       ),
                     ),
                     TextField(
@@ -162,7 +200,16 @@ class _HomePageState extends State<HomePage> {
                       children: [
                         Expanded(
                           child: RadioListTile<String>(
-                            title: Text('Male'.tr),
+                            title: Text(
+                              'Male'.tr,
+                              style: TextStyle(
+                                color:
+                                    Theme.of(context).brightness ==
+                                        Brightness.dark
+                                    ? Colors.white
+                                    : Colors.black,
+                              ),
+                            ),
                             value: 'Male',
                             groupValue: gender,
                             onChanged: (val) {
@@ -174,7 +221,16 @@ class _HomePageState extends State<HomePage> {
                         ),
                         Expanded(
                           child: RadioListTile<String>(
-                            title: Text('Female'.tr),
+                            title: Text(
+                              'Female'.tr,
+                              style: TextStyle(
+                                color:
+                                    Theme.of(context).brightness ==
+                                        Brightness.dark
+                                    ? Colors.white
+                                    : Colors.black,
+                              ),
+                            ),
                             value: 'Female',
                             groupValue: gender,
                             onChanged: (val) {
@@ -192,7 +248,14 @@ class _HomePageState extends State<HomePage> {
               actions: [
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(),
-                  child: Text('Cancel'.tr),
+                  child: Text(
+                    'Cancel'.tr,
+                    style: TextStyle(
+                      color: Theme.of(context).brightness == Brightness.dark
+                          ? Colors.white
+                          : Colors.black,
+                    ),
+                  ),
                 ),
                 ElevatedButton(
                   onPressed: () async {
@@ -217,7 +280,14 @@ class _HomePageState extends State<HomePage> {
                         });
                     Navigator.of(context).pop();
                   },
-                  child: Text('Save'.tr),
+                  child: Text(
+                    'Save'.tr,
+                    style: TextStyle(
+                      color: Theme.of(context).brightness == Brightness.dark
+                          ? Colors.white
+                          : Colors.black,
+                    ),
+                  ),
                 ),
               ],
             );
@@ -332,7 +402,14 @@ class _HomePageState extends State<HomePage> {
                             SizedBox(height: 8),
                             Text(
                               '🎯 Core Services of the App:'.tr,
-                              style: TextStyle(fontWeight: FontWeight.bold),
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color:
+                                    Theme.of(context).brightness ==
+                                        Brightness.dark
+                                    ? Colors.white
+                                    : Colors.black,
+                              ),
                             ),
                             SizedBox(height: 8),
                             Text(
@@ -347,15 +424,45 @@ class _HomePageState extends State<HomePage> {
                             Text(
                               "• Create daily and weekly schedules for tasks and classes."
                                   .tr,
+                              style: TextStyle(
+                                color:
+                                    Theme.of(context).brightness ==
+                                        Brightness.dark
+                                    ? Colors.white
+                                    : Colors.black,
+                              ),
                             ),
-                            Text("• Add, edit, and delete tasks easily.".tr),
+                            Text(
+                              "• Add, edit, and delete tasks easily.".tr,
+                              style: TextStyle(
+                                color:
+                                    Theme.of(context).brightness ==
+                                        Brightness.dark
+                                    ? Colors.white
+                                    : Colors.black,
+                              ),
+                            ),
                             Text(
                               "• Smart reminders for upcoming tasks and deadlines."
                                   .tr,
+                              style: TextStyle(
+                                color:
+                                    Theme.of(context).brightness ==
+                                        Brightness.dark
+                                    ? Colors.white
+                                    : Colors.black,
+                              ),
                             ),
                             Text(
                               "• AI-powered analysis of time usage to suggest ways to improve productivity."
                                   .tr,
+                              style: TextStyle(
+                                color:
+                                    Theme.of(context).brightness ==
+                                        Brightness.dark
+                                    ? Colors.white
+                                    : Colors.black,
+                              ),
                             ),
                             SizedBox(height: 16),
                             Text(
@@ -367,18 +474,48 @@ class _HomePageState extends State<HomePage> {
                               ),
                             ),
                             SizedBox(height: 8),
-                            Text("• Record daily expenses and income.".tr),
+                            Text(
+                              "• Record daily expenses and income.".tr,
+                              style: TextStyle(
+                                color:
+                                    Theme.of(context).brightness ==
+                                        Brightness.dark
+                                    ? Colors.white
+                                    : Colors.black,
+                              ),
+                            ),
                             Text(
                               "• Categorize expenses (food, transport, books, etc.)."
                                   .tr,
+                              style: TextStyle(
+                                color:
+                                    Theme.of(context).brightness ==
+                                        Brightness.dark
+                                    ? Colors.white
+                                    : Colors.black,
+                              ),
                             ),
                             Text(
                               "• Display visual reports and charts of spending patterns."
                                   .tr,
+                              style: TextStyle(
+                                color:
+                                    Theme.of(context).brightness ==
+                                        Brightness.dark
+                                    ? Colors.white
+                                    : Colors.black,
+                              ),
                             ),
                             Text(
                               "• Provide intelligent financial tips to reduce expenses and manage budgets better."
                                   .tr,
+                              style: TextStyle(
+                                color:
+                                    Theme.of(context).brightness ==
+                                        Brightness.dark
+                                    ? Colors.white
+                                    : Colors.black,
+                              ),
                             ),
                             SizedBox(height: 16),
                             Text(
@@ -393,10 +530,24 @@ class _HomePageState extends State<HomePage> {
                             Text(
                               "• Custom notifications for tasks, expenses, and bills."
                                   .tr,
+                              style: TextStyle(
+                                color:
+                                    Theme.of(context).brightness ==
+                                        Brightness.dark
+                                    ? Colors.white
+                                    : Colors.black,
+                              ),
                             ),
                             Text(
                               "• Suggest suitable times for study, rest, or focus based on user schedule."
                                   .tr,
+                              style: TextStyle(
+                                color:
+                                    Theme.of(context).brightness ==
+                                        Brightness.dark
+                                    ? Colors.white
+                                    : Colors.black,
+                              ),
                             ),
                             SizedBox(height: 16),
                             Text(
@@ -408,10 +559,26 @@ class _HomePageState extends State<HomePage> {
                               ),
                             ),
                             SizedBox(height: 8),
-                            Text("• Analyze user behavior and habits.".tr),
+                            Text(
+                              "• Analyze user behavior and habits.".tr,
+                              style: TextStyle(
+                                color:
+                                    Theme.of(context).brightness ==
+                                        Brightness.dark
+                                    ? Colors.white
+                                    : Colors.black,
+                              ),
+                            ),
                             Text(
                               "• Offer personalized suggestions to improve time and money management."
                                   .tr,
+                              style: TextStyle(
+                                color:
+                                    Theme.of(context).brightness ==
+                                        Brightness.dark
+                                    ? Colors.white
+                                    : Colors.black,
+                              ),
                             ),
                           ],
                         ),
