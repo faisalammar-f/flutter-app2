@@ -240,7 +240,7 @@ class Expenses_app extends State<Expenses_w> {
               ),
               const SizedBox(height: 20),
               SizedBox(
-                height: MediaQuery.of(context).size.height * 0.3,
+                height: MediaQuery.of(context).size.height * 0.6,
                 child: StreamBuilder<List<Expenses>>(
                   stream: prov.expensesStream,
                   builder: (context, snapshot) {

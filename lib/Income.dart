@@ -243,7 +243,7 @@ class Income_app extends State<Income_w> {
               ),
               const SizedBox(height: 20),
               SizedBox(
-                height: MediaQuery.of(context).size.height * 0.3,
+                height: MediaQuery.of(context).size.height * 0.6,
                 child: StreamBuilder<List<Income>>(
                   stream: prov.incomeStream,
                   builder: (context, snapshot) {
