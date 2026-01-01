@@ -101,7 +101,9 @@ class Calender extends State<Callender> {
                           vertical: 8,
                           horizontal: 16,
                         ),
-                        color: Colors.blue.shade50,
+                        color: Theme.of(context).brightness == Brightness.dark
+                            ? const Color(0xFF121212) // لون داكن
+                            : Colors.blue.shade50,
                         child: Padding(
                           padding: EdgeInsets.all(12),
                           child: Column(
@@ -112,7 +114,11 @@ class Calender extends State<Callender> {
                                 children: [
                                   Icon(
                                     Icons.task,
-                                    color: Colors.white,
+                                    color:
+                                        Theme.of(context).brightness ==
+                                            Brightness.dark
+                                        ? Colors.white
+                                        : Colors.black,
                                     size: 35,
                                   ),
                                   Text(
@@ -120,6 +126,11 @@ class Calender extends State<Callender> {
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 18,
+                                      color:
+                                          Theme.of(context).brightness ==
+                                              Brightness.dark
+                                          ? Colors.white
+                                          : Colors.black,
                                     ),
                                     textAlign: TextAlign.center,
                                   ),
@@ -131,6 +142,11 @@ class Calender extends State<Callender> {
                                     "Task Title: ".tr,
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
+                                      color:
+                                          Theme.of(context).brightness ==
+                                              Brightness.dark
+                                          ? Colors.white
+                                          : Colors.black,
                                       fontSize: 18,
                                     ),
                                   ),
@@ -139,7 +155,11 @@ class Calender extends State<Callender> {
                                       t["description"],
                                       style: TextStyle(
                                         fontSize: 16,
-                                        color: Colors.black87,
+                                        color:
+                                            Theme.of(context).brightness ==
+                                                Brightness.dark
+                                            ? Colors.white
+                                            : Colors.black,
                                       ),
                                     ),
                                   ),
@@ -153,6 +173,11 @@ class Calender extends State<Callender> {
                                     "Task Type:".tr,
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
+                                      color:
+                                          Theme.of(context).brightness ==
+                                              Brightness.dark
+                                          ? Colors.white
+                                          : Colors.black,
                                       fontSize: 18,
                                     ),
                                   ),
@@ -163,7 +188,9 @@ class Calender extends State<Callender> {
                                     t["tasktype"],
                                     style: TextStyle(
                                       fontSize: 16,
-                                      color: Colors.grey[700],
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.onSurface,
                                     ),
                                   ),
                                 ],
@@ -178,6 +205,11 @@ class Calender extends State<Callender> {
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 18,
+                                      color:
+                                          Theme.of(context).brightness ==
+                                              Brightness.dark
+                                          ? Colors.white
+                                          : Colors.black,
                                     ),
                                   ),
 
@@ -189,7 +221,9 @@ class Calender extends State<Callender> {
                                         .toString(),
                                     style: TextStyle(
                                       fontSize: 16,
-                                      color: Colors.grey[700],
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.onSurface,
                                     ),
                                   ),
                                 ],

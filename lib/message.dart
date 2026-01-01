@@ -122,6 +122,11 @@ class Support extends StatelessWidget {
                                         children: [
                                           TextFormField(
                                             controller: editController,
+                                            style: TextStyle(
+                                              color: Theme.of(
+                                                context,
+                                              ).colorScheme.onSurface,
+                                            ),
                                             decoration: InputDecoration(
                                               labelText: "الرسالة".tr,
                                               border: OutlineInputBorder(),
@@ -280,7 +285,26 @@ class Support extends StatelessWidget {
                     Expanded(
                       child: TextFormField(
                         controller: message,
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.onSurface,
+                        ),
                         decoration: InputDecoration(
+                          filled: true,
+                          fillColor: Theme.of(context).colorScheme.surface,
+
+                          labelStyle: TextStyle(
+                            color:
+                                Theme.of(context).brightness == Brightness.dark
+                                ? Colors.white
+                                : Colors.black,
+                          ),
+
+                          floatingLabelStyle: TextStyle(
+                            color:
+                                Theme.of(context).brightness == Brightness.dark
+                                ? Colors.white
+                                : Colors.black,
+                          ),
                           hintText: "Write your message here".tr,
                           contentPadding: EdgeInsets.symmetric(
                             vertical: 10,
@@ -627,6 +651,11 @@ class adminSupport extends StatelessWidget {
                                         children: [
                                           TextFormField(
                                             controller: editController,
+                                            style: TextStyle(
+                                              color: Theme.of(
+                                                context,
+                                              ).colorScheme.onSurface,
+                                            ),
                                             decoration: InputDecoration(
                                               labelText: "الرسالة".tr,
                                               border: OutlineInputBorder(),
@@ -777,7 +806,26 @@ class adminSupport extends StatelessWidget {
                     Expanded(
                       child: TextFormField(
                         controller: message,
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.onSurface,
+                        ),
                         decoration: InputDecoration(
+                          filled: true,
+                          fillColor: Theme.of(context).colorScheme.surface,
+
+                          labelStyle: TextStyle(
+                            color:
+                                Theme.of(context).brightness == Brightness.dark
+                                ? Colors.white
+                                : Colors.black,
+                          ),
+
+                          floatingLabelStyle: TextStyle(
+                            color:
+                                Theme.of(context).brightness == Brightness.dark
+                                ? Colors.white
+                                : Colors.black,
+                          ),
                           hintText: "Write your message here".tr,
                           contentPadding: EdgeInsets.symmetric(
                             vertical: 10,

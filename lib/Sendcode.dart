@@ -65,13 +65,32 @@ class _SendCodePageState extends State<SendCodePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Email Verification".tr)),
+      backgroundColor: Theme.of(context).brightness == Brightness.dark
+          ? const Color(0xFF121212) // لون داكن
+          : const Color(0xFF6A1B9A),
+      appBar: AppBar(
+        title: Text(
+          "Email Verification".tr,
+          style: TextStyle(
+            color: Theme.of(context).brightness == Brightness.dark
+                ? Colors.white
+                : Colors.black,
+          ),
+        ),
+      ),
       body: Center(
         child: isLoading
             ? const CircularProgressIndicator()
             : ElevatedButton(
                 onPressed: sendEmailVerification,
-                child: Text("Send Verification Email".tr),
+                child: Text(
+                  "Send Verification Email".tr,
+                  style: TextStyle(
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? Colors.white
+                        : Colors.black,
+                  ),
+                ),
               ),
       ),
     );

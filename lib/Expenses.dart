@@ -123,6 +123,10 @@ class Expenses_app extends State<Expenses_w> {
                 const SizedBox(height: 8),
                 TextFormField(
                   controller: amount_con,
+                  keyboardType: TextInputType.number,
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
                   decoration: InputDecoration(
                     prefixIcon: Icon(Icons.attach_money),
                     label: Text("0.00"),
@@ -170,6 +174,9 @@ class Expenses_app extends State<Expenses_w> {
                 TextFormField(
                   controller: date_con,
                   keyboardType: TextInputType.datetime,
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
                   decoration: InputDecoration(
                     filled: true,
                     fillColor: Theme.of(context).colorScheme.surface,
@@ -386,6 +393,11 @@ class Expenses_app extends State<Expenses_w> {
                                                 controller: amountController,
                                                 keyboardType:
                                                     TextInputType.number,
+                                                style: TextStyle(
+                                                  color: Theme.of(
+                                                    context,
+                                                  ).colorScheme.onSurface,
+                                                ),
                                                 decoration: InputDecoration(
                                                   labelText: "Amount".tr,
                                                   filled: true,
@@ -431,6 +443,13 @@ class Expenses_app extends State<Expenses_w> {
                                               const SizedBox(height: 10),
                                               TextField(
                                                 controller: dateController,
+                                                keyboardType:
+                                                    TextInputType.datetime,
+                                                style: TextStyle(
+                                                  color: Theme.of(
+                                                    context,
+                                                  ).colorScheme.onSurface,
+                                                ),
                                                 readOnly: true,
                                                 decoration: InputDecoration(
                                                   labelText: "Date".tr,

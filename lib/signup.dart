@@ -97,6 +97,9 @@ class _SignuState extends State<Signu> {
                     const SizedBox(height: 8),
                     TextFormField(
                       controller: fullname,
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.onSurface,
+                      ),
                       keyboardType: TextInputType.name,
                       decoration: InputDecoration(
                         filled: true,
@@ -140,6 +143,9 @@ class _SignuState extends State<Signu> {
                     const SizedBox(height: 8),
                     TextFormField(
                       controller: email,
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.onSurface,
+                      ),
                       keyboardType: TextInputType.emailAddress,
                       decoration: InputDecoration(
                         filled: true,
@@ -188,6 +194,9 @@ class _SignuState extends State<Signu> {
                     TextFormField(
                       controller: passcontroller,
                       obscureText: isObscure,
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.onSurface,
+                      ),
                       keyboardType: TextInputType.visiblePassword,
                       decoration: InputDecoration(
                         suffixIcon: IconButton(
@@ -257,8 +266,12 @@ class _SignuState extends State<Signu> {
                     const SizedBox(height: 8),
                     TextFormField(
                       controller: confpasscontroller,
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.onSurface,
+                      ),
                       obscureText: isObscure,
                       keyboardType: TextInputType.visiblePassword,
+
                       decoration: InputDecoration(
                         suffixIcon: IconButton(
                           icon: Icon(
@@ -365,6 +378,9 @@ class _SignuState extends State<Signu> {
                         Expanded(
                           child: TextFormField(
                             controller: phoneController,
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.onSurface,
+                            ),
                             keyboardType: TextInputType.phone,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
@@ -413,6 +429,9 @@ class _SignuState extends State<Signu> {
                     TextFormField(
                       controller: dateController,
                       keyboardType: TextInputType.datetime,
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.onSurface,
+                      ),
                       decoration: InputDecoration(
                         contentPadding: const EdgeInsets.symmetric(
                           vertical: 8,

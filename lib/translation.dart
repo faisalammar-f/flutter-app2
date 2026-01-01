@@ -170,6 +170,10 @@ final Map<String, String> authAr = {
   "Users": "المستخدمون",
   "• Categorize expenses (food, transport, books, etc.).":
       "• تصنيف النفقات (الطعام، المواصلات، الكتب، إلخ).",
+  "No data": "لا توجد بيانات",
+  "No financial data recorded.": "لم يتم تسجيل أي بيانات مالية.",
+  "Add income and expenses to see insights.":
+      "أضف الإيرادات والمصروفات للاطلاع على النتائج.",
 };
 
 final Map<String, String> authEn = {
@@ -208,6 +212,10 @@ final Map<String, String> authEn = {
   "Users": "Users",
   "• Categorize expenses (food, transport, books, etc.).":
       "• Categorize expenses (food, transport, books, etc.).",
+  "No data": "No data",
+  "No financial data recorded.": "No financial data recorded.",
+  "Add income and expenses to see insights.":
+      "Add income and expenses to see insights.",
 };
 final Map<String, Map<String, String>> authTranslation = {
   "en": {

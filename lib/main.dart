@@ -357,6 +357,9 @@ class _LoginPageState extends State<LoginPage> {
                       child: TextFormField(
                         controller: emailController,
                         keyboardType: TextInputType.emailAddress,
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.onSurface,
+                        ),
                         decoration: InputDecoration(
                           contentPadding: const EdgeInsets.symmetric(
                             vertical: 8,
@@ -389,6 +392,9 @@ class _LoginPageState extends State<LoginPage> {
                       child: TextFormField(
                         controller: passwordController,
                         keyboardType: TextInputType.visiblePassword,
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.onSurface,
+                        ),
                         obscureText: isObscure,
                         decoration: InputDecoration(
                           suffixIcon: IconButton(

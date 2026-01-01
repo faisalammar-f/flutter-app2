@@ -80,6 +80,10 @@ class _HomePageState extends State<HomePage> {
                   children: [
                     TextField(
                       controller: fullnameController,
+                      keyboardType: TextInputType.text,
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.onSurface,
+                      ),
                       decoration: InputDecoration(
                         labelText: 'Full Name'.tr,
                         filled: true,
@@ -100,7 +104,10 @@ class _HomePageState extends State<HomePage> {
                     ),
                     TextField(
                       controller: emailController,
-
+                      keyboardType: TextInputType.emailAddress,
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.onSurface,
+                      ),
                       decoration: InputDecoration(
                         labelText: 'Email'.tr,
                         filled: true,
@@ -205,6 +212,9 @@ class _HomePageState extends State<HomePage> {
                     TextField(
                       controller: phoneController,
                       keyboardType: TextInputType.phone,
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.onSurface,
+                      ),
                       decoration: InputDecoration(
                         labelText: 'Phone Number'.tr,
                         filled: true,
@@ -225,6 +235,10 @@ class _HomePageState extends State<HomePage> {
                     ),
                     TextField(
                       controller: dateController,
+                      keyboardType: TextInputType.datetime,
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.onSurface,
+                      ),
                       readOnly: true,
                       decoration: InputDecoration(
                         labelText: 'Date of Birth'.tr,

@@ -371,6 +371,16 @@ class ai_prov extends ChangeNotifier {
   String summary = "";
   int financialScore = 0;
   void calculatefinscore() {
+    if (totalincome == 0 && totalexp == 0) {
+      balance = 0.00;
+      financialScore = 0;
+      financialLabel = "No data".tr;
+      mainInsight = "No financial data recorded.".tr;
+      savingOpportunity = "";
+      summary = "Add income and expenses to see insights.".tr;
+      notifyListeners();
+      return;
+    }
     if (totalincome == 0) {
       financialScore = 0;
       financialLabel = "Risk".tr;
@@ -415,6 +425,9 @@ class ai_prov extends ChangeNotifier {
         : (financialScore >= 50)
         ? "Your financial situation is moderate and needs monitoring.".tr
         : "Your expenses are high and need control.".tr;
+    if (totalincome == 0 && totalexp == 0) {
+      balance = 0;
+    }
 
     notifyListeners();
   }

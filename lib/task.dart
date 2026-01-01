@@ -126,6 +126,9 @@ class Ttasktype extends State<Taskt> {
               const SizedBox(height: 20),
               TextFormField(
                 controller: desc_con,
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.onSurface,
+                ),
                 decoration: InputDecoration(
                   labelText: "Enter task title".tr,
                   filled: true,
@@ -212,6 +215,9 @@ class Ttasktype extends State<Taskt> {
               const SizedBox(height: 8),
               TextFormField(
                 controller: date_con,
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.onSurface,
+                ),
                 readOnly: true,
                 decoration: InputDecoration(
                   filled: true,
@@ -390,6 +396,11 @@ class Ttasktype extends State<Taskt> {
                                                 children: [
                                                   TextField(
                                                     controller: descController,
+                                                    style: TextStyle(
+                                                      color: Theme.of(
+                                                        context,
+                                                      ).colorScheme.onSurface,
+                                                    ),
                                                     decoration: InputDecoration(
                                                       labelText:
                                                           "Description".tr,
@@ -496,6 +507,11 @@ class Ttasktype extends State<Taskt> {
                                                   const SizedBox(height: 10),
                                                   TextField(
                                                     controller: dateController,
+                                                    style: TextStyle(
+                                                      color: Theme.of(
+                                                        context,
+                                                      ).colorScheme.onSurface,
+                                                    ),
                                                     readOnly: true,
                                                     decoration: InputDecoration(
                                                       labelText: "Due Date".tr,

@@ -125,7 +125,20 @@ class _VerifyCodePageState extends State<VerifyCodePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Email Verification".tr)),
+      backgroundColor: Theme.of(context).brightness == Brightness.dark
+          ? const Color(0xFF121212) // لون داكن
+          : const Color(0xFF6A1B9A),
+      appBar: AppBar(
+        title: Text(
+          "Email Verification".tr,
+
+          style: TextStyle(
+            color: Theme.of(context).brightness == Brightness.dark
+                ? Colors.white
+                : Colors.black,
+          ),
+        ),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
@@ -144,12 +157,26 @@ class _VerifyCodePageState extends State<VerifyCodePage> {
                 children: [
                   ElevatedButton(
                     onPressed: () => checkEmailVerified(),
-                    child: Text("✅ Check Verification".tr),
+                    child: Text(
+                      "✅ Check Verification".tr,
+                      style: TextStyle(
+                        color: Theme.of(context).brightness == Brightness.dark
+                            ? Colors.white
+                            : Colors.black,
+                      ),
+                    ),
                   ),
                   const SizedBox(height: 10),
                   ElevatedButton(
                     onPressed: resendVerificationEmail,
-                    child: Text("📩 Resend Verification Email".tr),
+                    child: Text(
+                      "📩 Resend Verification Email".tr,
+                      style: TextStyle(
+                        color: Theme.of(context).brightness == Brightness.dark
+                            ? Colors.white
+                            : Colors.black,
+                      ),
+                    ),
                   ),
                 ],
               ),
