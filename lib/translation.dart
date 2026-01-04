@@ -174,6 +174,11 @@ final Map<String, String> authAr = {
   "No financial data recorded.": "لم يتم تسجيل أي بيانات مالية.",
   "Add income and expenses to see insights.":
       "أضف الإيرادات والمصروفات للاطلاع على النتائج.",
+  "تم تأجيل المهمة 10 دقائق": "تم تأجيل المهمة 10 دقائق",
+  " تذكير مهمة  ": " تذكير مهمة  ",
+  "انهاء": "انهاء",
+  "تأجيل 10 د": "تأجيل 10 د",
+  "تجاهل": "تجاهل",
 };
 
 final Map<String, String> authEn = {
@@ -216,6 +221,11 @@ final Map<String, String> authEn = {
   "No financial data recorded.": "No financial data recorded.",
   "Add income and expenses to see insights.":
       "Add income and expenses to see insights.",
+  "تم تأجيل المهمة 10 دقائق": "The mission has been delayed by 10 minutes.",
+  " تذكير مهمة  ": "Important Reminder",
+  "انهاء": "ending",
+  "تأجيل 10 د": "10-minute postponement",
+  "تجاهل": "ignorance",
 };
 final Map<String, Map<String, String>> authTranslation = {
   "en": {

@@ -51,6 +51,8 @@ void main() async {
   if (!isAllowed) {
     AwesomeNotifications().requestPermissionToSendNotifications();
   }
+  NotificationController.init();
+
   runApp(
     MultiProvider(
       providers: [

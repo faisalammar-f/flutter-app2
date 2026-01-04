@@ -824,6 +824,7 @@ class task_provider extends ChangeNotifier {
         channelKey: "tasks_channel",
         body: t.tasktype,
         title: " تذكير مهمة:  ${t.description}  ",
+        payload: {"taskid": t.docId},
       ),
       schedule: NotificationCalendar(
         year: date.year,
@@ -831,10 +832,15 @@ class task_provider extends ChangeNotifier {
         day: date.day,
         hour: date.hour,
         minute: date.minute,
-        second: 0,
+        second: date.second,
         repeats: false,
         preciseAlarm: true,
       ),
+      actionButtons: [
+        NotificationActionButton(key: "DONE", label: "انهاء".tr),
+        NotificationActionButton(key: "SNOOZE", label: "تأجيل 10 د".tr),
+        NotificationActionButton(key: "IGNORE", label: "تجاهل".tr),
+      ],
     );
   }
 
@@ -881,5 +887,48 @@ class task_provider extends ChangeNotifier {
         .collection('tasks');
     if (t.docId.isEmpty) return;
     await taskCollection.doc(t.docId).update({'isdone': val});
+  }
+}
+
+class NotificationController {
+  static void init() {
+    AwesomeNotifications().setListeners(onActionReceivedMethod: _onaction);
+  }
+
+  static Future<void> _onaction(ReceivedAction action) async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+    final taskId = action.payload?["taskid"];
+    final taskref = FirebaseFirestore.instance
+        .collection("users")
+        .doc(user.uid)
+        .collection("tasks")
+        .doc(taskId);
+    switch (action.buttonKeyPressed) {
+      case "DONE":
+        await taskref.update({"isdone": true});
+        break;
+      case "SNOOZE":
+        final newd = DateTime.now().add(Duration(minutes: 10));
+        await taskref.update({'date': newd});
+        await AwesomeNotifications().createNotification(
+          content: NotificationContent(
+            id: DateTime.now().millisecondsSinceEpoch ~/ 1000,
+            channelKey: "tasks_channel",
+            body: "تم تأجيل المهمة 10 دقائق".tr,
+            title: " تذكير مهمة  ".tr,
+            payload: {"taskid": taskId},
+          ),
+          schedule: NotificationCalendar.fromDate(date: newd),
+          actionButtons: [
+            NotificationActionButton(key: "DONE", label: "انهاء".tr),
+            NotificationActionButton(key: "SNOOZE", label: "تأجيل 10 د".tr),
+            NotificationActionButton(key: "IGNORE", label: "تجاهل".tr),
+          ],
+        );
+        break;
+      case "IGNORE":
+        break;
+    }
   }
 }
