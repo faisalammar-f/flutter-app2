@@ -266,7 +266,11 @@ class Expenses_app extends State<Expenses_w> {
                               "Recent Expenses".tr,
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
-                                color: Colors.black87,
+                                color:
+                                    Theme.of(context).brightness ==
+                                        Brightness.dark
+                                    ? Colors.white
+                                    : Colors.black,
                                 fontSize: 18,
                               ),
                             ),
@@ -291,7 +295,14 @@ class Expenses_app extends State<Expenses_w> {
                               ],
                             ),
                             trailing: IconButton(
-                              icon: Icon(Icons.edit, color: Colors.black),
+                              icon: Icon(
+                                Icons.edit,
+                                color:
+                                    Theme.of(context).brightness ==
+                                        Brightness.dark
+                                    ? Colors.white
+                                    : Colors.black,
+                              ),
                               onPressed: () {
                                 TextEditingController amountController =
                                     TextEditingController(
@@ -314,21 +325,6 @@ class Expenses_app extends State<Expenses_w> {
                                         child: Column(
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
-                                            Text(
-                                              "Category".tr,
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                color:
-                                                    Theme.of(
-                                                          context,
-                                                        ).brightness ==
-                                                        Brightness.dark
-                                                    ? Colors.white
-                                                    : Colors.black,
-                                                fontSize: 18,
-                                              ),
-                                              textAlign: TextAlign.left,
-                                            ),
                                             DropdownButtonFormField<String>(
                                               value: selectedCategory,
                                               style: TextStyle(
@@ -341,6 +337,7 @@ class Expenses_app extends State<Expenses_w> {
                                                     : Colors.black,
                                               ),
                                               decoration: InputDecoration(
+                                                labelText: "Category".tr,
                                                 filled: true,
                                                 fillColor: Theme.of(
                                                   context,

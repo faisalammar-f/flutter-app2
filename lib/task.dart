@@ -432,22 +432,7 @@ class Ttasktype extends State<Taskt> {
                                                           ),
                                                     ),
                                                   ),
-                                                  Text(
-                                                    "Task Type".tr,
-                                                    style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 18,
-                                                      color:
-                                                          Theme.of(
-                                                                context,
-                                                              ).brightness ==
-                                                              Brightness.dark
-                                                          ? Colors.white
-                                                          : Colors.black,
-                                                    ),
-                                                    textAlign: TextAlign.left,
-                                                  ),
+
                                                   const SizedBox(height: 10),
                                                   DropdownButtonFormField<
                                                     String
@@ -467,7 +452,7 @@ class Ttasktype extends State<Taskt> {
                                                       fillColor: Theme.of(
                                                         context,
                                                       ).colorScheme.surface,
-
+                                                      labelText: "Task Type".tr,
                                                       labelStyle: TextStyle(
                                                         color:
                                                             Theme.of(

@@ -268,7 +268,11 @@ class Income_app extends State<Income_w> {
                               "Recent Income".tr,
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
-                                color: Colors.black87,
+                                color:
+                                    Theme.of(context).brightness ==
+                                        Brightness.dark
+                                    ? Colors.white
+                                    : Colors.black,
                                 fontSize: 18,
                               ),
                             ),
@@ -293,7 +297,14 @@ class Income_app extends State<Income_w> {
                               ],
                             ),
                             trailing: IconButton(
-                              icon: Icon(Icons.edit, color: Colors.black),
+                              icon: Icon(
+                                Icons.edit,
+                                color:
+                                    Theme.of(context).brightness ==
+                                        Brightness.dark
+                                    ? Colors.white
+                                    : Colors.black,
+                              ),
                               onPressed: () {
                                 TextEditingController amountController =
                                     TextEditingController(
@@ -316,22 +327,6 @@ class Income_app extends State<Income_w> {
                                         child: Column(
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
-                                            Text(
-                                              "Source".tr,
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                color:
-                                                    Theme.of(
-                                                          context,
-                                                        ).brightness ==
-                                                        Brightness.dark
-                                                    ? Colors.white
-                                                    : Colors.black,
-                                                fontSize: 18,
-                                              ),
-                                              textAlign: TextAlign.left,
-                                            ),
-
                                             DropdownButtonFormField<String>(
                                               value: selectedSource,
 
@@ -349,7 +344,7 @@ class Income_app extends State<Income_w> {
                                                 fillColor: Theme.of(
                                                   context,
                                                 ).colorScheme.surface,
-
+                                                labelText: "Source".tr,
                                                 labelStyle: TextStyle(
                                                   color:
                                                       Theme.of(
